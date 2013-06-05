@@ -6,7 +6,8 @@ require_once('config_bereichseditor.php');
 // ini_set('display_errors', 'on');
 
 
-//in case of added trailing slash by DOCUMENT_ROOT
+
+//in case of added trailing slash by DOCUMENT_ROOT //no need?
 if(substr($_SERVER['DOCUMENT_ROOT'],-1)=='/'){
     $_SERVER['DOCUMENT_ROOT'] = substr($_SERVER['DOCUMENT_ROOT'], 0, -1);
 }
@@ -17,6 +18,9 @@ $ne2_config_info['app_path_without_host'] = '/vkdaten/tools/NavEditor2/';
 $ne2_config_info['app_path'] = $_SERVER['DOCUMENT_ROOT'] .$ne2_config_info['app_path_without_host'];
 $ne2_config_info['log_path'] = $_SERVER['DOCUMENT_ROOT'] .$ne2_config_info['app_path_without_host'] . "log/";
 $ne2_config_info['cgi-bin_path'] = NavTools::simpleResolvePath($_SERVER['DOCUMENT_ROOT'] . "/../cgi-bin/");
+
+//error log file path
+$ne2_config_info['error_log_file'] = $ne2_config_info['log_path'].'errors.log';
 
 // the filename of user-data
 $ne2_config_info['user_data_file_name'] = '.hteditoruser';
@@ -38,7 +42,7 @@ $ne2_config_info['app_title'] = 'NavEditor 2 <sup>Delta</sup>';
 $ne2_config_info['app_titleplain'] = 'NavEditor 2 Delta';
 
 // current version
-$ne2_config_info['version'] = '2.13.0325';
+$ne2_config_info['version'] = '2.13.0605';
 
 // update host
 $ne2_config_info['update_url'] = 'http://www.vorlagen.uni-erlangen.de/downloads/naveditor/';
@@ -101,18 +105,18 @@ $ne2_config_info['show_logoupdate_allwebpages'] 	= $config_manager->get_conf_ite
  // helpfilesuffix:
  $ne2_config_info['help_filesuffix']  			= $config_manager->get_conf_item('help_filesuffix', '.html');
  // path for help files
-$ne2_config_info['help_path'] 				= $config_manager->get_conf_item('help_path', $ne2_config_info['app_path'] .'data/helps/');   ;
+$ne2_config_info['help_path']                   = $config_manager->get_conf_item('help_path', $ne2_config_info['app_path'] .'data/helps/');   ;
 // path for temp files
-$ne2_config_info['temp_path'] 				= $config_manager->get_conf_item('temp_path',$ne2_config_info['app_path'] . '_tmp/');
+$ne2_config_info['temp_path']                   = $config_manager->get_conf_item('temp_path',$ne2_config_info['app_path'] . '_tmp/');
  //einige .conf dateinamen.
- $ne2_config_info['website']  				= $config_manager->get_conf_item('website', 'website.conf');
- $ne2_config_info['variables']  			= $config_manager->get_conf_item('variables', 'variables.conf');
+ $ne2_config_info['website']                    = $config_manager->get_conf_item('website', 'website.conf');
+ $ne2_config_info['variables']                  = $config_manager->get_conf_item('variables', 'variables.conf');
  // indexdatei:
   $ne2_config_info['directoryindex_file']  		= $config_manager->get_conf_item('directoryindex_file', 'index.shtml');
 // where to store backup files
- $ne2_config_info['backup_root']  			= $config_manager->get_conf_item('backup_root', $ne2_config_info['app_path'] . '.htbackup/');
+ $ne2_config_info['backup_root']                = $config_manager->get_conf_item('backup_root', $ne2_config_info['app_path'] . '.htbackup/');
  // backup type: 1-Only one (with .bak-suffix); 2-Many (with Timestamp-suffix)
- $ne2_config_info['backup_type']  			= $config_manager->get_conf_item('backup_type', 2);
+ $ne2_config_info['backup_type']                = $config_manager->get_conf_item('backup_type', 2);
 // where to backup navgationsindex.txt
  $ne2_config_info['navindex_backup_dir']  		= $config_manager->get_conf_item('navindex_backup_dir', $_SERVER['DOCUMENT_ROOT'] . '/vkdaten/navindex_backup/');
 
@@ -122,10 +126,10 @@ $ne2_config_info['temp_path'] 				= $config_manager->get_conf_item('temp_path',$
  $ne2_config_info['timeout_loghistory']  		= $config_manager->get_conf_item('timeout_loghistory', '3600');
 
  //webauftritt configfiles ordner
- $ne2_config_info['usual_configs_path'] = $_SERVER['DOCUMENT_ROOT'] . "/vkdaten/";
+ $ne2_config_info['usual_configs_path']         = $_SERVER['DOCUMENT_ROOT'] . "/vkdaten/";
 
 //config file path fuer bereiche
-$ne2_config_info['config_file_path_bereiche'] = $ne2_config_info['usual_configs_path'] . 'bereiche.conf';
+$ne2_config_info['config_file_path_bereiche']   = $ne2_config_info['config_path'] . 'bereiche.conf';
 
 // Optionen fuer Funktionen
 
@@ -137,22 +141,20 @@ if ($ne2_config_info['tool_univis_mitarbeitereditor'] ) {
 	$ne2_config_info['activate_toolmenu']  =1;
 }
 
-
-
-//========================= LOESCHEN SPAETER BEGIN =============================
-
-// Definition der Seitenbereiche
- $ne2_config_info['content_marker_start_setting']  = 'content_marker_start';
- $ne2_config_info['content_marker_end_setting']  = 'content_marker_end';
- $ne2_config_info['bereich_filename_setting'] = 'file_name';
-
- $ne2_config_info['page_content_marker_start']          = $config_manager->get_conf_item('page_content_marker_start',  '<!-- TEXT AB HIER -->');
+$ne2_config_info['page_content_marker_start']           = $config_manager->get_conf_item('page_content_marker_start',  '<!-- TEXT AB HIER -->');
  $ne2_config_info['page_content_marker_end']            = $config_manager->get_conf_item('page_content_marker_end', '<!-- AB HIER KEIN TEXT MEHR -->');
  $ne2_config_info['page_content_marker_start_fallback'] = $config_manager->get_conf_item('page_content_marker_start_fallback',  '<a name="contentmarke" id="contentmarke"></a>');
  $ne2_config_info['page_content_marker_end_fallback']  	= $config_manager->get_conf_item('page_content_marker_end_fallback', '<hr id="vorfooter" />');
  $ne2_config_info['page_content_marker_preinhaltsinfo'] = $config_manager->get_conf_item('page_content_marker_preinhaltsinfo',  '<!--#include virtual="/ssi/inhaltsinfo.shtml" -->');
 
 
+
+//========================= LOESCHEN SPAETER BEGIN =============================
+
+// Definition der Seitenbereiche
+ $ne2_config_info['content_marker_start_setting']        = 'content_marker_start';
+ $ne2_config_info['content_marker_end_setting']          = 'content_marker_end';
+ $ne2_config_info['bereich_filename_setting']            = 'file_name';
 
 
  $ne2_config_info['zusatzinfo_file']                    = $config_manager->get_conf_item('zusatzinfo_file', '/ssi/zusatzinfo.shtml');
@@ -166,10 +168,10 @@ if ($ne2_config_info['tool_univis_mitarbeitereditor'] ) {
  $ne2_config_info['kurzinfo_content_marker_start']  	= $config_manager->get_conf_item('kurzinfo_content_marker_start',  '<div id="kurzinfo">  <!-- begin: kurzinfo -->');
  $ne2_config_info['kurzinfo_content_marker_end']        = $config_manager->get_conf_item('kurzinfo_content_marker_end', '</div>  <!-- end: kurzinfo -->');
 //TMP sidebar
- $ne2_config_info['sidebar_content_marker_start']  	= $config_manager->get_conf_item('sidebar_content_marker_start',  '<aside><div id="sidebar" class="noprint">  <!-- begin: sidebar -->');
- $ne2_config_info['sidebar_content_marker_startdiv'] = $config_manager->get_conf_item('sidebar_content_marker_startdiv', '<aside><div id="sidebar" class="noprint">  <!-- begin: sidebar -->');
- $ne2_config_info['sidebar_content_marker_end']  	= $config_manager->get_conf_item('sidebar_content_marker_end', '</div></aside>  <!-- end: sidebar -->');//verkehrt?
- $ne2_config_info['sidebar_file']                      = $config_manager->get_conf_item('sidebar_file', '/ssi/sidebar.shtml');
+ $ne2_config_info['sidebar_content_marker_start']   	= $config_manager->get_conf_item('sidebar_content_marker_start',  '<aside><div id="sidebar" class="noprint">  <!-- begin: sidebar -->');
+ $ne2_config_info['sidebar_content_marker_startdiv']    = $config_manager->get_conf_item('sidebar_content_marker_startdiv', '<aside><div id="sidebar" class="noprint">  <!-- begin: sidebar -->');
+ $ne2_config_info['sidebar_content_marker_end']         = $config_manager->get_conf_item('sidebar_content_marker_end', '</div></aside>  <!-- end: sidebar -->');//verkehrt?
+ $ne2_config_info['sidebar_file']                       = $config_manager->get_conf_item('sidebar_file', '/ssi/sidebar.shtml');
 
    // Inhaltsinfo Datei
  $ne2_config_info['inhaltsinfo_file']                   = $config_manager->get_conf_item('inhaltsinfo_file', '/ssi/inhaltsinfo.shtml');

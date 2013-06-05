@@ -22,7 +22,6 @@ class NavTools {
      * <p>with no params "default" files will be loaded  </p>
      * <p>*html source will be full url to the file  </p>
      */
-
     public static function includeHtml(/* ARGS */) {
         global $ne2_config_info;
         $retString = '';
@@ -30,10 +29,10 @@ class NavTools {
         //if no arguments, set to "default".
         if (func_num_args() == 0) {
             $arrayFiles = Array('default');
-            //else if first argument is an array, then use args of this array
+        //else if first argument is an array, then use args of this array
         } elseif (is_array(func_get_arg(0))) {
             $arrayFiles = func_get_arg(0);
-            //else use each argument
+        //else use each argument
         } else {
             $arrayFiles = func_get_args();
         }
@@ -89,7 +88,7 @@ class NavTools {
     /**
      * save execution time to logfile, in seconds at current point of call
      */
-    public static function save_execution_time($message = "", $logfile = "",$debug = -1) {
+    public static function save_execution_time($message = "", $logfile = "", $debug = -1) {
         global $ne2_config_info;
         if (strcmp($logfile, "") == 0) {
             $logfile = $ne2_config_info['debug_execution_file'];
@@ -163,7 +162,7 @@ class NavTools {
         }
 
         if ($case) {
-           return (substr($haystack, -$length) === $needle);
+            return (substr($haystack, -$length) === $needle);
         }
 
         return (strcasecmp(substr($haystack, -$length), $needle) === 0);
@@ -191,10 +190,9 @@ class NavTools {
      * @param string $path
      * @return string
      */
-    public static function simpleResolvePath($path){
+    public static function simpleResolvePath($path) {
         return preg_replace('/\w+\/\.\.\//', '', $path);
     }
-
 
     /**
      * If $variable is not set, returns $default, otherwise $variable
@@ -219,9 +217,23 @@ class NavTools {
      * @return bool
      */
     public static function is_assoc($array) {
-        if(!is_array($array)) return FALSE;
-        
+        if (!is_array($array))
+            return FALSE;
+
         return (bool) count(array_filter(array_keys($array), 'is_string'));
+    }
+
+    /**
+     * log errors/warnings to specified file
+     * @global array $ne2_config_info
+     * @param string $error_text
+     */
+    public static function error_log($error_text, $callerFunc = "") {
+        global $ne2_config_info;
+        if (!empty($callerFunc)) {
+            $callerFunc = $callerFunc . ': ';
+        }
+        error_log(date('Y-m-d H:m') . ' - ' . $callerFunc . $error_text . "\n", 3, $ne2_config_info['error_log_file']);
     }
 
 }

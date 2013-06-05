@@ -1,7 +1,7 @@
 <?php
 /**
  * Logger + login wartezeit, bei brutforce.
- * @TODO neu als Klasse schreiben.
+ * @TODO neu als Klasse schreiben. +param max file size.
  */
 require_once('config.php');
 
@@ -59,9 +59,14 @@ function logadd($operation, $msg = null) {
         delete_old_content($_SERVER["REMOTE_ADDR"]);
     }
 
+    if (file_exists($logfile)) {
+
+    }
+
     $save = fopen($logfile, "a");
     fputs($save, $logentry);
     fclose($save);
+
 }
 
 //anzahl von bestimmten Erreignissen/operation
@@ -116,9 +121,15 @@ function waitTimeForLogin() {
 }
 
 //veraltete log daten loeschen, optional nur von ipAdresse
+
 function delete_old_content($ipAdresse = null) {
     global $logfile, $logHistory;
+    if(!file_exists($logfile)){
+        file_put_contents($logfile, '');
+    }
+
     $subject = file_get_contents($logfile);
+
     $newcontent = "";
     preg_match_all('/([0-9]+).*/', $subject, $result, PREG_PATTERN_ORDER);
 
@@ -135,6 +146,14 @@ function delete_old_content($ipAdresse = null) {
     $save = fopen($logfile, "w");
     fputs($save, $newcontent);
     fclose($save);
+}
+
+function get_content_local($logfile){
+
+}
+
+function save_content_local($logfile, $newcontent){
+
 }
 
 ?>

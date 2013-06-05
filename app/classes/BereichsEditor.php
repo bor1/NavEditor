@@ -8,6 +8,7 @@ require_once 'NavTools.php';
  * @uses config.php some global variables
  * @uses NavTools.php some functions
  * @author Dmitry Gorelenkov
+ * @internal Purpose: learning PHP -> probably low quality code, sorry :/
  *
  */
 class BereichsEditor {
@@ -110,6 +111,10 @@ class BereichsEditor {
      *
      */
     private function _get_splitted_content($content, $start_mark, $end_mark) {
+        //TODO regex, versuchen normal, einschaetzen ob was fehlt,
+        //falls ja, versuchen fallback, wieder einschaetzen, vergleichen wo mehr gefunden wurde
+
+
         $returnArray = array();
         $start_content = "";
         $end_content = "";
@@ -120,8 +125,11 @@ class BereichsEditor {
 
             //TEMP. falls nicht gefunden, mit fallBack versuchen
             if ($start_pos === FALSE) {
-                $start_pos = $this->_tryFallBack_start_pos($content, $this->_bereichname);
-            }//TODO remove this code later..
+                $start_mark = $this->_tryFallBack_start_mark($content, $this->_bereichname);
+                if($start_mark !== FALSE){
+                    $start_pos = strpos($content, $start_mark);
+                }
+            }
 
             //falls position bestimmt, trennen, start_content speichern
             if ($start_pos !== FALSE) {
@@ -134,8 +142,13 @@ class BereichsEditor {
         //end position bestimmen
         if (strlen($end_mark) > 0) {
             $end_pos = strpos($content, $end_mark);
+
+            //TEMP. falls nicht gefunden, mit fallBack versuchen
             if ($end_pos === FALSE) {
-                $end_pos = $this->_tryFallBack_end_pos($content, $this->_bereichname);
+                $end_mark = $this->_tryFallBack_end_mark($content, $this->_bereichname);
+                if($end_mark !== FALSE){
+                    $end_pos = strpos($content, $end_mark);
+                }
             }
 
             //falls position bestimmt, trennen, end_content speichern
@@ -158,24 +171,104 @@ class BereichsEditor {
     }
 
 
-    //temp fallBack
-    private function _tryFallBack_start_pos($content, $bereich) {
-        //TODO
-        switch ($bereich) {
-            case 'kurzinfo':
 
 
-                break;
-            default:
-                break;
-        }
-        return false;
+    //================FALLBACK FUNCS============================================
+    //temp fallBack getDataArray
+    private function _getFallBackData($bereich) {
+        $data = Array(
+            'kurzinfo' => Array(
+                'startMarks' => Array('<div id="kurzinfo">',
+                                      '<div id="kurzinfo">  <!-- begin: kurzinfo -->'),
+                'startRegex' => '/^\s*<div id="kurzinfo"\s*>\s*/',
+                'endMarks' => Array('</div>  <!-- end: kurzinfo -->'),
+                'endRegex' => '/<\/div>\s*(<!--\s* end:\s* kurzinfo\s* -->|)[\s\n]*$/'
+            ),
+            'inhaltsinfo' => Array(
+                'startMarks' => Array('<div id="inhaltsinfo">',
+                                      '<div id="inhaltsinfo">  <!-- begin: inhaltsinfo -->'),
+                'startRegex' => '/^\s*<div\s* id="inhaltsinfo"\s*>\s*/',
+                'endMarks' => Array('</div>  <!-- end: inhaltsinfo -->'),
+                'endRegex' => '/<\/div>\s*(<!--\s* end:\s* inhaltsinfo\s* -->|)[\s\n]*$/'
+            ),
+            'fusstext' => Array(
+                'startMarks' => Array(Array('<!-- /footerinfos -->')),
+                'startRegex' => '',
+                'endMarks' => Array('<!-- /footerinfos -->'),
+                'endRegex' => '',
+            ),
+            'sidebar' => Array(
+                'startMarks' => Array('<div id="sidebar" class="noprint">',
+                                      '<aside><div id="sidebar" class="noprint">  <!-- begin: sidebar -->',
+                                      '<aside><div id="sidebar" class="noprint">  <!-- begin: sidebar -->'),
+                'startRegex' => '/^\s*<div\s* id="sidebar"\s*>\s*/',
+                'endMarks' => Array('</div></aside>  <!-- end: sidebar -->'),
+                'endRegex' => '/<\/div>\s*(<!--\s* end: sidebar\s* -->|)\s*$/'
+            ),
+            'zielgrpmenue' => Array(
+                'startMarks' => Array('<h2 class="skip"><a name="hauptmenumarke" id="hauptmenumarke">Zielgruppennavigation</a></h2>'),
+                'startRegex' => '',
+                'endMarks' => Array(''),
+                'endRegex' => ''
+            ),
+            'zusatzinfo' => Array(
+                'startMarks' => Array('<div id="zusatzinfo" class="noprint">',
+                    '<div id="zusatzinfo" class="noprint">  <!-- begin: zusatzinfo -->',
+                    '<a id="zusatzinfomarke" name="zusatzinfomarke"></a>'),
+                'startRegex' => '/^\s*<div\s* id="zusatzinfo"\s*>\s*/',
+                'endMarks' => Array('</div>  <!-- end: zusatzinfo -->'),
+                'endRegex' => '/<\/div>\s*(<!--\s* end: zusatzinfo\s* -->|)\s*$/'
+            ),
+        );
+
+        return NavTools::ifsetor($data[$bereich],Array());
     }
 
-    //temp fallBack
-    private function _tryFallBack_end_pos($content, $bereich) {
-        //TODO
-        return false;
+    //try to find position with mark or regex
+    private function _tryToFindFallbackMark(&$content, array &$marksArray, $regex) {
+        $mark = FALSE;
+
+        //try simple marks
+        foreach ($marksArray as $mark) {
+            if (strlen($mark) > 0) {
+                $pos = strpos($content, $mark);
+                if ($pos !== FALSE) {
+                    return $mark;
+                }
+            }
+        }
+
+        //try with regex
+        if(strlen($regex) > 0) {
+            $matches = Array();
+            $result = preg_match ($regex, $content, $matches, PREG_OFFSET_CAPTURE);
+            if($result > 0){
+                $mark = $matches[0][0];
+            }
+        }
+
+        return $mark;
+    }
+
+    //temp fallBack start marker
+    private function _tryFallBack_start_mark(&$content, $bereich) {
+        $data = $this->_getFallBackData($bereich);
+        if(empty($data)){return false;}
+
+        $marksArray = $data['startMarks'];
+        $regex = $data['startRegex'];
+        return $this->_tryToFindFallbackMark($content,$marksArray,$regex);
+
+    }
+
+    //temp fallBack end marker
+    private function _tryFallBack_end_mark(&$content, $bereich) {
+        $data = $this->_getFallBackData($bereich);
+        if(empty($data)){return false;}
+
+        $marksArray = $data['endMarks'];
+        $regex = $data['endRegex'];
+        return $this->_tryToFindFallbackMark($content,$marksArray,$regex);
     }
 
 }

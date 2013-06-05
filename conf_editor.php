@@ -60,10 +60,10 @@ function loadConfListCallback(rdata) {
 				showPanel("fld_feedimport");
 				loadFeedImport();
 				break;
-			case "vorlagen.conf":
-				showPanel("fld_vorlagen");
-				loadVorlagen();
-				break;
+//			case "vorlagen.conf":
+//				showPanel("fld_vorlagen");
+//				loadVorlagen();
+//				break;
 			case ".htusers":
 				showPanel("fld_htusers");
 				loadHtUsers();
