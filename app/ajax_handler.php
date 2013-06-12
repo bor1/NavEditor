@@ -85,25 +85,25 @@ $data_to_return = '';
             //BereichsManager/functions---------------------------------------------
             switch ($function_to_call) {
                 //no need?
-                case 'getBereichList':
-                    $data_to_return = json_encode($BerManager->getBereichList());
+                case 'getAreaList':
+                    $data_to_return = json_encode($BerManager->getAreaList());
                     break;
 
-                case 'getAllBereichSettings':
+                case 'getAllAreaSettings':
 
-                    $data_to_return = json_encode($BerManager->getAllBereichSettings());
+                    $data_to_return = json_encode($BerManager->getAllAreaSettings());
                     break;
 
-                case 'addBereichSettings':
-                    $data_to_return = $BerManager->addBereichSettings($data_to_pass['name'], $data_to_pass['settings']);
+                case 'addAreaSettings':
+                    $data_to_return = $BerManager->addAreaSettings($data_to_pass['name'], $data_to_pass['settings']);
                     break;
 
-                case 'deleteBereichSettings':
-                    $data_to_return = $BerManager->deleteBereichSettings($data_to_pass['name']);
+                case 'deleteAreaSettings':
+                    $data_to_return = $BerManager->deleteAreaSettings($data_to_pass['name']);
                     break;
 
-                case 'updateBereichSettings':
-                    $data_to_return = $BerManager->updateBereichSettings($data_to_pass['name'], $data_to_pass['settings']);
+                case 'updateAreaSettings':
+                    $data_to_return = $BerManager->updateAreaSettings($data_to_pass['name'], $data_to_pass['settings']);
                     break;
             }
             break;

@@ -1,5 +1,5 @@
 <?php
-
+require_once 'NavTools.php';
 /**
  * Abstract manager for config files
  * To Implement: decode/encode functons of data in file
@@ -181,9 +181,11 @@ abstract class ConfigFileManager{
      */
     public function removeSetting($sSettingName, $bMultipleCalls = FALSE) {
         $bReturn = FALSE;
-        if(in_array($sSettingName, $this->_configDataCache)){
+        if(array_key_exists($sSettingName, $this->_configDataCache)){
             unset($this->_configDataCache[$sSettingName]);
             $bReturn = TRUE;
+        }else{
+            NavTools::error_log('No setting to remove found', __METHOD__);
         }
 
         $this->multipleCallsHandler($bMultipleCalls);
@@ -207,7 +209,7 @@ abstract class ConfigFileManager{
             return false;
         }
 
-        if(!in_array($sOldName, $this->_configDataCache) || in_array($sNewName, $this->_configDataCache)){
+        if(!array_key_exists($sOldName, $this->_configDataCache) || array_key_exists($sNewName, $this->_configDataCache)){
 //            throw new Exception('$sOldName not found, or $sNewName exists');
             NavTools::error_log('$sOldName not found, or $sNewName exists', __METHOD__);
             return false;

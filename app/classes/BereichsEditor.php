@@ -14,7 +14,7 @@ require_once 'NavTools.php';
 class BereichsEditor {
 
     private $_fpath; //file path
-    private $_bereichname; //bereichtsname
+    private $_areaname; //areaname
     private $_content_splitted; //splitted (start, middle, end) array. By markers
     private $_conf_array; //array mit daten aus config datei
     private $_start_marker; //startmarker
@@ -27,18 +27,18 @@ class BereichsEditor {
      * Constructor
      *
      * @global array $ne2_config_info
-     * @param string $bereichname Name des Bereichs
+     * @param string $areaname Name des Bereichs
 
      */
-    public function __construct($bereichname) {
+    public function __construct($areaname) {
         global $ne2_config_info;
-        $this->_bereichname = $bereichname;
+        $this->_areaname = $areaname;
         $config_file_path = $ne2_config_info['config_file_path_bereiche'];
         $confMngr = new ConfigFileManagerJSON($config_file_path);
-        $this->_conf_array = $confMngr->getSetting($bereichname);
+        $this->_conf_array = $confMngr->getSetting($areaname);
         $this->_start_marker = \NavTools::ifsetor($this->_conf_array[$ne2_config_info['content_marker_start_setting']]);
         $this->_end_marker = \NavTools::ifsetor($this->_conf_array[$ne2_config_info['content_marker_end_setting']]);
-        $filename_setting = $ne2_config_info['bereich_filename_setting'];
+        $filename_setting = $ne2_config_info['bereich_filename_setting']; //einfach file_name ?
         $filename = \NavTools::ifsetor($this->_conf_array[$filename_setting]);
         if (strlen($filename) == 0) {
             throw new Exception('No filename setting: "'.$filename_setting.'" in config: "'.$config_file_path.'" found');
@@ -98,7 +98,7 @@ class BereichsEditor {
         $this->_loadContents($data);
 
 
-        return ucfirst($this->_bereichname . ' wurde aktualisiert');
+        return NavTools::ifsetor($this->_conf_array['title'], "Bereich") . ' wurde aktualisiert';
     }
 
     /**
@@ -125,7 +125,7 @@ class BereichsEditor {
 
             //TEMP. falls nicht gefunden, mit fallBack versuchen
             if ($start_pos === FALSE) {
-                $start_mark = $this->_tryFallBack_start_mark($content, $this->_bereichname);
+                $start_mark = $this->_tryFallBack_start_mark($content, $this->_areaname);
                 if($start_mark !== FALSE){
                     $start_pos = strpos($content, $start_mark);
                 }
@@ -145,7 +145,7 @@ class BereichsEditor {
 
             //TEMP. falls nicht gefunden, mit fallBack versuchen
             if ($end_pos === FALSE) {
-                $end_mark = $this->_tryFallBack_end_mark($content, $this->_bereichname);
+                $end_mark = $this->_tryFallBack_end_mark($content, $this->_areaname);
                 if($end_mark !== FALSE){
                     $end_pos = strpos($content, $end_mark);
                 }

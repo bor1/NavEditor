@@ -7,7 +7,7 @@ require_once('app/classes/BereichsManager.php');
 $thiseditor = null;
 
 $BerManager = new BereichsManager();
-$alleBereiche = $BerManager->getAllBereichSettings();
+$alleBereiche = $BerManager->getAllAreaSettings();
 
 foreach ($alleBereiche as $value) {
     if(isset($_GET[$value['name']])){

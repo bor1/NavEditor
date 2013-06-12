@@ -147,16 +147,13 @@ $ne2_config_info['page_content_marker_start']           = $config_manager->get_c
  $ne2_config_info['page_content_marker_end_fallback']  	= $config_manager->get_conf_item('page_content_marker_end_fallback', '<hr id="vorfooter" />');
  $ne2_config_info['page_content_marker_preinhaltsinfo'] = $config_manager->get_conf_item('page_content_marker_preinhaltsinfo',  '<!--#include virtual="/ssi/inhaltsinfo.shtml" -->');
 
-
-
-//========================= LOESCHEN SPAETER BEGIN =============================
-
 // Definition der Seitenbereiche
  $ne2_config_info['content_marker_start_setting']        = 'content_marker_start';
  $ne2_config_info['content_marker_end_setting']          = 'content_marker_end';
  $ne2_config_info['bereich_filename_setting']            = 'file_name';
 
 
+//========================= LOESCHEN SPAETER BEGIN =============================
  $ne2_config_info['zusatzinfo_file']                    = $config_manager->get_conf_item('zusatzinfo_file', '/ssi/zusatzinfo.shtml');
 // Marker fuer Zusatzinfo:
  $ne2_config_info['zusatzinfo_content_marker_start']  	= $config_manager->get_conf_item('zusatzinfo_content_marker_start',  '<div id="zusatzinfo" class="noprint">  <!-- begin: zusatzinfo -->');
@@ -467,7 +464,7 @@ foreach($ne2_menu as $value) {
 require_once ('classes/BereichsManager.php');
 
  $BerManager = new BereichsManager();
- $alleBereiche = $BerManager->getAllBereichSettings();
+ $alleBereiche = $BerManager->getAllAreaSettings();
 
  foreach ($alleBereiche as $aBereich) {
     static $i = 21;

@@ -458,7 +458,7 @@ function has_help_file() {
                 $("button").button();
 
                 //loading all info about areas
-                NavTools.call_php('app/classes/BereichsManager.php', 'getAllBereichSettings',
+                NavTools.call_php('app/classes/BereichsManager.php', 'getAllAreaSettings',
                 {},
                 loadContentCallback);
 
@@ -502,7 +502,7 @@ function has_help_file() {
                     var params = readInput();
                     //                    params = JSON.stringify(params);
 
-                    NavTools.call_php('app/classes/BereichsManager.php', 'addBereichSettings',
+                    NavTools.call_php('app/classes/BereichsManager.php', 'addAreaSettings',
                     {
                         name: bereichName,
                         settings: params
@@ -520,7 +520,7 @@ function has_help_file() {
                     if(confirm(unescape('Den Bereich: \"'+ bereichName + '" aktualisieren?'))){
                         var params = readInput()
                         //                        params = JSON.stringify(params);
-                        NavTools.call_php('app/classes/BereichsManager.php', 'updateBereichSettings',
+                        NavTools.call_php('app/classes/BereichsManager.php', 'updateAreaSettings',
                         {
                             name: bereichName,
                             settings: params
@@ -535,7 +535,7 @@ function has_help_file() {
                 $("#bereichmanager #removeBereich").live('click',function() {
                     var bereichName = _currentValues['bereich'];
                     if(confirm(unescape('Den Bereich: \"'+ bereichName + '" l%F6schen?'))){
-                        NavTools.call_php('app/classes/BereichsManager.php', 'deleteBereichSettings',
+                        NavTools.call_php('app/classes/BereichsManager.php', 'deleteAreaSettings',
                         {
                             name: bereichName
                         },

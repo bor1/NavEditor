@@ -1,5 +1,6 @@
 <?php
 require_once 'ConfigFileManagerJSON.php';
+require_once 'NavTools.php';
 /**
  * Verwaltung fuer Bereiche.
  * requires config.php!
@@ -48,7 +49,7 @@ class BereichsManager {
         //fall back
         if($bFirstTime){
             //falls neu erstellt, mit default values fuellen
-            $this->addDefaultBereichSettings();
+            $this->addDefaultAreaSettings();
         }
     }
 
@@ -56,7 +57,7 @@ class BereichsManager {
      * Search all saved Areas-names in config
      * @return array List of all Areas-names
      */
-    public function getBereichList(){
+    public function getAreaList(){
 
         return $this->_ConfigManager->getSettingNames();
 
@@ -66,56 +67,82 @@ class BereichsManager {
      * Get array of all areas, with all settings for each area.
      * @return array associative 'area'=>'associative settings array'
      */
-    public function getAllBereichSettings(){
+    public function getAllAreaSettings(){
 
         return $this->_ConfigManager->getSettingsArray();
 
     }
 
     /**
-     * Get settings array for $sBereichName area
-     * @param string $sBereichName - name of area
+     * Get settings array for $sAreaName area
+     * @param string $sAreaName - name of area
      * @return array associative 'setting-name'=>'setting-value'
      */
-    public function getBereichSettings($sBereichName){
+    public function getAreaSettings($sAreaName){
 
-        return $this->_ConfigManager->getSetting($sBereichName);
+        return $this->_ConfigManager->getSetting($sAreaName);
 
     }
 
-
     /**
-     * Add new area
-     * @param string $sBereichName name of area
+     * Add new area, creates empty file
+     * @param string $sAreaName name of area
      * @param array $aSettings associative array of area settings
      * @return bool success
-     * @throws Exception
      */
-    public function addBereichSettings($sBereichName, $aSettings){
+    public function addAreaSettings($sAreaName, array $aSettings) {
 
-        return $this->_ConfigManager->addSetting($sBereichName, $aSettings);
+        //falls dateiname existiert, abbrechen
+        $aAllSettings = $this->getAllAreaSettings();
+        $newFileName = $aSettings['file_name'];
+        foreach ($aAllSettings as $aSetting) {
+            if(strcmp($aSetting['file_name'],$newFileName)== 0 ){
+                throw new Exception('Can add, file "'. $newFileName .'" already exists');
+            }
+        }
 
+        //save settings
+        $bResult = $this->_ConfigManager->addSetting($sAreaName, $aSettings);
+
+        //falls erfolgreich neue Datei erstellen
+        if ($bResult) {
+            //datei mit start/end marker erstellen
+            $newAreaData = $aSettings['content_marker_start'] . "\n" . $aSettings['content_marker_end'];
+            $path = NavTools::root_filter($this->_getPathByAreaName($sAreaName));
+            if (!file_exists($path) && strcmp($path, '') != 0) {
+                if (!file_put_contents($path, $newAreaData)) {
+                    NavTools::error_log('Can not create area file', __METHOD__);
+                }
+            }
+
+        }
+
+        return $bResult;
     }
 
     /**
      * Remove area
-     * @param string $sBereichName name of area
+     * @param string $sAreaName name of area
      * @return success
      */
-    public function deleteBereichSettings($sBereichName){
+    public function deleteAreaSettings($sAreaName){
 
-        return $this->_ConfigManager->removeSetting($sBereichName);
+        return $this->_ConfigManager->removeSetting($sAreaName);
 
     }
 
     /**
      * Update area
-     * @param string $sBereichName name of area
+     * @param string $sAreaName name of area
      * @param array $aSettings associative array of area settings
      * @return success
      * @throws Exception
+     * @internal TODO falls datei sich auch aendert... vllt allgemein BereichFileHandler Klass erstellen.
      */
-    public function updateBereichSettings($sBereichName, $aSettings){
+    public function updateAreaSettings($sAreaName, $aSettings){
+        //vorherige settings temporaer speichern
+        $aOldAreaSettings = $this->getAreaSettings($sAreaName);
+
         //nur erlaubte einstellungen aktualisieren
         $aSettings = array_intersect_key($aSettings, array_flip($this->_aPossibleSettings));
 
@@ -123,22 +150,42 @@ class BereichsManager {
         $newName = NavTools::ifsetor($aSettings['name']);
 
         //falls Name angegeben und nicht die Originalname ist
-        if(isset($newName[0]) && strcmp($newName, $sBereichName)!=0){
+        if(strcmp($newName, $sAreaName)!=0){
 
             //namen zeichen filtrieren
             $newName = NavTools::filterSymbols($newName);
             $aSettings['name'] = $newName;
 
             //testen ob name schon vorhanden
-            $allNames = $this->getBereichList();
+            $allNames = $this->getAreaList();
             if(in_array($newName, $allNames)){
                 throw new Exception('Can not update, name "'. $newName .'" already exists');
             }
-            $this->deleteBereichSettings($sBereichName);
-            $sBereichName = $aSettings['name'];
+
+            $this->_ConfigManager->renameSetting($sAreaName, $newName, TRUE);
+
+            $sAreaName = $newName;
         }
 
-        return $this->_ConfigManager->setSetting($sBereichName, $aSettings);
+
+        //setting speichern,
+        $bResult = $this->_ConfigManager->setSetting($sAreaName, $aSettings);
+
+        // falls erfolgreich und falls marker aktualisiert werden muessen
+        // alte marker in der datei ersetzen
+        $sNewStartMark = $aSettings['content_marker_start'];
+        $sNewEndMark = $aSettings['content_marker_end'];
+        $sOldStartMark = $aOldAreaSettings['content_marker_start'];
+        $sOldEndMark = $aOldAreaSettings['content_marker_end'];
+        $bMarkMustBeChanged = strcmp($sOldStartMark,$sNewStartMark) != 0 ||
+                              strcmp($sOldEndMark,$sNewEndMark) != 0;
+
+        if($bResult && $bMarkMustBeChanged){
+            $bResult &= $this->_replaceMarks($sAreaName, $sOldStartMark, $sNewStartMark);
+            $bResult &= $this->_replaceMarks($sAreaName, $sOldEndMark, $sNewEndMark);
+        }
+
+        return $bResult;
     }
 
 
@@ -146,7 +193,7 @@ class BereichsManager {
      * Add default areas settings to file (fallback)
      * @global type $aBereicheditors
      */
-    public function addDefaultBereichSettings(){
+    public function addDefaultAreaSettings(){
         global $aBereicheditors, $ne2_config_info;
 
         $aSettings = array();
@@ -160,7 +207,7 @@ class BereichsManager {
 
             $aSettingsAdjused = $this->_adjustSettingsArray($aSettings);
 
-            $this->addBereichSettings($sSettingName, $aSettingsAdjused);
+            $this->addAreaSettings($sSettingName, $aSettingsAdjused);
         }
 
 
@@ -187,7 +234,7 @@ class BereichsManager {
      * @return boolean true falls konsistent
      * @internal nicht benutzt?
      */
-    private function _testBereichSettingsConsistence($aSettings, $bAllSettings=FALSE){
+    private function _testAreaSettingsConsistence($aSettings, $bAllSettings=FALSE){
         //TODO pruefen einstellungen die sein MUESSEN? und die optional sind?
         $allPossibleSettings = &$this->_aPossibleSettings;
 
@@ -204,6 +251,64 @@ class BereichsManager {
         //da alle enthalten sind (vorher ueberprueft).
         return true;
     }
+
+    /**
+
+     */
+
+
+    /**
+     * get path of arean $sAreaName
+     * @global array $ne2_config_info
+     * @param string $sAreaName
+     * @return string Path to $sAreaName file
+     */
+    public function _getPathByAreaName($sAreaName) {
+        global $ne2_config_info;
+        $aAreaArray = $this->getAreaSettings($sAreaName);
+
+        return $ne2_config_info['ssi_folder_path'].$aAreaArray['file_name'];
+    }
+
+
+
+    /**
+     * replace one text for another (marks) in file of $sAreaName
+     * @param string $sAreaName
+     * @param string $sOldMark
+     * @param string $sNewMark
+     * @return boolean Success
+     */
+    public function _replaceMarks($sAreaName, $sOldMark, $sNewMark) {
+        $filepath = NavTools::root_filter($this->_getPathByAreaName($sAreaName));
+
+        if(!is_file($filepath)){
+            NavTools::error_log("File: '$filepath' not found");
+            return FALSE;
+        }
+
+        $content = file_get_contents($filepath);
+        if($content === FALSE){
+            NavTools::error_log("Can not get content from '$filepath'", __METHOD__);
+            return FALSE;
+        }
+
+        $pos = strpos($content,$sOldMark);
+        if ($pos !== FALSE) {
+            $content = substr_replace($content,$sNewMark,$pos,strlen($sOldMark));
+        }
+
+        if(file_put_contents($filepath, $content) === FALSE){
+            NavTools::error_log("Can not save to '$filepath'", __METHOD__);
+            return FALSE;
+        }
+
+        return TRUE;
+
+    }
+
+
+
 
 }
 
