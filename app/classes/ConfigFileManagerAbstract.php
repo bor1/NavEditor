@@ -66,13 +66,14 @@ abstract class ConfigFileManager{
      * Sets values $settingValue to $settingName setting
      * @param string $settingName name of setting
      * @param mixed $settingValue value of setting
+     * @param boolean $bCreateIfNoSettingExists [Optional = FALSE] if TRUE missing setting, will be created
      * @param boolean $bMultipleCalls [Optional = FALSE] Set it true if calls more methods at once
      * @return boolean Success
      */
-    public function setSetting($settingName, $settingValue, $bMultipleCalls = FALSE) {
+    public function setSetting($settingName, $settingValue, $bCreateIfNoSettingExists = FALSE, $bMultipleCalls = FALSE) {
         $cache = &$this->_configDataCache;
 
-        if (array_key_exists($settingName, $cache)) {
+        if (array_key_exists($settingName, $cache) || $bCreateIfNoSettingExists) {
             $cache[$settingName] = $settingValue;
         } else {
             NavTools::error_log("No key: '$settingName' found", __METHOD__);
@@ -123,13 +124,14 @@ abstract class ConfigFileManager{
     /**
      * set many settings by $arrayToSet
      * @param array $arrayToSet
+     * @param boolean $bCreateIfNoSettingExists [Optional = FALSE] if TRUE missing settings, will be created
      * @param boolean $bMultipleCalls [Optional = FALSE] Set it true if calls more methods at once
      * @return boolean Success
      */
-    public function setSettingsByArray(array $arrayToSet, $bMultipleCalls = FALSE) {
+    public function setSettingsByArray(array $arrayToSet, $bCreateIfNoSettingExists = FALSE, $bMultipleCalls = FALSE) {
         $bReturn = true;
         foreach ($arrayToSet as $settingName => $sValue) {
-            $bReturn &= $this->setSetting($settingName, $sValue, TRUE);
+            $bReturn &= $this->setSetting($settingName, $sValue,$bCreateIfNoSettingExists, TRUE);
         }
 
         $this->multipleCallsHandler($bMultipleCalls);
