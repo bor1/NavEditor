@@ -11,13 +11,13 @@
 (function() {
 	// Load plugin specific language pack
 	// tinymce.PluginManager.requireLangPack('mitarbeiter');
-	
+
 	tinymce.create('tinymce.plugins.MitarbeiterPlugin', {
 
 		init : function(ed, url) {
 			var ma_img = '<img title="Mitarbeiter" src="' + url +'/img/mitarbeiter.jpg" alt="" />',
 			cls = 'addMitarbeiter',
-			ma_inhalt = '<!--#include virtual="/cgi-bin/univis/mitarbeiter.pl" -->';
+			ma_inhalt = '<!--#include virtual="/vkdaten/tools/univis/mitarbeiter-alle.php" -->';
 			// Register the command
 			ed.addCommand(cls, function() {
 				ed.execCommand('mceInsertContent', 0, ma_img);
@@ -29,7 +29,7 @@
 				cmd : cls,
 				image : url + '/img/ma_ico.gif'
 			});
-			
+
 			ed.onClick.add(function(ed, e) {
 				e = e.target;
 
@@ -41,11 +41,11 @@
 			ed.onNodeChange.add(function(ed, cm, n) {
 				cm.setActive('mitarbeiter', n.nodeName == 'IMG' && ed.dom.hasClass(n, cls));
 			});
-			
+
 			ed.onBeforeSetContent.add(function(ed, o) {
-				o.content = o.content.replace(/<!--#include virtual=\"\/cgi-bin\/univis\/mitarbeiter\.pl\" -->/g, ma_img);
+				o.content = o.content.replace(/<!--#include virtual=\"\/vkdaten\/tools\/univis\/mitarbeiter-alle\.php\" -->/g, ma_img);
 			});
-			
+
 			ed.onPostProcess.add(function(ed, o) {
 				if (o.get){
 					while(o.content.search(ma_img) != -1){
