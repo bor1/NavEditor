@@ -454,6 +454,18 @@ foreach($ne2_menu as $value) {
 
 
 
+$ne2_config_info['symbols_being_replaced'] = array ('ä', 'ö', 'ü', 'ß', "Ä", "Ö", "Ü","ẞ");
+$ne2_config_info['symbols_replacement'] = array ('ae', 'oe', 'ue', 'ss', "AE", "OE", "UE", "SS");
+$ne2_config_info['regex_removed_symbols'] = '/[^a-zA-Z0-9\-_\s]/';
+
+
+//default html includes for every file
+$ne2_config_info['default_includes_js_css'] = Array(
+    "styles.css?".date('Ymdis'), "jquery-1.7.2.min.js", "loading.js"
+);
+
+
+
 
 //dynamisch bereichseditors binden
 //MUST BE SET BEFORE:
@@ -481,19 +493,6 @@ require_once ('classes/BereichsManager.php');
 
     $i++;
 }
-
-
-
-
-$ne2_config_info['symbols_being_replaced'] = array ('ä', 'ö', 'ü', 'ß', "Ä", "Ö", "Ü","ẞ");
-$ne2_config_info['symbols_replacement'] = array ('ae', 'oe', 'ue', 'ss', "AE", "OE", "UE", "SS");
-$ne2_config_info['regex_removed_symbols'] = '/[^a-zA-Z0-9\-_\s]/';
-
-
-//default html includes for every file
-$ne2_config_info['default_includes_js_css'] = Array(
-    "styles.css?".date('Ymdis'), "jquery-1.7.2.min.js", "loading.js"
-);
 
 
 //NavTools::save_execution_time("Config Initialised", $ne2_config_info['debug_execution_file'], $ne2_config_info['debug_time']);
