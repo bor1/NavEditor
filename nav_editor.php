@@ -149,7 +149,7 @@ tinyMCE.init({
 	convert_urls: false,
 
 	theme_advanced_buttons1: "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,formatselect,styleselect,|,bullist,numlist,outdent,indent,blockquote,sub,sup,|,cut,copy,paste,pastetext,pasteword,|,search,replace,|,undo,redo",
-	theme_advanced_buttons2: "tablecontrols,|,link,unlink,anchor,image,cleanup,|,hr,removeformat,visualaid,|,charmap,emotions,media,iespell,|,ltr,rtl,|,fullscreen,help,code,|,nachOben, | ,mitarbeiter, feedimport, varslb",
+	theme_advanced_buttons2: "tablecontrols,|,link,unlink,anchor,image,cleanup,|,hr,removeformat,visualaid,|,charmap,emotions,media,iespell,|,ltr,rtl,|,fullscreen,help,code,|,nachOben, | ,varslb",
 	theme_advanced_buttons3: "",
 
 	theme_advanced_toolbar_location: "top",
