@@ -125,7 +125,7 @@ $ne2_user_modus= Array(
 //TODO save in extra php file, and require everytime? because of require_ONCE by auth.php ... works only for caller php file.
 $ne2_default_file_rights = Array(
 //    'app/do_upload.php' => 'user',
-    'nav_editor.php' => 'redaktor',//test
+//    'nav_editor.php' => 'redaktor',//test
     'conf_editor.php' => 'admin',
 //    'design_editor.php' => 'admin',
     'update.php' => 'admin',
