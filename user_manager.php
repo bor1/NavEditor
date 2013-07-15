@@ -83,7 +83,7 @@ function load_validation(){
         failureMessage: "Passwort muss \u00FCbereinstimmen"
     });
 
-    return true; //LiveValidation.massValidate( [ user_name_pat, ablaufdatum, mail, password2, vorname, nachname] );
+    return LiveValidation.massValidate( [ user_name_pat, ablaufdatum, mail, password2, vorname, nachname] );
 }
 
 function array_diff_key (arr1) {
