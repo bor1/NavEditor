@@ -7,7 +7,7 @@ require_once('app/classes/SimplePie.php');
 $feedUrl = $ne2_config_info['dashboard_feed'];
 
 // call simplepie... get feed info... error handling?
-set_time_limit(15);
+//set_time_limit(15);
 
 $sp = new SimplePie();
 $sp->strip_htmltags(array('base', 'blink', 'body', 'doctype', 'font', 'form', 'frame', 'frameset', 'html', 'iframe', 'input', 'marquee', 'meta', 'noscript', 'style'));
@@ -18,12 +18,12 @@ $sp->set_timeout(15);
 $sp->init();
 $sp->handle_content_type();
 
-if($sp->error()) {
-	echo('[ERR] ' . $sp->error() . '<br />');
-	$sp->__destruct();
-	unset($sp);
-	return FALSE;
-}
+//if($sp->error()) {
+//	echo('[ERR] ' . $sp->error() . '<br />');
+//	$sp->__destruct();
+//	unset($sp);
+//	return FALSE;
+//}
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
@@ -52,27 +52,35 @@ if($sp->error()) {
 </head>
 
 <body id="bd_Dash">
-<div id="wrapper">
-	<h1 id="header"><?php echo($ne2_config_info['app_title']); ?></h1>
-	<div id="navBar">
-		<?php require('common_nav_menu.php'); ?>
-	</div>
-	
-	<div id="contentPanel1">
-		<h2 id="dashbrd_title"><a href="<?php echo($sp->get_permalink()); ?>"><?php echo($sp->get_title()); ?></a></h2>
-<div id="acc">
-<?php foreach($sp->get_items() as $item) { ?>
-	<h3><a href="<?php echo $item->get_permalink(); ?>"><?php echo $item->get_title(); ?></a></h3>
-	<div class="fc">
-		<p class="ftime"><?php echo $item->get_date('j F Y | g:i a'); ?></p>
-		<div class="fcontent"><?php echo $item->get_description(); ?></div>
-	</div>
-<?php } ?>
-</div>
-	</div>
-	
-<?php require('common_footer.php'); ?>	
-</div>
+    <div id="wrapper">
+        <h1 id="header"><?php echo($ne2_config_info['app_title']); ?></h1>
+        <div id="navBar">
+            <?php require('common_nav_menu.php'); ?>
+        </div>
+
+        <div id="contentPanel1">
+            <?php
+            if ($sp->error()) {
+                echo('[ERR] ' . $sp->error() . '<br />');
+                $sp->__destruct();
+                unset($sp);
+            } else {
+                ?>
+                <h2 id="dashbrd_title"><a href="<?php echo($sp->get_permalink()); ?>"><?php echo($sp->get_title()); ?></a></h2>
+                <div id="acc">
+                    <?php foreach ($sp->get_items() as $item) { ?>
+                        <h3><a href="<?php echo $item->get_permalink(); ?>"><?php echo $item->get_title(); ?></a></h3>
+                        <div class="fc">
+                            <p class="ftime"><?php echo $item->get_date('j F Y | g:i a'); ?></p>
+                            <div class="fcontent"><?php echo $item->get_description(); ?></div>
+                        </div>
+                    <?php }
+                } ?>
+            </div>
+        </div>
+
+        <?php require('common_footer.php'); ?>
+    </div>
 </body>
 
 </html>
