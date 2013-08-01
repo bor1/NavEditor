@@ -16,6 +16,8 @@ class NavTools {
      * Filenames, single filename or array of strings.
      * Additional html string (parameter?) after comma.<br />
      * example includeHtml("folder/file.css, version=2", "some.js")
+     * output: <link rel="stylesheet"... /folder/file.css?version=2 ...<br />
+     *         <script type="text/javascript" src=".../some.js"...
      * </p>
      * @return String like <link rel="stylesheet" ... / <script src=" ...
      * for each argument
