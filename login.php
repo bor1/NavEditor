@@ -21,7 +21,6 @@ if (isset($_POST['btnLogin']) && $toWait < 5) {
     $login_result = $um->Login($username, $password);
     if ($login_result == 1) {
         setcookie('ne2_username', $username, time() + $ne2_config_info['session_timeout']);
-        setcookie('ne2_password', $password, time() + $ne2_config_info['session_timeout']);
         setcookie('keep_session_counter', 1, time() + $ne2_config_info['session_timeout']);
 
         $_SESSION['ne2_username'] = $username;
@@ -39,11 +38,10 @@ if (isset($_POST['btnLogin']) && $toWait < 5) {
 
         logadd('loginFail');
         setcookie("ne2_username", "", time() - 1);
-        setcookie("ne2_password", "", time() - 1);
         setcookie('keep_session_counter', "", time() - 1);
         unset($_SESSION['ne2_username']);
         unset($_SESSION['ne2_password']);
-        //falls account abgelaufen ist, extra Fehlermeldung zeigen
+        //falls der account abgelaufen ist, extra Fehlermeldung zeigen
         if ($login_result == -1) {
             echo '<script type="text/javascript">';
             echo 'alert("Account is abgelaufen!")';

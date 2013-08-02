@@ -77,18 +77,15 @@ namespace auth {
         $current_user_pwd = NULL;
 
         $has_session = FALSE;
-        $has_cookie = FALSE;
 
         $loginResult = 'FAIL'; //values: FAIL, OK, WAIT
-        //check if session or cookie is activated
+        //check if session is activated
         if (isset($_SESSION['ne2_username'])) {
             $has_session = TRUE;
-        } elseif (isset($_COOKIE['ne2_username'])) {
-            $has_cookie = TRUE;
         }
 
-        //if cookie or session is activated
-        if ($has_session || $has_cookie) {
+        //if session is activated
+        if ($has_session) {
             //waitTimeForLogin ist eine aufwaendige function, dafuer aber mehr sicherheit,
             //da man theoretisch die session/cookie gesp. passwoerter immer ersetzen kann.
             //Ob es sich lohnt..
@@ -105,9 +102,6 @@ namespace auth {
                 if ($has_session) {
                     $current_user_name = $_SESSION['ne2_username'];
                     $current_user_pwd = $_SESSION['ne2_password'];
-                } else { //$has_cookie
-                    $current_user_name = $_COOKIE['ne2_username'];
-                    $current_user_pwd = $_COOKIE['ne2_password'];
                 }
 
                 //try to login
@@ -127,14 +121,10 @@ namespace auth {
                         $is_admin = TRUE;
                     }
 
-                    //set new cookie
-                    setcookie('ne2_username', $current_user_name, time() + $ne2_config_info['session_timeout']);
-                    setcookie('ne2_password', $current_user_pwd, time() + $ne2_config_info['session_timeout']);
-
                     //add log for keep_session.php //TODO remove, no need?
                     $keep_session_prog = $ne2_config_info['app_path_without_host'] . "app/keep_session.php";
                     if (($_SERVER['PHP_SELF'] == $keep_session_prog)) {
-                        $message = ($has_session) ? '(session)' : '(cookie)';
+                        $message = ($has_session) ? '(session)' : '(not session O_o)';
                         $message .= " user: " . $current_user_name;
                         if (isset($_COOKIE['keep_session_counter'])) {
                             $message .= " count: " . $_COOKIE['keep_session_counter'];
