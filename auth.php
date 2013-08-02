@@ -148,7 +148,7 @@ namespace auth {
                     //test access for the requested file
                     $requested_file_path = str_replace($ne2_config_info['app_path_without_host'], "", $_SERVER["SCRIPT_NAME"]);
                     if (!$um->isAllowAccesPHP($requested_file_path, $current_user_name)) {
-                        auth401('You dont have permission for this file');
+                        access_denied('You dont have permission for this file');
                     }
                     break;
                 case 'WAIT': //if have to wait
@@ -171,9 +171,9 @@ namespace auth {
 
 namespace {
 
-    function auth401($msg = 'Contact SERVER_ADMIN for your account information.') {
-        header('WWW-Authenticate: Basic realm="NavEditor2"');
-        header('HTTP/1.0 401 Unauthorized');
+    function access_denied($msg = 'Contact SERVER_ADMIN for your account information.') {
+//        header('WWW-Authenticate: Basic realm="NavEditor2"');
+//        header('HTTP/1.0 401 Unauthorized');
         $backlink = '<A HREF="javascript:javascript:history.go(-1)">Click here to go back to previous page</A>';
         echo $msg, '<br />', $backlink;
         exit;
