@@ -2,18 +2,11 @@
 require_once('app/config.php');
 require_once('app/classes/UserMgmt_Class.php');
 require_once('app/log_funcs.php');
+require_once ('app/sessions.php');
 
-ini_set("session.use_only_cookies", "on");
-session_start();
-
-$cur_user = '';
-if (isset($_SESSION['ne2_username'])) {
-    $cur_user = $_SESSION['ne2_username'];
-}
-
-
-function removeLockFiles($dir) {
-    global $cur_user, $ne2_config_info;
+function removeLockFiles($dir, $cur_user) {
+    global $ne2_config_info;
+    if(!$cur_user){return;}
     if (is_dir($dir)) {
         if ($dh = opendir($dir)) {
             while (FALSE !== ($file = readdir($dh))) {
@@ -21,7 +14,7 @@ function removeLockFiles($dir) {
                 if (!in_array($file, $ne2_config_info['nologoupdate_dir'])) {
                     if (is_dir($dir . '/' . $file)) {
                         // recursively
-                        removeLockFiles($dir . '/' . $file);
+                        removeLockFiles($dir . '/' . $file, $cur_user);
                     } else {
                         $lf = $dir . '/' . $file . '.lock';
                         if (file_exists($lf)) {
@@ -38,17 +31,23 @@ function removeLockFiles($dir) {
     }
 }
 
+\sessions\setSession();
+
+$cur_user = '';
+if (isset($_SESSION['ne2_username'])) {
+    $cur_user = $_SESSION['ne2_username'];
+}
+
 // remoive self's .lock files
 $root_path = $_SERVER['DOCUMENT_ROOT'];
 
-removeLockFiles($root_path);
+removeLockFiles($root_path, $cur_user);
 
 // clean cookies
-setcookie('ne2_username', '', time() - 7200);
-setcookie('keep_session_counter', "", time() - 7200);
+NavTools::unsetAllCookies();
 
-unset($_SESSION['ne2_username']);
-unset($_SESSION['ne2_password']);
+
+\sessions\unsetSession();
 
 header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past

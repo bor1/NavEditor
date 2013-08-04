@@ -31,10 +31,10 @@ class NavTools {
         //if no arguments, set to "default".
         if (func_num_args() == 0) {
             $arrayFiles = Array('default');
-        //else if first argument is an array, then use args of this array
+            //else if first argument is an array, then use args of this array
         } elseif (is_array(func_get_arg(0))) {
             $arrayFiles = func_get_arg(0);
-        //else use each argument
+            //else use each argument
         } else {
             $arrayFiles = func_get_args();
         }
@@ -236,6 +236,31 @@ class NavTools {
             $callerFunc = $callerFunc . ': ';
         }
         error_log(date('Y-m-d H:m') . ' - ' . $callerFunc . $error_text . "\n", 3, $ne2_config_info['error_log_file']);
+    }
+
+
+    /**
+     * removes ALL or only given in $cookies_list cookies
+     * @param array $cookies_list [Optional] explicit cookie-names to remove
+     */
+    public static function unsetAllCookies(array $cookies_list = NULL) {
+        if (is_null($cookies_list)) {
+            //load ALL cookies to unset
+            if (isset($_SERVER['HTTP_COOKIE'])) {
+                $cookies = explode(';', $_SERVER['HTTP_COOKIE']);
+                foreach ($cookies as $cookie) {
+                    $parts = explode('=', $cookie);
+                    $name = trim($parts[0]);
+                    $cookies_list[] = $name;
+                }
+            }
+        }
+
+        //remove routine
+        foreach ($cookies_list as $cookieToRemove) {
+            setcookie($cookieToRemove,'',1);
+            unset($_COOKIE[$cookieToRemove]);
+        }
     }
 
 }

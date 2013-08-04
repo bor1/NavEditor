@@ -4,7 +4,6 @@
 function createSubMenu($num)   {
     global $ne2_menu;
     global $g_current_user_name;
-//    global $is_admin;
 
     $actualPage = $_SERVER['PHP_SELF'];
 //    $actualPath = $_SERVER['REQUEST_URI'];

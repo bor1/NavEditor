@@ -3,9 +3,8 @@
 require_once('app/config.php');
 require_once('app/classes/UserMgmt_Class.php');
 require_once('app/log_funcs.php');
+require_once ('app/sessions.php');
 
-ini_set("session.use_only_cookies", "on");
-session_set_cookie_params($ne2_config_info['session_timeout']);
 session_start();
 
 $um = new UserMgmt();
@@ -21,7 +20,6 @@ if (isset($_POST['btnLogin']) && $toWait < 5) {
     $login_result = $um->Login($username, $password);
     if ($login_result == 1) {
         setcookie('ne2_username', $username, time() + $ne2_config_info['session_timeout']);
-        setcookie('keep_session_counter', 1, time() + $ne2_config_info['session_timeout']);
 
         $_SESSION['ne2_username'] = $username;
         $_SESSION['ne2_password'] = $password;
@@ -37,10 +35,8 @@ if (isset($_POST['btnLogin']) && $toWait < 5) {
     } else {
 
         logadd('loginFail');
-        setcookie("ne2_username", "", time() - 1);
-        setcookie('keep_session_counter', "", time() - 1);
-        unset($_SESSION['ne2_username']);
-        unset($_SESSION['ne2_password']);
+        NavTools::unsetAllCookies();
+        \sessions\unsetSession();
         //falls der account abgelaufen ist, extra Fehlermeldung zeigen
         if ($login_result == -1) {
             echo '<script type="text/javascript">';

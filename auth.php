@@ -11,6 +11,7 @@ namespace auth {
     require_once('app/config.php');
     require_once('app/classes/UserMgmt_Class.php');
     require_once('app/log_funcs.php');
+    require_once ('app/sessions.php');
 
     /**
      * Call if login failed
@@ -20,7 +21,6 @@ namespace auth {
         logadd('loginFail');
         exit;
     }
-
 
     /**
      * Go to login page.
@@ -52,16 +52,14 @@ namespace auth {
         return $allowthis;
     }
 
-
     //global variables
     global $ne2_config_info;
     global $g_current_user_permission;
     global $g_current_user_name;
     global $is_admin;
 
-    ini_set("session.use_only_cookies", "on");
-    session_set_cookie_params($ne2_config_info['session_timeout']); // don't know if works...
-    session_start();
+    //start or refresh session
+    \sessions\setSession();
 
     $um = new \UserMgmt();
 
@@ -76,64 +74,43 @@ namespace auth {
         $current_user_name = NULL;
         $current_user_pwd = NULL;
 
-        $has_session = FALSE;
-
         $loginResult = 'FAIL'; //values: FAIL, OK, WAIT
-        //check if session is activated
-        if (isset($_SESSION['ne2_username'])) {
-            $has_session = TRUE;
-        }
+        //waitTimeForLogin ist eine aufwaendige function, dafuer aber mehr sicherheit,
+        //da man theoretisch die session/cookie gesp. passwoerter immer ersetzen kann.
+        //Ob es sich lohnt..
+        $toWait = waitTimeForLogin();
+        if ($toWait > 5) {
+            //goToLogin();
+            //need to wait, too many login tries
+            $loginResult = 'WAIT';
 
-        //if session is activated
-        if ($has_session) {
-            //waitTimeForLogin ist eine aufwaendige function, dafuer aber mehr sicherheit,
-            //da man theoretisch die session/cookie gesp. passwoerter immer ersetzen kann.
-            //Ob es sich lohnt..
-            $toWait = waitTimeForLogin();
-            if ($toWait > 5) {
-//                goToLogin();
-                //need to wait, too many login tries
-                $loginResult = 'WAIT';
+            //dont need to wait, can try to login
+        } else {
 
-                //dont need to wait, can try login
-            } else {
+            //get username and password
+            $current_user_name = \NavTools::ifsetor($_SESSION['ne2_username'],'');
+            $current_user_pwd = \NavTools::ifsetor($_SESSION['ne2_password'],'');
 
-                //get username and password
-                if ($has_session) {
-                    $current_user_name = $_SESSION['ne2_username'];
-                    $current_user_pwd = $_SESSION['ne2_password'];
-                }
 
-                //try to login
-                if ($um->Login($current_user_name, $current_user_pwd) != 1) { // login failed
-//                    login_failed();
-                    $loginResult = 'FAIL';
-                } else { // login ok
-                    $loginResult = 'OK';
+            //try to login
+            if ($um->Login($current_user_name, $current_user_pwd) != 1) { // login failed
+                //login_failed();
+                $loginResult = 'FAIL';
+            } else { // login ok
+                $loginResult = 'OK';
 
-                    //routine for logged in user
+                //routine for logged in user
 
-                    $g_current_user_permission = $um->GetPermission($current_user_name);
-                    $g_current_user_name = $current_user_name;
+                $g_current_user_permission = $um->GetPermission($current_user_name);
+                $g_current_user_name = $current_user_name;
 
-                    //set $is_admin, fallback. TODO remove. replace with permissions check
-                    if (strcmp($current_user_name, \NavTools::getServerAdmin()) == 0) {
-                        $is_admin = TRUE;
-                    }
-
-                    //add log for keep_session.php //TODO remove, no need?
-                    $keep_session_prog = $ne2_config_info['app_path_without_host'] . "app/keep_session.php";
-                    if (($_SERVER['PHP_SELF'] == $keep_session_prog)) {
-                        $message = ($has_session) ? '(session)' : '(not session O_o)';
-                        $message .= " user: " . $current_user_name;
-                        if (isset($_COOKIE['keep_session_counter'])) {
-                            $message .= " count: " . $_COOKIE['keep_session_counter'];
-                        }
-                        logadd('sessionup', $message);
-                    }
+                //set $is_admin, fallback. TODO remove. replace with permissions check
+                if (strcmp($current_user_name, \NavTools::getServerAdmin()) == 0) {
+                    $is_admin = TRUE;
                 }
             }
         }
+
 
 
 
@@ -172,12 +149,9 @@ namespace auth {
 namespace {
 
     function access_denied($msg = 'Contact SERVER_ADMIN for your account information.') {
-//        header('WWW-Authenticate: Basic realm="NavEditor2"');
-//        header('HTTP/1.0 401 Unauthorized');
         $backlink = '<A HREF="javascript:javascript:history.go(-1)">Click here to go back to previous page</A>';
         echo $msg, '<br />', $backlink;
         exit;
-//        \auth\login_failed();
     }
 
 }

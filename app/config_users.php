@@ -126,14 +126,20 @@ $ne2_user_modus= Array(
 $ne2_default_file_rights = Array(
 //    'app/do_upload.php' => 'user',
 //    'nav_editor.php' => 'redaktor',//test
-    'conf_editor.php' => 'admin',
+
 //    'design_editor.php' => 'admin',
-    'file_editor.php' => 'redakteur',
-    'default_editor.php' => 'redakteur',
+    'file_editor.php' => 'redaktor',
+    'default_editor.php' => 'redaktor',
+    'ma_editor.php' => 'redaktor',
     'update.php' => 'admin',
     'user_manager.php' => 'admin',
+    'bereiche_manager.php'=> 'admin',
+    'conf_editor.php' => 'admin',
+    'website_editor.php' => 'admin',
     'app/create_conf.php' => 'admin',
 //    'app/edit_design.php' => 'admin',
-    'app/live_update.php' => 'admin',
+    'app/live_update.php' => 'admin'
 );
+
+
 ?>
