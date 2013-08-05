@@ -4,7 +4,7 @@
  * Authentification
  * requires config.php, UserMgmt_Class.php, log_funcs.php, NavTools.php
  *
- * @TODO save user to $_SESSION by login, if saved, ignore login routine by auth.php.
+ * @TODO +Performance: check user right only every 30 minuts for example...
  */
 
 namespace auth {
@@ -42,8 +42,8 @@ namespace auth {
         $uri = $_SERVER['REQUEST_URI'];
         $appuri = $ne2_config_info['app_path_without_host'];
         $allowthis = FALSE;
-        for ($i = 0; $i < count($ne2_config_info['nologin_file']); $i++) {
-            $thisuri = $appuri . $ne2_config_info['nologin_file'][$i];
+        foreach ($ne2_config_info['nologin_file'] as $allowedFile) {
+            $thisuri = $appuri . $allowedFile;
             if (strcmp($uri, $thisuri) == 0) {
                 $allowthis = TRUE;
                 break;
@@ -123,7 +123,7 @@ namespace auth {
             switch (strtoupper($loginResult)) {
                 case 'OK'://if logged in
                     //test access for the requested file
-                    $requested_file_path = str_replace($ne2_config_info['app_path_without_host'], "", $_SERVER["SCRIPT_NAME"]);
+                    $requested_file_path = str_replace($ne2_config_info['app_path_without_host'], '', $_SERVER["SCRIPT_NAME"]);
                     if (!$um->isAllowAccesPHP($requested_file_path, $current_user_name)) {
                         access_denied('You dont have permission for this file');
                     }
