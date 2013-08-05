@@ -80,8 +80,7 @@ if ($oper == "sendmail") {
         $message = "Mail zu oft angefordert, bitte warten Sie noch: ";
     } else {
         $admin_mail = $_SERVER['SERVER_ADMIN'];
-        $key = (string) (rand(0, 1000000)) . $admin_mail;
-        $key = md5($key);
+        $key = md5(uniqid(rand(), true));
         $md5key = md5($key);
         keyerstellen($md5key);
         sendmail($admin_mail, $key);
@@ -242,7 +241,7 @@ if ($oper == "sendmail") {
                         <label for="txtPwRe"style="width:20em;display:inline-block;">Best&auml;tigung des Passworts:</label>
                         <input type="password" id="txtPwRe" name="txtPwRe" size="16" class="textBox" /><br/><br/>
                         <input type="submit" id="btnPwSet" name="btnPwSet" class="button" value="aktivieren" />
-                        <input type="hidden" id="key" name="key" value="<?php echo $_GET['key'] ?>">
+                        <input type="hidden" id="key" name="key" value="<?php echo htmlspecialchars($_GET['key']) ?>">
                     </form>
 
                     <?php
