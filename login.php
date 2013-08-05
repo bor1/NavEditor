@@ -5,7 +5,7 @@ require_once('app/classes/UserMgmt_Class.php');
 require_once('app/log_funcs.php');
 require_once ('app/sessions.php');
 
-session_start();
+\sessions\setSession();
 
 $um = new UserMgmt();
 if (is_null($um->GetUsers())) {
