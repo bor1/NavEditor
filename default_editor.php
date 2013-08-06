@@ -36,15 +36,13 @@ function has_help_file() {
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><?php echo ($thiseditor["title"]); ?> bearbeiten - <?php echo($ne2_config_info['app_titleplain']); ?></title>
-
-<?php
-    echo NavTools::includeHtml("default",
-            "nav_tools.js", //todo put to default?
-            "../tiny_mce/tiny_mce.js", //eigentlich sollte in JS verzeichnis sein..
-            "json2.js"
-            );
-?>
-
+<link rel="stylesheet" type="text/css" href="css/bootstrap.css?<?php echo date('Ymdis'); ?>" />
+<link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.css?<?php echo date('Ymdis'); ?>" />
+<link rel="stylesheet" type="text/css" href="css/style.css?<?php echo date('Ymdis'); ?>" />
+<script src="js/jquery-1.10.1.js" type="text/javascript"></script>
+<script src="js/bootstrap.js" type="text/javascript"></script>
+<script src="js/tinymce/tinymce.min.js"></script>
+<script src="js/nav_tools.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 var tinymceReady = false;
@@ -54,12 +52,17 @@ var helpText = "";
 tinyMCE.init({
 	forced_root_block : '',
 	mode: "textareas",
-	theme: "advanced",
 	language: "de",
-	skin: "o2k7",
+	plugins: "image link code table preview mitarbeiter feedimport ssiInclude",
+	menubar: false,
+	toolbar1: "undo redo | cut copy paste | link image table | outdent indent | code | preview | mitarbeiter | feedimport",
+	toolbar2: "fontselect fontsizeselect | styleselect | alignleft aligncenter alignright alignjustify | bold italic underline strikethrough | bullist numlist",
+	//theme: "advanced",
+	//language: "de",
+	//skin: "o2k7",
 	relative_urls: false,
 	convert_urls: false,
-	plugins: "safari,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template",
+	//plugins: "safari,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template",
 	theme_advanced_styles: "infologo",
 	theme_advanced_toolbar_location: "top",
 	theme_advanced_toolbar_align: "left",
@@ -121,56 +124,75 @@ $(document).ready(function() {
 	});
 
 	// help
-	$("#helpHand a").click(function() {
-		if(helpText == "") {
+	$(".help-container .fetch").click(function() {
+		var $this = $(this),
+			content = $this.siblings(".hover-popover").find("content").html(),
+			showContent = function(content) {
+				$this.siblings(".hover-popover").show().find(".content").html(content);
+			};
+
+		console.log(content);
+
+		if(content === undefined || content == "") {
 			$.get("app/get_help.php?r=" + Math.random(), {
 				"page_name": "<?php echo ($thiseditor['help_page_name']); ?>"
-			}, function(rdata){
-				helpText = rdata;
-				$("#helpCont").html(helpText);
-				$("#helpCont").slideToggle("fast");
-			});
+			}, showContent);
 		} else {
-			$("#helpCont").slideToggle("fast");
+			showContent(content);
 		}
+	});
+
+	$(".hover-popover .dismiss").click(function() {
+		$(this).closest(".hover-popover").hide();
 	});
 });
 </script>
 </head>
 
 <body id="bd_Inhal">
-    <div id="wrapper">
-        <h1 id="header"><?php echo($ne2_config_info['app_title']); ?></h1>
-        <div id="navBar">
-            <?php require('common_nav_menu.php'); ?>
-        </div>
+	<?php require('common_nav_menu.php'); ?>
+
+    <div class="container" id="wrapper">
 
         <div id="contentPanel1">
 
-            <?php
-            // help
-            if (has_help_file()) {
-                ?>
-                <div id="helpCont"></div>
-                <div id="helpHand"><a href="javascript:;">Hilfe</a></div>
-                <?php
-            } else {
-                ?>
-                <div id="hmmDesignDiesIfNoHelpFileAndNoThisDivDontKnowWhyMaybeLaterSomeoneFixThisLol">&nbsp;</div>
-            <?php } ?>
             <form action="" method="post" name="frmEdit" id="frmEdit">
                 <fieldset>
-                    <legend><?php echo ($thiseditor["title"]); ?> bearbeiten</legend>
-                    <label for="txtContent">Inhalt:</label>
-                    <textarea id="txtContent" name="txtContent" cols="160" rows="25" class="textBox"></textarea>
-                    <hr size="1" noshade="noshade" />
-                    <input type="button" id="btnUpdate" name="btnUpdate" value="Update" class="button" />
+                	<div class="page-header">
+	                    <h3 class="page-header"><?php echo ($thiseditor["title"]); ?> bearbeiten</h3>
+	                    <div class="pull-right">
+							 <?php
+				            	// help
+				            	if (has_help_file()) {
+				            ?>
+				            	<div class="popover-container">
+									<a class="fetch btn btn btn-primary btn-light" href="javascript:void(0);"><i class="icon-white">?</i> Hilfe</a>
+									<div class="hover-popover">
+										<div class="header clearfix">
+											<h4>Hilfe</h4>
+											<div class="pull-right">
+												<a class="dismiss btn btn-black-white" href="javascript:void(0);">Ok</a>
+
+											</div>
+										</div>
+
+										<div class="content"></div>
+									</div>
+								</div>
+							<?php
+				            	} 
+				            ?>
+				            <a href="javascript:void(0);" class="btn btn-success btn-light" id="btnUpdate" name="btnUpdate" ><i class="icon-white icon-ok"></i> Speichern</a>
+				        </div>
+                    </div>
+
+                    <textarea id="txtContent" class="padding-top" name="txtContent" cols="160" rows="25" class="textBox"></textarea>
                 </fieldset>
             </form>
         </div>
-
-        <?php require('common_footer.php'); ?>
     </div>
+
+    <?php require('common_footer.php'); ?>
 </body>
 
 </html>

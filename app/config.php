@@ -14,7 +14,7 @@ if(substr($_SERVER['DOCUMENT_ROOT'],-1)=='/'){
 
 // the path of NavEditor2, by default: $_SERVER['DOCUMENT_ROOT'] . '/vkdaten/tools/NavEditor2/'
 // please include trailing slash!
-$ne2_config_info['app_path_without_host'] = '/vkdaten/tools/NavEditor2/';
+$ne2_config_info['app_path_without_host'] = '/vkdaten/tools/NavEditor3/';
 $ne2_config_info['app_path'] = $_SERVER['DOCUMENT_ROOT'] .$ne2_config_info['app_path_without_host'];
 $ne2_config_info['log_path'] = $_SERVER['DOCUMENT_ROOT'] .$ne2_config_info['app_path_without_host'] . "log/";
 $ne2_config_info['cgi-bin_path'] = NavTools::simpleResolvePath($_SERVER['DOCUMENT_ROOT'] . "/../cgi-bin/");
@@ -36,13 +36,13 @@ $ne2_config_info['upload_dir'] = $_SERVER['DOCUMENT_ROOT'] . '';
 
 
 // current public title with html
-$ne2_config_info['app_title'] = 'NavEditor 2 <sup>Delta</sup>';
+$ne2_config_info['app_title'] = 'NavEditor 3 <sup>Alpha</sup>';
 
 // current public title with html
-$ne2_config_info['app_titleplain'] = 'NavEditor 2 Delta';
+$ne2_config_info['app_titleplain'] = 'NavEditor 3 Alpha';
 
 // current version
-$ne2_config_info['version'] = '2.13.0605';
+$ne2_config_info['version'] = '3.13.0615';
 
 // update host
 $ne2_config_info['update_url'] = 'http://www.vorlagen.uni-erlangen.de/downloads/naveditor/';
@@ -495,7 +495,7 @@ $ne2_config_info['regex_removed_symbols'] = '/[^a-zA-Z0-9\-_\s]/';
 
 //default html includes for every file
 $ne2_config_info['default_includes_js_css'] = Array(
-    "styles.css?".date('Ymdis'), "jquery-1.7.2.min.js", "loading.js"
+    "style.css?".date('Ymdis'), "jquery-1.10.1.min.js", "loading.js", "bootstrap.css", "bootstrap-responsive.css", "bootstrap.js"
 );
 
 

@@ -4,32 +4,35 @@ require_once ('auth.php');
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
 	<title>Credits - <?php echo($ne2_config_info['app_titleplain']); ?></title>
-	<link rel="stylesheet" type="text/css" href="css/styles.css?<?php echo date('Ymdis'); ?>" />
-	<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
-	<script type="text/javascript" src="js/json2.js"></script>
+
+    <?php echo NavTools::includeHtml("default"); ?>
+
+
 </head>
-<body id="bd_Credits">
-	<div id="wrapper">
-			<h1 id="header"><?php echo($ne2_config_info['app_title']); ?></h1>
-		<div id="navBar">
-			<?php
-			require ('common_nav_menu.php');
-			?>
-		</div>
-		<div id="textbereich">
 
 
-				<p>
+<body>
+    <?php
+        require ('common_nav_menu.php');
+    ?>
+    <div class="container">
+
+
+            <div class="row page">
+                
+                <h2>Entwickler</h2>
+
+                <p>
 		
 					Der <?php echo($ne2_config_info['app_title']); ?> wurde im Rahmen des <a class="extern" href="http://www.vorlagen.uni-erlangen.de">Webbaukastens der Friedrich-Alexander-Universit&auml;t</a>
 					entwickelt. 
 					Folgende Personen sind und waren beteiligt:					
 														
 				</p>							
-				
-				<h2>Entwickler</h2>
 				
 				<ul>
 								
@@ -95,11 +98,12 @@ require_once ('auth.php');
 					<li><a class="extern" href="http://users.tpg.com.au/j_birch/plugins/superfish//">jQuery Plugin Superfish</a></li>
 					<li><a class="extern" href="http://www.tinymce.com/">TinyMCE Editor</a></li>
 				</ul>
-				
-				
-								
-		</div>
-	</div>
-	<?php require('common_footer.php'); ?>	
+            </div>
+
+    </div>
+
+    <?php require('common_footer.php'); ?>
+
 </body>
+
 </html>

@@ -113,19 +113,36 @@ var _editable_user_params_array = array_diff_key(_empty_user_data_array, _not_ed
 
 function loadContentCallback(data) {
 
-        _user_data_array = data;
+    var users = new Array(),
+        users_ul = $("<ul>").addClass("user-list");
 
-        var ulhtml = "<ul>";
-        for(var i = 0; i < data.length; i++) {
-		ulhtml += "<li><button class='user_button' id="+ i +">"+data[i].user_name+"</button></li>";
-	}
-        ulhtml += "<li><button id='addNewUser'>Add new user</button></li>";
-        ulhtml += "</ul>";
-	$("#userList").html(ulhtml);
+     _user_data_array = data;
 
-        loadFilePermTree();
+    $.each(data, function (index, value) {
+        var li = $("<li>"),
+            icon = $('<i class="icon-user">'),
+            a = $('<a href="javascript:void(0);">').addClass("user_button").attr("id", index).html(value.user_name);
 
-        reInitUi();
+        console.log(value);
+        li.html(new Array(icon, a));
+        users.push(li);
+    });
+
+    users_ul.html(users);
+    $("#userList").html(users_ul);
+
+    loadFilePermTree();
+
+    reInitUi();
+
+ //        _user_data_array = data;
+
+ //        var ulhtml = "<ul>";
+ //        for(var i = 0; i < data.length; i++) {
+	// 	ulhtml += "<li><button class='user_button' id="+ i +">"+data[i].user_name+"</button></li>";
+	// }
+ //        ulhtml += "<li><button id='addNewUser'>Add new user</button></li>";
+ //        ulhtml += "</ul>";
 }
 
 function loadFilePermTree(){
@@ -206,7 +223,7 @@ function fillFieldsWithData(dataArray){
 
 
     //set datepicker for some of elements.  Bugged. need to dynamically recreate on focus.
-    $('#userOptions :input[name="ablaufdatum"]').live('focus', function(){
+    $(document).on('focus', '#userOptions :input[name="ablaufdatum"]',  function(){
         $(this).datepicker( "destroy" );
         var date = $.datepicker.parseDate('dd/mm/yy', $(this).val());
         $(this).datepicker();
@@ -525,7 +542,7 @@ $(document).ready(function() {
         "json_oper": "get_users"
     }, loadContentCallback);
 
-    $("#userPermission input").live('change', function(){
+    $(document).on('change', "#userPermission input", function(){
 
         var checkedYesNo = $(this).prop('checked');
         var thisRef = $(this).val();
@@ -534,9 +551,15 @@ $(document).ready(function() {
 
     });
 
-    $("#userList .user_button").live('click', function(){
+    $(document).on('click', "#userList .user_button", function(){
         if(checkInputChange()){return;}
-        var userArray = _user_data_array[$(this).attr("id")]
+
+        var $this = $(this),
+            userArray = _user_data_array[$this.attr("id")];
+        
+        $this.parent().addClass("active");
+        $this.parent().siblings().removeClass("active");
+
         fillFieldsWithData(userArray);
         _currentValues['user'] = userArray['user_name'];
         //ui bug ? ..
@@ -544,10 +567,10 @@ $(document).ready(function() {
         //addContentToElement($('#userOptions'), createButtonHtml('removeUser', 'Delete User'));
         checkInputChange(false);
 
-        selectMenu($(this));
+        selectMenu($this);
     });
 
-    $("#userList #addNewUser").live('click',function() {
+    $(document).on('click', "#userList #addNewUser", function() {
         if(checkInputChange()){return;}
         fillFieldsWithData(_empty_user_data_array);
         clearTempButtons();
@@ -557,7 +580,7 @@ $(document).ready(function() {
         selectMenu($(this));
     });
 
-    $("#usermanager #createUser").live('click',function() {
+    $(document).on('click', "#usermanager #createUser", function() {
         if(!checkForm(true)){
             return;
         }
@@ -574,7 +597,7 @@ $(document).ready(function() {
 
     });
 
-    $("#usermanager #updateUser").live('click',function() {
+    $(document).on('click', "#usermanager #updateUser", function() {
         if(!checkForm()){
             return;
         }
@@ -598,7 +621,7 @@ $(document).ready(function() {
 
     });
 
-    $("#usermanager #removeUser").live('click',function() {
+    $(document).on('click', "#usermanager #removeUser", function() {
         var userName = _currentValues['user'];
         if(confirm(unescape('Den Benutzer: \"'+ userName + '" l%F6schen?'))){
               if(admin_uname == userName) {
@@ -612,7 +635,7 @@ $(document).ready(function() {
         }
     });
 
-    $('#usermanager').find(':input').live('change', function(){
+    $('#usermanager').find(':input').on('change', function(){
        if(_currentValues['user'] != null){
            if( _currentValues['user'].length > 0){
                _somethingChanged = true;
@@ -621,18 +644,26 @@ $(document).ready(function() {
     });
 
     // help
-    $("#helpHand a").click(function() {
-        if(helpText == "") {
+    $(".help-container .fetch").click(function() {
+        var $this = $(this),
+            content = $this.siblings(".hover-popover").find("content").html(),
+            showContent = function(content) {
+                $this.siblings(".hover-popover").show().find(".content").html(content);
+            };
+
+        console.log(content);
+
+        if(content === undefined || content == "") {
             $.get("app/get_help.php?r=" + Math.random(), {
-                "page_name": "user_manager"
-            }, function(rdata){
-                helpText = rdata;
-                $("#helpCont").html(helpText);
-                $("#helpCont").slideToggle("fast");
-            });
+                "page_name": "design_editor"
+            }, showContent);
         } else {
-            $("#helpCont").slideToggle("fast");
+            showContent(content);
         }
+    });
+
+    $(".hover-popover .dismiss").click(function() {
+        $(this).closest(".hover-popover").hide();
     });
 
     $(window).resize(function() {
@@ -644,31 +675,77 @@ $(document).ready(function() {
 </head>
 
 <body id="bd_User">
-<div id="wrapper">
-	<h1 id="header"><?php echo($ne2_config_info['app_title']); ?></h1>
-	<div id="navBar">
-		<?php require('common_nav_menu.php'); ?>
-	</div>
+    <?php require('common_nav_menu.php'); ?>
 
-    <div id="contentPanel1222">
-        <?php
-        // help
-        if (has_help_file()) {
-            ?>
-            <div id="helpCont">.</div>
-            <div id="helpHand"><a href="javascript:;">Hilfe</a></div>
-            <?php
-        }
-        ?>
-        <div id="usermanager" >
-            <div id="userList"></div>
-            <div id="userPermission"></div>
-            <div id="userOptions"></div>
+    <div class="container">
+        <div class="page-header">
+            <h3 class="page-header">Benutzerverwaltung</h3>
+            <div class="pull-right">
+                
+                 <?php
+                    // help
+                    if (has_help_file()) {
+                ?>
+                    <div class="help-container">
+                        <a class="fetch btn btn btn-primary btn-light" href="javascript:void(0);"><i class="icon-white">?</i> Hilfe</a>
+                        <div class="hover-popover">
+                            <div class="header clearfix">
+                                <h4>Hilfe</h4>
+                                <div class="pull-right">
+                                    <a class="dismiss btn btn-black-white" href="javascript:void(0);">Ok</a>
+
+                                </div>
+                            </div>
+
+                            <div class="content"></div>
+                        </div>
+                    </div>
+                <?php
+                    } 
+                ?>
+            </div>
+        </div>
+
+        <div  class="row padding-top" id="contentPanel1222">
+            <div id="usermanager" >
+                <div class="span3">
+                    <h4>Nutzerliste</h4>
+
+                    <div id="userList" class="user-list"> </div>
+                </div>
+                <div class="span9 page" id="userDetails">
+
+                    <div class="page-header">
+                        <h4 class="page-header">uq04idat</h4>
+
+                        <div class="pull-right">
+                                    <a class="dismiss btn btn-light btn-danger" href="javascript:void(0);"><i class="icon-white icon-trash"></i> Nutzer L&ouml;schen</a>
+
+                                </div>
+                    </div>
+
+                    <div class="tabbable"> <!-- Only required for left/right tabs -->
+                      <ul class="nav nav-tabs nav-tabs-custom">
+                        <li class="active"><a href="#options" data-toggle="tab">Details Bearbeiten</a></li>
+                        <li><a href="#permissions" data-toggle="tab">Berechtigungen Einstellen</a></li>
+                      </ul>
+                      <div class="tab-content">
+                        <div class="tab-pane active" id="options">
+                            <div id="userOptions"></div>
+                        </div>
+                        <div class="tab-pane" id="permissions">
+                            <div id="userPermission"></div>
+                        </div>
+
+                      </div>
+                    </div>
+                    
+                </div>
+            </div>
         </div>
     </div>
 
-<?php require('common_footer.php'); ?>
-</div>
+    <?php require('common_footer.php'); ?>
 </body>
 
 </html>

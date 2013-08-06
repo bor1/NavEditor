@@ -27,8 +27,8 @@ var NavTools = new function(){
     this.set_settings = function(s){
         if( !s ){var s = {};}
         settings.current_host = location.protocol + "//" + location.host + "/";
-        settings.nav_editor_path = self.ifsetor(s.nav_editor_path, 'vkdaten/tools/NavEditor2/');
-        settings.nav_editor_path = self.ifsetor(s.nav_editor_path, 'vkdaten/tools/NavEditor2/');
+        settings.nav_editor_path = self.ifsetor(s.nav_editor_path, 'vkdaten/tools/NavEditor3/');
+        settings.nav_editor_path = self.ifsetor(s.nav_editor_path, 'vkdaten/tools/NavEditor3/');
         settings.ajax_handler_path = self.ifsetor(s.ajax_handler_path, 'app/ajax_handler.php');
         settings.ajax_handler_fullpath = settings.current_host + settings.nav_editor_path + settings.ajax_handler_path;
     };
