@@ -239,25 +239,70 @@ function has_help_file() {
 		            ?>
 
 		            <div class="popover-container">
-						<a href="javascript:void(0);" class="btn btn-success btn-light" id="btnUpdate" name="btnUpdate" ><i class="icon-white icon-upload"></i> Datei hochladen</a>
+						<a href="javascript:void(0);" class="btn btn-success btn-light" id="btnUpdate" name="btnUpdate" ><i class="icon-white icon-plus-sign"></i> Hinzuf&uuml;gen</a>
 						<div class="hover-popover">
 							<div class="header clearfix">
-								<h4>Datei Hochladen</h4>
+								<h4>Hinzuf&uuml;gen</h4>
 								<div class="pull-right">
 									<a class="dismiss btn btn-black-white" href="javascript:void(0);">Abbrechen</a>
-									<a class="btn btn-black-white" href="javascript:void(0);">Hochladen</a>
 								</div>
 							</div>
 
 							<div class="content">
-								<div class="file-list-container">
-									<h5 class="file-list-titel">Dateien:</h5>
-									<ul class="file-list">
-										<li class="">Noch keine Dateien hinzugef&uuml;gt.</li>
-									</ul>
+								<div class="tabbable"> <!-- Only required for left/right tabs -->
+								  <ul class="nav nav-tabs nav-tabs-custom-dark">
+								    <li class="active"><a href="#upload" data-toggle="tab">Hochladen</a></li>
+								    <li><a href="#createFile" data-toggle="tab">Neue Datei</a></li>
+								    <li><a href="#createFolder" data-toggle="tab">Neuer Ordner</a></li>
+								  </ul>
+								  <div class="tab-content">
+								    <div class="tab-pane active" id="upload">
+								    	<div class="file-list-container">
+											<h5 class="file-list-titel">Dateien:</h5>
+											<ul class="file-list">
+												<li class="">Noch keine Dateien hinzugef&uuml;gt.</li>
+											</ul>
+										</div>
+										<a id="file-list-add" class="btn btn-large btn-black-white" href="javascript:void(0);">Hinzuf&uuml;gen</a>
+								    </div>
+								    <div class="tab-pane" id="createFile">
+								    	<form class="form-horizontal">
+									    	<div class="control-group">
+												<label class="control-label" for="inputTyp">Typ</label>
+												<div class="controls">
+											  		<select class="input-small" id="inputTyp">
+													  <option>.txt</option>
+													  <option>.conf</option>
+													  <option>.htaccess</option>
+													</select>
+												</div>
+											</div>
+											<div class="control-group">
+												<label class="control-label" for="inputFileName">Dateiname</label>
+												<div class="controls">
+											  		<input type="text" class="input-medium" id="inputFileName">
+												</div>
+											</div>
+											<div class="control-group">
+												<div class="controls">
+											  		<a id="file-list-add" class="btn pull-left btn-black-white" href="javascript:void(0);">Erstellen</a>
+												</div>
+											</div>
+										</form>
+								    </div>
+								    <div class="tab-pane" id="createFolder">
+								    	<form class="form-horizontal">
+									    	<div class="control-group">
+												<label class="control-label" for="inputFileName">Verzeichnisname</label>
+												<div class="controls">
+											  		<input type="text" class="input-medium" id="inputFileName">
+												</div>
+											</div>
+											<a id="file-list-add" class="btn btn-black-white" href="javascript:void(0);">Erstellen</a>
+										</form>
+								    </div>
+								  </div>
 								</div>
-								<a id="file-list-add" class="btn btn-large btn-black-white" href="javascript:void(0);">Hinzuf&uuml;gen</a>
-								
 							</div>
 						</div>
 					</div>

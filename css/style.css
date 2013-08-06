@@ -16,7 +16,7 @@ html[xmlns] .clearfix {
   height: 1%; }
 
 body {
-  background: #f1f1f1!important;
+  background: #f1f1f1 !important;
   color: #333;
   padding-top: 30px; }
 
@@ -28,7 +28,7 @@ body {
   font-weight: 400; }
 
 .btn-rounded {
-  border-radius: 29px!important;
+  border-radius: 29px !important;
   padding: 8px 24px !important; }
 
 .btn-rounded.btn-inverse {
@@ -37,11 +37,11 @@ body {
 
 .btn-light {
   background: none;
-  background-image: none!important;
-  border: none!important;
-  text-shadow: none!important;
+  background-image: none !important;
+  border: none !important;
+  text-shadow: none !important;
   padding: 8px 24px !important;
-  border-radius: 3px!important;
+  border-radius: 3px !important;
   letter-spacing: 1px; }
   .btn-light i {
     position: relative;
@@ -52,7 +52,7 @@ body {
   font-size: 14px; }
 
 .btn-light.btn-primary {
-  background-color: #0087F7!important; }
+  background-color: #0087f7 !important; }
 
 .btn-light.btn-success {
   background-color: #78b153; }
@@ -84,23 +84,23 @@ div.page-header {
       box-shadow: 0 0 8px black; }
       div.page-header .popover-container .hover-popover .header {
         width: 100%;
-        border-bottom: solid 1px #aaaaaa;
+        border-bottom: solid 1px #aaa;
         padding-bottom: 4px;
         margin-bottom: 6px; }
         div.page-header .popover-container .hover-popover .header h3, div.page-header .popover-container .hover-popover .header h4, div.page-header .popover-container .hover-popover .header h5 {
           float: left; }
       div.page-header .popover-container .hover-popover .content {
         padding: 0 4px; }
-        div.page-header .popover-container .hover-popover .content * {
-          float: none; }
+        div.page-header .popover-container .hover-popover .content .nav-tabs-custom-dark .active a {
+          border-bottom: solid 1px black; }
         div.page-header .popover-container .hover-popover .content h5 {
-          border-bottom: solid 1px #aaaaaa; }
+          border-bottom: solid 1px #aaa; }
         div.page-header .popover-container .hover-popover .content .file-list-container {
-          border-bottom: solid 1px #aaaaaa; }
+          border-bottom: solid 1px #aaa; }
       div.page-header .popover-container .hover-popover a {
         margin-top: 6px;
         background: black;
-        border: solid 1px #aaaaaa;
+        border: solid 1px #AAA;
         box-shadow: none;
         color: white;
         text-shadow: none; }
@@ -124,7 +124,7 @@ div.page-header {
   margin: 14px 0 !important; }
 
 [class*="span"] div.page-header .btn {
-  margin-top: 4px!important; }
+  margin-top: 4px !important; }
 
 .page {
   background: white;
@@ -180,14 +180,14 @@ div.page-header {
     .nav-tabs-custom li a {
       padding-bottom: 14px;
       margin-bottom: 0px;
-      border: none!important;
+      border: none !important;
       border-bottom: solid 3px transparent;
       color: #999;
       font-weight: 400; }
     .nav-tabs-custom li a:hover {
-      background: transparent!important;
+      background: transparent !important;
       border-bottom: solid 3px transparent !important;
-      border: none!important;
+      border: none !important;
       color: #555;
       font-weight: 400; }
   .nav-tabs-custom li.active a {
@@ -201,7 +201,7 @@ div.page-header {
     border: none; }
   .nav-tabs-custom li.active:hover {
     background: transparent;
-    border: none!important; }
+    border: none !important; }
 
 [class*="span"] .nav-tabs-custom {
   margin: 0;

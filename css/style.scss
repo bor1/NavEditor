@@ -121,8 +121,8 @@ div.page-header {
 			.content {
 				padding: 0 4px;
 				
-				* {
-					float: none;
+				.nav-tabs-custom-dark .active a {
+					border-bottom: solid 1px black;
 				}
 
 				h5 {
