@@ -1,8 +1,8 @@
 <?php
-require_once ('app/config.php');
+require_once ('auth.php');
 
 // check if first run
-$fpath =  $ne2_config_info['app_path'] . 'data/' . $ne2_config_info['user_data_file_name'];
+$fpath =  $ne_config_info['user_data_file_path'];
 if(! file_exists($fpath)) {
         header('Location: aktivierung.php');
 } else {

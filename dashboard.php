@@ -1,10 +1,9 @@
 <?php
-require_once('app/config.php');
 require_once('auth.php');
 require_once('app/classes/SimplePie.php');
 
 
-$feedUrl = $ne2_config_info['dashboard_feed'];
+$feedUrl = $ne_config_info['dashboard_feed'];
 
 // call simplepie... get feed info... error handling?
 //set_time_limit(15);
@@ -29,7 +28,7 @@ $sp->handle_content_type();
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Dashboard - <?php echo($ne2_config_info['app_titleplain']); ?></title>
+<title>Dashboard - <?php echo($ne_config_info['app_titleplain']); ?></title>
 <link rel="stylesheet" type="text/css" href="css/styles.css?<?php echo date('Ymdis'); ?>" />
 <link href="css/jquery-ui-1.8.2.custom.css" media="screen, projection" type="text/css" rel="stylesheet" />
 <script src="js/jquery-1.4.2.min.js" type="text/javascript"></script>
@@ -53,7 +52,7 @@ $sp->handle_content_type();
 
 <body id="bd_Dash">
     <div id="wrapper">
-        <h1 id="header"><?php echo($ne2_config_info['app_title']); ?></h1>
+        <h1 id="header"><?php echo($ne_config_info['app_title']); ?></h1>
         <div id="navBar">
             <?php require('common_nav_menu.php'); ?>
         </div>

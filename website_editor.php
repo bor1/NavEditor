@@ -1,11 +1,10 @@
 <?php
 require_once('auth.php');
-require_once('app/config.php');
 
 // help
 function has_help_file() {
-	global $ne2_config_info;
-	$help_file = $ne2_config_info['help_path'] .'website_editor'. $ne2_config_info['help_filesuffix'] ;
+	global $ne_config_info;
+	$help_file = $ne_config_info['help_path'] .'website_editor'. $ne_config_info['help_filesuffix'] ;
 	return file_exists($help_file);
 }
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -13,7 +12,7 @@ function has_help_file() {
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Logo bearbeiten - <?php echo($ne2_config_info['app_titleplain']); ?></title>
+<title>Logo bearbeiten - <?php echo($ne_config_info['app_titleplain']); ?></title>
 <link rel="stylesheet" type="text/css" href="css/styles.css?<?php echo date('Ymdis'); ?>" />
 
 <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
@@ -22,7 +21,7 @@ function has_help_file() {
 var imgObj, imgW, imgH, jsonArray;
 
 var helpText = "";
-var thisConf = "<?php echo($ne2_config_info['website']); ?>";
+var thisConf = "<?php echo($ne_config_info['website']); ?>";
 function loadConf(confFileName) {
 	$.getJSON("app/edit_conf.php?r=" + Math.random(), {
 		"oper": "get_conf",
@@ -39,18 +38,18 @@ function loadConf(confFileName) {
 	// });
 	// return tmpRet;
 // }
-	
-	 
+
+
 function loadContentCallback(data) {
 	jsonArray = data;
-	
+
 	$.each(data, function( intIndex, obj){
 		$("#"+obj.opt_name).val(obj.opt_value);
 	});
-	
+
 	imgH = $("#logo-Height").val();
 	imgW = $("#logo-Width").val();
-	
+
 	if($("#logo-URL").val() != "") {
 		imgPreLoad();
 	}
@@ -63,7 +62,7 @@ function previewImageLoadCallback() {
 		}
 		if(imgH ==""){
 		imgH = imgObj.height;
-		
+
 		}
 	}
 }
@@ -131,7 +130,7 @@ $(document).ready(function() {
 	});
 	//all inputs add class 'textBox'
 	$('input[type="text"]').attr('class', 'textBox');
-	
+
 	//save all inputs to conf.
 	$("#btnSaveall").click(function saveAll() {
 		$.each(jsonArray, function(ind, obj){
@@ -170,7 +169,7 @@ $(document).ready(function() {
 		var imgUrl = $("#logo-URL").val();
 		var imgAlt = $("#logo-Alt").val();
 		var siteTitle = $("#titel-des-Webauftritts").val();
-		
+
 		// if image specified, then alt-text cannot be empty!
 		if(imgUrl != "") {
 			if(imgAlt == "") {
@@ -178,7 +177,7 @@ $(document).ready(function() {
 				return false;
 			}
 		}
-		
+
 		if(confirm("Wollen Sie wirklich speichern?")) {
 			loading(true);
 			if(imgUrl != "") {
@@ -202,7 +201,7 @@ $(document).ready(function() {
 			}, saveContentCallback);
 		}
 	});
-	
+
 	$("#btnLoadLogo").click(function() {
 		$.getJSON("app/edit_logo.php?r=" + Math.random(), {
 			"json_oper": "get_content",
@@ -210,7 +209,7 @@ $(document).ready(function() {
 		}, loadContentCallback);
 	});
 
-	
+
 	$("#btnUpdateExisted").click(function() {
 		if(confirm("Wollen Sie wirklich alle Seiten aktualisieren und mit dem neuen Titel und/oder Logo versehen?")) {
 			loading(true);
@@ -239,19 +238,19 @@ $(document).ready(function() {
 			}, saveContentCallback);
 		}
 	});
-	
+
 	$("#btnCopySiteName").click(function() {
 		$("#titel-des-Webauftritts").val($("#name-des-Webauftritts").val());
 	});
-	
-	
-	
-	// initial load	
+
+
+
+	// initial load
 	// $.getJSON("app/edit_logo.php?r=" + Math.random(), {
 		// "json_oper": "get_content",
 		// "template_name": $("#selTempl").val()
 	// }, loadContentCallback);
-	
+
 	// help
 	$("#helpHand a").click(function() {
 		if(helpText == "") {
@@ -266,25 +265,25 @@ $(document).ready(function() {
 			$("#helpCont").slideToggle("fast");
 		}
 	});
-	
-	
+
+
 });
 
 
 //wenn neue conf Dateien fehlen, die neu generieren.
 		<?php
-		if(!file_exists("../../".$ne2_config_info['website']) || !file_exists("../../".$ne2_config_info['variables'])){
+		if(!file_exists("../../".$ne_config_info['website']) || !file_exists("../../".$ne_config_info['variables'])){
 		?>
 			//only for loading /beginn------------
 			var loaded = new Object;
-			var website = "<?php echo $ne2_config_info['website']; ?>";
-			var variables = "<?php echo $ne2_config_info['variables']; ?>";
+			var website = "<?php echo $ne_config_info['website']; ?>";
+			var variables = "<?php echo $ne_config_info['variables']; ?>";
 			loaded[website] = false;
 			loaded[variables] = false;
 			$(document).ready(function() {
 				loading(true);
 			});
-			
+
 			function loadingCheck(){
 				if (loaded[website] && loaded[variables]){
 					loading(false);
@@ -294,7 +293,7 @@ $(document).ready(function() {
 			}
 			var loadingAktive = setInterval("loadingCheck()", 500);
 			//only for loading /end--------------
-			
+
 			function create_conf(confName, confData){
 				$.post("app/create_conf.php", {
 						"oper": "create_conf",
@@ -304,7 +303,7 @@ $(document).ready(function() {
 						loaded[confName] = true;
 				});
 			}
-			
+
 				alert('Hinweis: Eine oder mehrere Konfigurationsdateien fehlen. Diese werden nun automatisch neu erstellt.');
 				var json_data = [];
 				//load kontakt daten von contactdata.conf save to json_data
@@ -334,7 +333,7 @@ $(document).ready(function() {
 						create_conf(variables, "");
 					});
 				});
-			
+
 		<?php
 		}
 		?>
@@ -344,11 +343,11 @@ $(document).ready(function() {
 
 <body id="bd_Logo">
 <div id="wrapper">
-	<h1 id="header"><?php echo($ne2_config_info['app_title']); ?></h1>
+	<h1 id="header"><?php echo($ne_config_info['app_title']); ?></h1>
 	<div id="navBar">
 		<?php require('common_nav_menu.php'); ?>
 	</div>
-	
+
 	<div id="contentPanel1">
 	<?php
 	// help
@@ -398,7 +397,7 @@ $(document).ready(function() {
 				<img id="ajaxLoader" alt="please wait..." src="ajax-loader.gif" border="0" width="16" height="16" style="display:none;" />
 			</fieldset>
 		</form>
-		
+
 		<!-- Kontakt Block ab hier -->
 		<script type="text/javascript">
 		<!--
@@ -408,7 +407,7 @@ $(document).ready(function() {
 			// $("#btnLoadConf").click(function() {
 				// $.get("app/load_osm.php", function(data) {
 					// var arrValues = data.split('\\:\\');
-					// var n = 1; 
+					// var n = 1;
 					// $.each(
 						// arrValues, function( intIndex, objValue){
 							// $("#" + n).attr("value", objValue);
@@ -420,7 +419,7 @@ $(document).ready(function() {
 					// setCenter(lat, lon);
 				// });
 			// });
-			
+
 			$("#save_osm").click(function() {
 				loading(true);
 				var inst = $("#name").attr("value");
@@ -490,10 +489,10 @@ $(document).ready(function() {
 				<hr size="1" noshade="noshade" id="hr" style="clear:both" />
 			</fieldset>
 		</form>
-		
+
 	</div>
-	
-<?php require('common_footer.php'); ?>	
+
+<?php require('common_footer.php'); ?>
 </div>
 </body>
 

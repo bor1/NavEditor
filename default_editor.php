@@ -1,6 +1,5 @@
 <?php
 require_once('auth.php');
-require_once('app/config.php');
 require_once('app/classes/BereichsManager.php');
 
 
@@ -24,8 +23,8 @@ if (!is_array($thiseditor)){
 
 // help
 function has_help_file() {
-	global $ne2_config_info, $thiseditor;
-	$help_file = $ne2_config_info['help_path'] .$thiseditor['help_page_name']. $ne2_config_info['help_filesuffix'] ;
+	global $ne_config_info, $thiseditor;
+	$help_file = $ne_config_info['help_path'] .$thiseditor['help_page_name']. $ne_config_info['help_filesuffix'] ;
 	return file_exists($help_file);
 }
 
@@ -35,7 +34,7 @@ function has_help_file() {
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title><?php echo ($thiseditor["title"]); ?> bearbeiten - <?php echo($ne2_config_info['app_titleplain']); ?></title>
+<title><?php echo ($thiseditor["title"]); ?> bearbeiten - <?php echo($ne_config_info['app_titleplain']); ?></title>
 
 <?php
     echo NavTools::includeHtml("default",
@@ -140,7 +139,7 @@ $(document).ready(function() {
 
 <body id="bd_Inhal">
     <div id="wrapper">
-        <h1 id="header"><?php echo($ne2_config_info['app_title']); ?></h1>
+        <h1 id="header"><?php echo($ne_config_info['app_title']); ?></h1>
         <div id="navBar">
             <?php require('common_nav_menu.php'); ?>
         </div>

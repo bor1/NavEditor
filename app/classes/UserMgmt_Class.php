@@ -5,7 +5,7 @@
  *
  * Requires config.php, auth.php!
  *
- * @global array $ne2_config_info
+ * @global array $ne_config_info
  *
  */
 class UserMgmt {
@@ -16,12 +16,12 @@ class UserMgmt {
     /**
      * Constructor <br/>
      * everytime on construct tests settings file for new format
-     * @global array $ne2_config_info
+     * @global array $ne_config_info
      */
     public function __construct() {
-        global $ne2_config_info;
-        $this->_user_data_file = $ne2_config_info['app_path'] . 'data/' . $ne2_config_info['user_data_file_name'];
-        $this->_user_default_array = get_ne2_user_params_simple();
+        global $ne_config_info;
+        $this->_user_data_file = $ne_config_info['user_data_file_path'];
+        $this->_user_default_array = get_ne_user_params_simple();
         $this->checkForNewFormat();
     }
 
@@ -300,7 +300,7 @@ class UserMgmt {
      * </p>
      * @return bool allowed or not
      */
-    public function isAllowAccess($menuId, $user, $menu_value_to_check = "id", $menu=null, $rollen=null ) {
+    public function isAllowAccessMenu($menuId, $user, $menu_value_to_check = "id", $menu=null, $rollen=null ) {
 
         //fast check if admin..
         if(strcmp($user, NavTools::getServerAdmin())==0){
@@ -308,8 +308,8 @@ class UserMgmt {
         }
 
         //falls keine menu oder rollen übergeben wurde, dann die aus dem config.php holen. <require config.php !>
-        if($menu == null){$menu = $GLOBALS["ne2_menu"];}
-        if($rollen == null){$rollen = $GLOBALS["ne2_user_roles"];}
+        if($menu == null){$menu = $GLOBALS['ne_menu'];}
+        if($rollen == null){$rollen = $GLOBALS['ne_user_roles'];}
         if($menu != null && $rollen != null && $menuId != null){ // die werte muessen angegeben werden
             foreach ($menu as $value) {
                 if ($value[$menu_value_to_check] == $menuId) {
@@ -320,7 +320,7 @@ class UserMgmt {
 
             if ($need_role == null){//falls nichts gefunden
                 return false;
-            }elseif ($need_role == "public") { //falls public immer erlauben
+            }elseif ($need_role == 'public' || $need_role == '0') { //falls public immer erlauben
                 return true;
             }elseif($user == null){ //falls kein user und kein public, nicht erlauben
                 return false;
@@ -343,7 +343,7 @@ class UserMgmt {
     /**
      * Tests if current user has minimal access level $access
      *
-     * @global array $ne2_user_roles
+     * @global array $ne_user_roles
      * @global string $g_current_user_name
      * @param mixed $access<p>
      * minimal rights level needed to have access<br>
@@ -353,7 +353,7 @@ class UserMgmt {
      * @return boolean
      */
     public function hasAccesLevel($access, $userName = null) {
-        global $ne2_user_roles, $g_current_user_name;
+        global $ne_user_roles, $g_current_user_name;
 
         if (is_null($userName)) {
             if (!is_null($g_current_user_name)) {
@@ -364,9 +364,9 @@ class UserMgmt {
         }
 
         if (!is_numeric($access)) {
-            $needAccessLvl = NavTools::ifsetor($ne2_user_roles[$access]['value']);
+            $needAccessLvl = NavTools::ifsetor($ne_user_roles[$access]['value']);
         } else {
-            $needAccessLvl = $access;
+            $needAccessLvl = intval($access);
         }
 
         //if nothing found return false
@@ -374,8 +374,7 @@ class UserMgmt {
             return false;
         }
 
-        $um = new UserMgmt();
-        $user_data = $um->GetUser($userName, 'array');
+        $user_data = $this->GetUser($userName, 'array');
         if ($user_data['rolle'] >= $needAccessLvl) {
             return true;
         } else {
@@ -387,12 +386,11 @@ class UserMgmt {
 
     /**
      * Test if user has acces to the php file
-     * Requires config.php for $ne2_default_file_rights, $ne2_config_info
+     * Requires config.php for $ne_user_public_php, $ne_config_info
      * @uses auth.php for $g_current_user_name
      *
-     * @global array $ne2_default_file_rights
      * @global string $g_current_user_name
-     * @global array $ne2_config_info
+     * @global array $ne_config_info
      *
      * @param string $phpPath Full or relative to NavEditor/ path to the php file
      * @param string $userName [Optional] Username to test. If null try to get global set variable $g_current_user_name
@@ -400,7 +398,16 @@ class UserMgmt {
      */
     public function isAllowAccesPHP($phpPath, $userName = null){
         //TODO ausnahmen bei jedem User, pruefen.
-        global $ne2_default_file_rights, $g_current_user_name, $ne2_config_info;
+        global $g_current_user_name, $ne_config_info;
+
+        //cut root path if found
+        $phpPath = str_replace($ne_config_info['app_path_without_host'], '', $phpPath);
+        //if public, ok
+        if(in_array($phpPath, $ne_config_info['public_php_files'])){
+            return true;
+        }
+
+        //try to get username
         if(is_null($userName)){
             $userName = $g_current_user_name;
             if(is_null($g_current_user_name)){
@@ -408,22 +415,18 @@ class UserMgmt {
             }
         }
 
-        //cut root path if found
-        $phpPath = str_replace($ne2_config_info['app_path_without_host'], '', $phpPath);
-
-        $needRole = NavTools::ifsetor($ne2_default_file_rights[$phpPath]);
-        if (!is_null($needRole)) {
-            if(!$this->hasAccesLevel($needRole, $userName)){
-                return false;
-            }
+        $needRole = NavTools::ifsetor($ne_config_info['php_file_permissions'][$phpPath]);
+        //if no role found or not enough access-lvl of the current user, decline
+        if (is_null($needRole) || !$this->hasAccesLevel($needRole, $userName)) {
+            return FALSE;
         }
 
-        return true;
+        return TRUE;
     }
 
 
     /**
-     * Log login time
+     * Save login time to user info
      * @param string $user Username
      */
     public function saveLoginTime($user) {

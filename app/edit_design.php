@@ -1,5 +1,4 @@
 <?php
-require_once('config.php');
 require_once('../auth.php');
 
 $path = $_SERVER['DOCUMENT_ROOT'] . '/ssi';
@@ -43,7 +42,7 @@ case 'get_file_list':
         closedir($dh);
     }
 
-    $curr_fpath = $ne2_config_info['app_path'] . 'data/current_design.txt';
+    $curr_fpath = $ne_config_info['app_path'] . 'data/current_design.txt';
     $curr_fname = 'head-d3.shtml'; // default design
     if(file_exists($curr_fpath)) {
         $curr_fname = file_get_contents($curr_fpath);
@@ -61,7 +60,7 @@ case 'set_head_file':
     copy($new_fname, $old_fname);
     chmod($old_fname, 0755);
 
-    $curr_fpath = $ne2_config_info['app_path'] . 'data/current_design.txt';
+    $curr_fpath = $ne_config_info['app_path'] . 'data/current_design.txt';
     file_put_contents($curr_fpath, $_REQUEST['new_head_file']);
 
     echo('Update done!');

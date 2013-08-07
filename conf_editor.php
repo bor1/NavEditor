@@ -1,11 +1,10 @@
 <?php
 require_once('auth.php');
-require_once('app/config.php');
 
 // help
 function has_help_file() {
-	global $ne2_config_info;
-	$help_file = $ne2_config_info['help_path'] .'conf_editor'. $ne2_config_info['help_filesuffix'] ;
+	global $ne_config_info;
+	$help_file = $ne_config_info['help_path'] .'conf_editor'. $ne_config_info['help_filesuffix'] ;
 	return file_exists($help_file);
 }
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -13,7 +12,7 @@ function has_help_file() {
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Konfigurationen bearbeiten - <?php echo($ne2_config_info['app_titleplain']); ?></title>
+<title>Konfigurationen bearbeiten - <?php echo($ne_config_info['app_titleplain']); ?></title>
 <link rel="stylesheet" type="text/css" href="css/styles.css?<?php echo date('Ymdis'); ?>" />
 
 <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
@@ -72,7 +71,7 @@ function loadConfListCallback(rdata) {
 				showPanel("fld_hthosts");
 				loadHtHosts();
 				break;
-			case "<?php echo($ne2_config_info['website']); ?>":
+			case "<?php echo($ne_config_info['website']); ?>":
 				showPanel("fld_website");
 				$("#fld_common legend").text(cfn);
 				loadWebsiteConf();
@@ -718,7 +717,7 @@ $(document).ready(function() {
 
 <body id="bd_Conf">
 <div id="wrapper">
-	<h1 id="header"><?php echo($ne2_config_info['app_title']); ?></h1>
+	<h1 id="header"><?php echo($ne_config_info['app_title']); ?></h1>
 	<div id="navBar">
 		<?php require('common_nav_menu.php'); ?>
 	</div>

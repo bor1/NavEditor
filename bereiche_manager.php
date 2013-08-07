@@ -1,11 +1,10 @@
 <?php
 require_once('auth.php');
-require_once('app/config.php');
 
 // help
 function has_help_file() {
-    global $ne2_config_info;
-    $help_file = $ne2_config_info['help_path'] . 'bereich_manager' . $ne2_config_info['help_filesuffix'];
+    global $ne_config_info;
+    $help_file = $ne_config_info['help_path'] . 'bereich_manager' . $ne_config_info['help_filesuffix'];
     return file_exists($help_file);
 }
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -14,7 +13,7 @@ function has_help_file() {
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-        <title>Bereich management - <?php echo($ne2_config_info['app_titleplain']); ?></title>
+        <title>Bereich management - <?php echo($ne_config_info['app_titleplain']); ?></title>
 
         <?php
         echo NavTools::includeHtml('default',
@@ -577,7 +576,7 @@ function has_help_file() {
 
     <body id="bereich_manager">
         <div id="wrapper">
-            <h1 id="header"><?php echo($ne2_config_info['app_title']); ?></h1>
+            <h1 id="header"><?php echo($ne_config_info['app_title']); ?></h1>
             <div id="navBar">
                 <?php require('common_nav_menu.php'); ?>
             </div>

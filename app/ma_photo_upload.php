@@ -1,5 +1,4 @@
 <?php
-require_once('config.php');
 require_once('../auth.php');
 
 function is_image($file_name) {
@@ -41,7 +40,7 @@ function create_thumb($name, $filename, $new_w, $new_h) { // supports jpg, png a
 		$thumb_h = $new_h;
 	}
 	$dst_img = imagecreatetruecolor($thumb_w, $thumb_h);
-	imagecopyresampled($dst_img, $src_img, 0, 0, 0, 0, $thumb_w, $thumb_h, $old_x, $old_y); 
+	imagecopyresampled($dst_img, $src_img, 0, 0, 0, 0, $thumb_w, $thumb_h, $old_x, $old_y);
 	if(preg_match("/png/", $system[count($system) - 1])) {
 		imagepng($dst_img, $filename);
 	} elseif(preg_match("/gif/", $system[count($system) - 1])) {
@@ -67,7 +66,7 @@ function get_ma_file_dir() {
 		if((strlen($pline) == 0) || (substr($pline, 0, 1) == '#')) {
 			continue; // ignore comments and empty rows
 		}
-		
+
 		if(substr($pline, strlen($pline) - 2, 2) == " \\") {
 			// concat next lines to form the value
 			if($to_concat === FALSE) {
@@ -97,9 +96,9 @@ function get_ma_file_dir() {
 		}
 	}
 	fclose($fh);
-	
+
 	$ma_file_dir = '';
-	
+
 	foreach($retv as $ar) {
 		if(($ar['opt_name'] == 'URL_Mitarbeiter') && ($ar['opt_value'] != '')) {
 			$v1 = substr($ar['opt_value'], 0, strrpos($ar['opt_value'], '/'));
@@ -109,7 +108,7 @@ function get_ma_file_dir() {
 	if(!is_dir($ma_file_dir)) {
 		$ma_file_dir = $_SERVER['DOCUMENT_ROOT'] . '/mitarbeiter/daten/';
 	}
-	
+
 	return $ma_file_dir;
 }
 
@@ -123,7 +122,7 @@ $ma_photo_file_path = '';
 if(isset($_POST['hidCustomData'])) {
 	$upCustomData = $_POST['hidCustomData'];
 	$arrCustomData = explode('|', $upCustomData);
-	
+
 	$ma_photo_file_name = $arrCustomData[1];
 	$ma_photo_file_path = $ma_file_dir1 . $ma_photo_file_name;
 }
@@ -140,7 +139,7 @@ if(count($_FILES)) {
 		$json_res['error'] = 'No actual file uploaded!';
 	} else {
 		$newnamepath = $ma_photo_file_path;
-		
+
 		// Attempt to move the uploaded file to it's new home:
 		if(!(move_uploaded_file($_FILES['filAttachment']['tmp_name'], $newnamepath))) {
 			$json_res['error'] = 'A problem occurred during file upload!';

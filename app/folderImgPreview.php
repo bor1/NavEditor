@@ -1,8 +1,7 @@
 <?php
-require_once('config.php');
 require_once('../auth.php');
 
-$root = $ne2_config_info['upload_dir'];
+$root = $ne_config_info['upload_dir'];
 $dir = urldecode($_REQUEST['dir']); //TODO sicherer daten bekommen? input::?
 $path = NavTools::root_filter($root . $dir);
 

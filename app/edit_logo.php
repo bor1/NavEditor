@@ -1,19 +1,15 @@
 <?php
-require_once('config.php');
-
-
-
 require_once('../auth.php');
 require_once('classes/FileHandler_Class.php');
 
 ini_set("pcre.backtrack_limit", "200000"); // workaround for preg_replace error by large content
 
-$fpath = $ne2_config_info['app_path'] . 'data/templates/' . $_REQUEST['template_name'];
+$fpath = $ne_config_info['app_path'] . 'data/templates/' . $_REQUEST['template_name'];
 $oper = $_REQUEST['json_oper'];
 $fh = new FileHandler();
 
 $site_title_text = '';
-$titleFilePath = $ne2_config_info['app_path'] . $ne2_config_info['current_site_title_file'];
+$titleFilePath = $ne_config_info['app_path'] . $ne_config_info['current_site_title_file'];
 if(file_exists($titleFilePath)) {
     $site_title_text = file_get_contents($titleFilePath);
 }
@@ -102,7 +98,7 @@ if($oper == 'get_content') {
 
     // update all
     $raw_data = $data0;
-    $fh->UpdateExistedPageLogos($raw_data, $_SERVER['DOCUMENT_ROOT'] . '/',$ne2_config_info['defaulthtml_filesuffix']);
+    $fh->UpdateExistedPageLogos($raw_data, $_SERVER['DOCUMENT_ROOT'] . '/',$ne_config_info['defaulthtml_filesuffix']);
     $fh->UpdateStartPageLogo();
 
 

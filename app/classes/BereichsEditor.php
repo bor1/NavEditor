@@ -26,24 +26,24 @@ class BereichsEditor {
     /**
      * Constructor
      *
-     * @global array $ne2_config_info
+     * @global array $ne_config_info
      * @param string $areaname Name des Bereichs
 
      */
     public function __construct($areaname) {
-        global $ne2_config_info;
+        global $ne_config_info;
         $this->_areaname = $areaname;
-        $config_file_path = $ne2_config_info['config_file_path_bereiche'];
+        $config_file_path = $ne_config_info['config_file_path_bereiche'];
         $confMngr = new ConfigFileManagerJSON($config_file_path);
         $this->_conf_array = $confMngr->getSetting($areaname);
-        $this->_start_marker = \NavTools::ifsetor($this->_conf_array[$ne2_config_info['content_marker_start_setting']]);
-        $this->_end_marker = \NavTools::ifsetor($this->_conf_array[$ne2_config_info['content_marker_end_setting']]);
-        $filename_setting = $ne2_config_info['bereich_filename_setting']; //einfach file_name ?
+        $this->_start_marker = \NavTools::ifsetor($this->_conf_array[$ne_config_info['content_marker_start_setting']]);
+        $this->_end_marker = \NavTools::ifsetor($this->_conf_array[$ne_config_info['content_marker_end_setting']]);
+        $filename_setting = $ne_config_info['bereich_filename_setting']; //einfach file_name ?
         $filename = \NavTools::ifsetor($this->_conf_array[$filename_setting]);
         if (strlen($filename) == 0) {
             throw new Exception('No filename setting: "'.$filename_setting.'" in config: "'.$config_file_path.'" found');
         }
-        $this->_fpath = $ne2_config_info['ssi_folder_path'] . $filename;
+        $this->_fpath = $ne_config_info['ssi_folder_path'] . $filename;
 
         if (!is_file($this->_fpath)) {
 //            throw new Exception('File ('.$this->_fpath.') not found');

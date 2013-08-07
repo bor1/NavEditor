@@ -11,7 +11,7 @@ class NavTools {
      * include js und css files in html. from JS and CSS directory
      * there is an option to add default includes set like jQuery files etc..
      *
-     * @global array $ne2_config_info
+     * @global array $ne_config_info
      * @param String $Filenames<p>
      * Filenames, single filename or array of strings.
      * Additional html string (parameter?) after comma.<br />
@@ -25,7 +25,7 @@ class NavTools {
      * <p>*html source will be full url to the file  </p>
      */
     public static function includeHtml(/* ARGS */) {
-        global $ne2_config_info;
+        global $ne_config_info;
         $retString = '';
 
         //if no arguments, set to "default".
@@ -44,7 +44,7 @@ class NavTools {
             //check for default sets
             switch (strtolower($file)) {
                 case "default":
-                    $retString .= self::includeHtml($ne2_config_info['default_includes_js_css']);
+                    $retString .= self::includeHtml($ne_config_info['default_includes_js_css']);
                     continue;
             }
             //split file - params
@@ -62,11 +62,11 @@ class NavTools {
 
             switch (strtolower($ext)) {
                 case "js":
-                    $path = $ne2_config_info['ne2_url'] . $ne2_config_info['js_folder_name'] . "/" . $file_only;
+                    $path = $ne_config_info['ne_url'] . $ne_config_info['js_folder_name'] . "/" . $file_only;
                     $retString .= "<script type=\"text/javascript\" src=\"" . $path . $file_params . "\"></script>\n";
                     break;
                 case "css":
-                    $path = $ne2_config_info['ne2_url'] . $ne2_config_info['css_folder_name'] . "/" . $file_only;
+                    $path = $ne_config_info['ne_url'] . $ne_config_info['css_folder_name'] . "/" . $file_only;
                     $retString .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"" . $path . $file_params . "\">\n";
             }
         }
@@ -91,12 +91,12 @@ class NavTools {
      * save execution time to logfile, in seconds at current point of call
      */
     public static function save_execution_time($message = "", $logfile = "", $debug = -1) {
-        global $ne2_config_info;
+        global $ne_config_info;
         if (strcmp($logfile, "") == 0) {
-            $logfile = $ne2_config_info['debug_execution_file'];
+            $logfile = $ne_config_info['debug_execution_file'];
         }
         if ($debug == -1) {
-            $debug = $ne2_config_info['debug_time'];
+            $debug = $ne_config_info['debug_time'];
         }
 
 
@@ -128,9 +128,9 @@ class NavTools {
      * @return String <p>Returns filtered String</p>
      */
     public static function filterSymbols($string) {
-        global $ne2_config_info;
-        $string = str_replace($ne2_config_info['symbols_being_replaced'], $ne2_config_info['symbols_replacement'], $string);
-        $string = preg_replace($ne2_config_info['regex_removed_symbols'] . 'u', '', $string); //u fuer UTF-8 symbole ersetzung
+        global $ne_config_info;
+        $string = str_replace($ne_config_info['symbols_being_replaced'], $ne_config_info['symbols_replacement'], $string);
+        $string = preg_replace($ne_config_info['regex_removed_symbols'] . 'u', '', $string); //u fuer UTF-8 symbole ersetzung
         return $string;
     }
 
@@ -227,15 +227,15 @@ class NavTools {
 
     /**
      * log errors/warnings to specified file
-     * @global array $ne2_config_info
+     * @global array $ne_config_info
      * @param string $error_text
      */
     public static function error_log($error_text, $callerFunc = "") {
-        global $ne2_config_info;
+        global $ne_config_info;
         if (!empty($callerFunc)) {
             $callerFunc = $callerFunc . ': ';
         }
-        error_log(date('Y-m-d H:m') . ' - ' . $callerFunc . $error_text . "\n", 3, $ne2_config_info['error_log_file']);
+        error_log(date('Y-m-d H:m') . ' - ' . $callerFunc . $error_text . "\n", 3, $ne_config_info['log_file']);
     }
 
 

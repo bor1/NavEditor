@@ -1,11 +1,10 @@
 <?php
 require_once('auth.php');
-require_once('app/config.php');
 
 // help
 function has_help_file() {
-	global $ne2_config_info;
-	$help_file = $ne2_config_info['help_path'] .'user_manager'. $ne2_config_info['help_filesuffix'] ;
+	global $ne_config_info;
+	$help_file = $ne_config_info['help_path'] .'user_manager'. $ne_config_info['help_filesuffix'] ;
 	return file_exists($help_file);
 }
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -14,7 +13,7 @@ function has_help_file() {
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-<title>User management - <?php echo($ne2_config_info['app_titleplain']); ?></title>
+<title>User management - <?php echo($ne_config_info['app_titleplain']); ?></title>
 
 <?php
     echo NavTools::includeHtml("default",
@@ -36,11 +35,11 @@ var admin_uname = "<?php echo(NavTools::getServerAdmin()); ?>";
 var helpText = "";
 var _user_data_array = [];
 var _currentValues = [];
-var _user_roles_array = $.parseJSON('<?php echo(json_encode($ne2_user_roles)); ?>') ;
-var _user_modus_array = $.parseJSON('<?php echo(json_encode($ne2_user_modus)); ?>') ;
-var _empty_user_data_array = $.parseJSON('<?php echo(json_encode(get_ne2_user_params_simple())); ?>');
-var _not_editable_user_params_array = $.parseJSON('<?php echo(json_encode(get_ne2_user_params_not_editable())); ?>');
-var _user_params_full = $.parseJSON('<?php echo(json_encode($ne2_user_params)); ?>');
+var _user_roles_array = $.parseJSON('<?php echo(json_encode($ne_user_roles)); ?>') ;
+var _user_modus_array = $.parseJSON('<?php echo(json_encode($ne_user_modus)); ?>') ;
+var _empty_user_data_array = $.parseJSON('<?php echo(json_encode(get_ne_user_params_simple())); ?>');
+var _not_editable_user_params_array = $.parseJSON('<?php echo(json_encode(get_ne_user_params_not_editable())); ?>');
+var _user_params_full = $.parseJSON('<?php echo(json_encode($ne_user_params)); ?>');
 var _somethingChanged = false;
 var _check_boxes_status = [];
 
@@ -645,7 +644,7 @@ $(document).ready(function() {
 
 <body id="bd_User">
 <div id="wrapper">
-	<h1 id="header"><?php echo($ne2_config_info['app_title']); ?></h1>
+	<h1 id="header"><?php echo($ne_config_info['app_title']); ?></h1>
 	<div id="navBar">
 		<?php require('common_nav_menu.php'); ?>
 	</div>

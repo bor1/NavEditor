@@ -1,5 +1,4 @@
 <?php
-require_once('config.php');
 require_once('../auth.php');
 
 $univis_id = '';
@@ -11,7 +10,7 @@ function file_get_contents_utf8($fn) {
 
 function get_ma_file_dir() {
 	global $univis_id;
-	
+
 	// get ma path from univis.conf
 	$fpath = $_SERVER['DOCUMENT_ROOT'] . '/vkdaten/univis.conf';
 	$retv = array();
@@ -23,7 +22,7 @@ function get_ma_file_dir() {
 		if((strlen($pline) == 0) || (substr($pline, 0, 1) == '#')) {
 			continue; // ignore comments and empty rows
 		}
-		
+
 		if(substr($pline, strlen($pline) - 2, 2) == " \\") {
 			// concat next lines to form the value
 			if($to_concat === FALSE) {
@@ -53,9 +52,9 @@ function get_ma_file_dir() {
 		}
 	}
 	fclose($fh);
-	
+
 	$ma_file_dir = '';
-	
+
 	foreach($retv as $ar) {
 		if(($ar['opt_name'] == 'URL_Mitarbeiter') && ($ar['opt_value'] != '')) {
 			$v1 = substr($ar['opt_value'], 0, strrpos($ar['opt_value'], '/'));
@@ -68,7 +67,7 @@ function get_ma_file_dir() {
 	if(!is_dir($ma_file_dir)) {
 		$ma_file_dir = $_SERVER['DOCUMENT_ROOT'] . '/mitarbeiter/daten/';
 	}
-	
+
 	return $ma_file_dir;
 }
 
@@ -135,11 +134,11 @@ switch($oper) {
 	case 'set_univis_id':
 		$new_univis_id = $_POST['new_univis_id'];
 		$new_univis_id_line = "UnivISId\t" . $new_univis_id . "\n";
-		
+
 		$before_part = '';
 		$after_part = '';
 		$found_line = FALSE;
-		
+
 		$fpath = $_SERVER['DOCUMENT_ROOT'] . '/vkdaten/univis.conf';
 		$fh = fopen($fpath, 'r') or die('Cannot open file!');
 		while(!feof($fh)) {
@@ -153,7 +152,7 @@ switch($oper) {
 				}
 				continue; // ignore comments and empty rows
 			}
-			
+
 			if(!$found_line) {
 				$arr_opts = preg_split('/\t|\s{2,}/', $pline);
 				if($arr_opts[0] == 'UnivISId') {
@@ -167,7 +166,7 @@ switch($oper) {
 			}
 		}
 		fclose($fh);
-		
+
 		$new_content = $before_part . $new_univis_id_line . $after_part;
 		file_put_contents($fpath, $new_content);
 		echo('Neue UnivIS-ID wurde gesperchert.');

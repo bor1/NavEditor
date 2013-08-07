@@ -1,15 +1,14 @@
 <?php
 require_once('auth.php');
-require_once('app/config.php');
 
 // help
 function has_help_file() {
-	global $ne2_config_info;
-	$help_file = $ne2_config_info['help_path'] .'update'. $ne2_config_info['help_filesuffix'] ;
+	global $ne_config_info;
+	$help_file = $ne_config_info['help_path'] .'update'. $ne_config_info['help_filesuffix'] ;
 	return file_exists($help_file);
 }
 
-if(!file_exists("../../".$ne2_config_info['website']) || !file_exists("../../".$ne2_config_info['variables'])){
+if(!file_exists("../../".$ne_config_info['website']) || !file_exists("../../".$ne_config_info['variables'])){
 	header('Location: website_editor.php');
 }
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -17,7 +16,7 @@ if(!file_exists("../../".$ne2_config_info['website']) || !file_exists("../../".$
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Live Update - <?php echo($ne2_config_info['app_titleplain']); ?></title>
+<title>Live Update - <?php echo($ne_config_info['app_titleplain']); ?></title>
 <link rel="stylesheet" type="text/css" href="css/styles.css?<?php echo date('Ymdis'); ?>" />
 
 <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
@@ -128,7 +127,7 @@ if(!file_exists("../../".$ne2_config_info['website']) || !file_exists("../../".$
 
 <body id="bd_Update" onload="check();">
 <div id="wrapper">
-	<h1 id="header"><?php echo($ne2_config_info['app_title']); ?></h1>
+	<h1 id="header"><?php echo($ne_config_info['app_title']); ?></h1>
 	<div id="navBar">
 		<?php require('common_nav_menu.php'); ?>
 	</div>
@@ -149,7 +148,7 @@ if(!file_exists("../../".$ne2_config_info['website']) || !file_exists("../../".$
                     <table class="versionsinfo">
                         <tr>
                             <th>Aktuell verwendete Version:</th>
-                            <td><span id="cur_ver"><?php echo($ne2_config_info['version']); ?></span></td>
+                            <td><span id="cur_ver"><?php echo($ne_config_info['version']); ?></span></td>
                             <td colspan="2">&nbsp;</td>
                         </tr>
                         <tr>

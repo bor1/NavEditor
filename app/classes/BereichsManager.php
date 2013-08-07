@@ -44,12 +44,12 @@ class BereichsManager {
 
     /**
      * Constructor
-     * @global array $ne2_config_info
+     * @global array $ne_config_info
      * @global array $g_bereich_settings
      */
     public function __construct() {
-        global $ne2_config_info, $g_bereich_settings, $ne2_user_roles;
-        $configPath = $ne2_config_info['config_file_path_bereiche'];
+        global $ne_config_info, $g_bereich_settings, $ne_user_roles;
+        $configPath = $ne_config_info['config_file_path_bereiche'];
         $bFirstTime = false;
         //falls kein config datei vorhanden, erstellen, danach mit default values fuellen
         if(!is_file($configPath)){
@@ -61,8 +61,8 @@ class BereichsManager {
         $this->_ConfigManager = new ConfigFileManagerJSON($configPath);
         $this->_aPossibleSettings = $g_bereich_settings['possible_bereich_settings'];
         $this->_aEmptySettings = array_fill_keys($this->_aPossibleSettings, '');
-        $this->_sPathToSSI = $ne2_config_info['ssi_folder_path'];
-        $this->_aUserRoles = $ne2_user_roles;
+        $this->_sPathToSSI = $ne_config_info['ssi_folder_path'];
+        $this->_aUserRoles = $ne_user_roles;
 
         //fall back
         if($bFirstTime){
@@ -230,18 +230,18 @@ class BereichsManager {
 
     /**
      * Add default areas settings to file (fallback)
-     * @global array $aBereicheditors
+     * @global array $g_aBereicheditors
      */
     public function addDefaultAreaSettings(){
-        global $aBereicheditors, $ne2_config_info;
+        global $g_aBereicheditors, $ne_config_info;
 
         $aSettings = array();
 
-        foreach ($aBereicheditors as $values) {
+        foreach ($g_aBereicheditors as $values) {
             $aSettings = $values;
             $sSettingName = $aSettings['name'];
-            $aSettings['content_marker_start'] = NavTools::ifsetor($ne2_config_info[$sSettingName.'_content_marker_start'],'');
-            $aSettings['content_marker_end'] = NavTools::ifsetor($ne2_config_info[$sSettingName.'_content_marker_end'],'');
+            $aSettings['content_marker_start'] = NavTools::ifsetor($ne_config_info[$sSettingName.'_content_marker_start'],'');
+            $aSettings['content_marker_end'] = NavTools::ifsetor($ne_config_info[$sSettingName.'_content_marker_end'],'');
             $aSettings['user_role_required'] = 'user';
 
             $aSettingsAdjused = $this->_adjustSettingsArray($aSettings);

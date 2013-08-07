@@ -6,31 +6,29 @@
  * Use nav_tools.js call_php() function for the php handler
  */
 try {
-require_once 'config.php';
-require_once '../auth.php';
-require_once 'classes/Input.php';
+    require_once '../auth.php';
+    require_once 'classes/Input.php';
 
-//returned data variable
-$data_to_return = '';
+    //returned data variable
+    $data_to_return = '';
 
-//what file
+    //what file
     //path will be resolved, full path will be modified to NavEditor2/ relative path
-    $file_to_call = str_replace($ne2_config_info['app_path'],'', NavTools::simpleResolvePath(Input::get_post('file')));
-//what function
+    $file_to_call = str_replace($ne_config_info['app_path'], '', NavTools::simpleResolvePath(Input::get_post('file')));
+    //what function
     $function_to_call = Input::get_post('function');
-//args, data to handle
+    //args, data to handle
     $data_to_pass = Input::get_post('args');
 
 
 
-//test if user has permission for the php file
-    $um = new UserMgmt();
-    if (!$um->isAllowAccesPHP($file_to_call)){
-        throw new Exception('Kein zugriff auf "'.$file_to_call.'"');
+    //test if user has permission for the php file
+    if (!$g_UserMgmt->isAllowAccesPHP($file_to_call)) {
+        throw new Exception('Kein zugriff auf "' . $file_to_call . '"');
     }
 
 
-//test what file, then test what function
+    //test what file, then test what function
     switch ($file_to_call) {
 
         //BereichsEditor------------------------------------------------------------
@@ -42,7 +40,7 @@ $data_to_return = '';
                 throw new Exception('Bereich undefiniert');
             }
 
-            require_once $ne2_config_info['app_path'].$file_to_call;
+            require_once $ne_config_info['app_path'] . $file_to_call;
 
             $BerEditor = new BereichsEditor($bereichsname);
             //BereichsEditor/functions----------------------------------------------
@@ -80,7 +78,7 @@ $data_to_return = '';
         //BereichsManager-----------------------------------------------------------
         case 'app/classes/BereichsManager.php':
 
-            require_once $ne2_config_info['app_path'].$file_to_call;
+            require_once $ne_config_info['app_path'] . $file_to_call;
             $BerManager = new BereichsManager();
             //BereichsManager/functions---------------------------------------------
             switch ($function_to_call) {

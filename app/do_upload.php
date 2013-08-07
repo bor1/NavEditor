@@ -1,5 +1,4 @@
 <?php
-require_once('config.php');
 require_once('../auth.php');
 
 function is_image($file_name) {
@@ -41,7 +40,7 @@ function create_thumb($name, $filename, $new_w, $new_h) { // supports jpg, png a
 		$thumb_h = $new_h;
 	}
 	$dst_img = imagecreatetruecolor($thumb_w, $thumb_h);
-	imagecopyresampled($dst_img, $src_img, 0, 0, 0, 0, $thumb_w, $thumb_h, $old_x, $old_y); 
+	imagecopyresampled($dst_img, $src_img, 0, 0, 0, 0, $thumb_w, $thumb_h, $old_x, $old_y);
 	if(preg_match("/png/", $system[count($system) - 1])) {
 		imagepng($dst_img, $filename);
 	} elseif(preg_match("/gif/", $system[count($system) - 1])) {
@@ -54,13 +53,13 @@ function create_thumb($name, $filename, $new_w, $new_h) { // supports jpg, png a
 	chmod($filename, 0755);
 }
 
-$up_dir = $ne2_config_info['upload_dir'];
+$up_dir = $ne_config_info['upload_dir'];
 $up_dir_rel = str_replace($_SERVER['DOCUMENT_ROOT'], '', $up_dir);
 
 if(isset($_POST['hidCustomData'])) {
 	$upCustomData = $_POST['hidCustomData'];
 	$arrCustomData = explode('|', $upCustomData);
-	
+
 	$up_dir = $arrCustomData[1] . '/';
 	$up_dir_rel = str_replace($_SERVER['DOCUMENT_ROOT'], '', $up_dir);
 }
@@ -80,7 +79,7 @@ if(count($_FILES)) {
 		if(!is_dir($up_dir)) {
 			mkdir($up_dir, 0755, TRUE);
 		}
-		
+
 //		$prx = time() . '_';
 		$prx = '';
 		$oriname = str_replace(' ', '_', basename($_FILES['filAttachment']['name']));
@@ -89,13 +88,13 @@ if(count($_FILES)) {
 //		while(file_exists($up_dir . $newname)) {
 //			$newname = '_' . $newname;
 //		}
-		
+
 		$thname = 'thumb_' . $newname;
 		// duplicate name?
 //		while(file_exists($up_dir . $thname)) {
 //			$thname = '_' . $thname;
 //		}
-		
+
 		$newnamepath = $up_dir . $newname;
 		$thnamepath = $up_dir . $thname;
 
@@ -104,7 +103,7 @@ if(count($_FILES)) {
 		if(@preg_match('/php|cgi|pl|asp|aspx/i', $ext[1])) {
 			$newnamepath .= '.txt';
 		}
-				
+
 		// Attempt to move the uploaded file to it's new home:
 		if(!(move_uploaded_file($_FILES['filAttachment']['tmp_name'], $newnamepath))) {
 			$json_res['error'] = 'A problem occurred during file upload!';

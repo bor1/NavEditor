@@ -3,16 +3,14 @@
  * ajax request handler, for file manager routine
  */
 
-require_once('config.php');
 require_once('../auth.php');
 require_once('classes/FileManager.php');
-require_once('classes/UserMgmt_Class.php');
 require_once ('classes/Input.php');
 
 $htusers_file = $_SERVER['DOCUMENT_ROOT'] . '/vkdaten/.htusers';
 $hthosts_file = $_SERVER['DOCUMENT_ROOT'] . '/vkdaten/hthosts';
-$htacc_file_templ_auth = $ne2_config_info['app_path'] . 'data/htacc_template_auth';
-$htacc_file_templ_host = $ne2_config_info['app_path'] . 'data/htacc_template_host';
+$htacc_file_templ_auth = $ne_config_info['app_path'] . 'data/htacc_template_auth';
+$htacc_file_templ_host = $ne_config_info['app_path'] . 'data/htacc_template_host';
 //$noPerm = "Zugriff verweigert";
 $fm = new FileManager();
 
@@ -84,7 +82,7 @@ switch ($service_type) {
         break;
     case 'delete_folder':
         $folder = NavTools::root_filter(Input::get_post('folder'));
-        $un_folders = $ne2_config_info['important_folders']; //array('vkdaten', 'ssi', 'css', 'grafiken', 'img', 'js');
+        $un_folders = $ne_config_info['important_folders']; //array('vkdaten', 'ssi', 'css', 'grafiken', 'img', 'js');
         if (is_dir($folder)) {
             if (NavTools::endsWith($folder, 'websource') || NavTools::endsWith($folder, 'websource/')) { // root dir!
                 echo('Dieses Verzeichnis darf nicht entfernt werden!');

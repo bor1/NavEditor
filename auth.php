@@ -1,158 +1,141 @@
 <?php
 
 /**
- * Authentification
- * requires config.php, UserMgmt_Class.php, log_funcs.php, NavTools.php
+ * Authentification, config loading.
+ * Schould be included in every php file of NavEditor! (except for classes)
  *
- * @TODO +Performance: check user right only every 30 minuts for example...
+ * requires config.php, UserMgmt_Class.php, log_funcs.php, NavTools.php
+ * @TODO +Performance: make user login only every 30 minuts for example...
  */
 
-namespace auth {
-    require_once('app/config.php');
-    require_once('app/classes/UserMgmt_Class.php');
-    require_once('app/log_funcs.php');
-    require_once ('app/sessions.php');
+namespace auth;
 
-    /**
-     * Call if login failed
-     */
-    function login_failed() {
-        goToLogin();
-        logadd('loginFail');
-        exit;
+//if called directly, exit.
+no_direct_call(__FILE__);
+
+require_once('config/config.php');
+
+require_once(NE_DIR_ROOT.'app/classes/UserMgmt_Class.php');
+require_once(NE_DIR_ROOT.'app/log_funcs.php');
+require_once(NE_DIR_ROOT.'app/sessions.php');
+
+
+
+/**
+ * Stop script if this file called directly.<br />
+ * Example: \auth\no_direct_call(__FILE__);
+ * @param string $__FILE__ must be __FILE__ parameter
+ * @todo implement with traits, with no parameter passed. Make sure php_5.4 supported
+ */
+function no_direct_call($__FILE__) {
+    if (strcmp(realpath($__FILE__), realpath($_SERVER['DOCUMENT_ROOT'] . $_SERVER['PHP_SELF'])) === 0) {
+        die("Direct access forbidden");
     }
+}
 
-    /**
-     * Go to login page.
-     * @global array $ne2_config_info
-     */
-    function goToLogin() {
-        global $ne2_config_info;
-        $host = $_SERVER['HTTP_HOST'] . $ne2_config_info['app_path_without_host'];
-        header('Location: http://' . $host . 'login.php');
-    }
+/**
+ * Call if login failed
+ */
+function login_failed() {
+    logadd('loginFail');
+    goToLogin();
+    exit;
+}
 
-    /**
-     * Check if file is for public access
-     * @global array $ne2_config_info
-     * @return boolean TRUE if public file
-     */
-    function checkPublic() {
-        global $ne2_config_info;
-        $uri = $_SERVER['REQUEST_URI'];
-        $appuri = $ne2_config_info['app_path_without_host'];
-        $allowthis = FALSE;
-        foreach ($ne2_config_info['nologin_file'] as $allowedFile) {
-            $thisuri = $appuri . $allowedFile;
-            if (strcmp($uri, $thisuri) == 0) {
-                $allowthis = TRUE;
-                break;
-            }
-        }
-        return $allowthis;
-    }
+/**
+ * Go to login page.
+ * @global array $ne_config_info
+ */
+function goToLogin() {
+    global $ne_config_info;
+    $host = $_SERVER['HTTP_HOST'] . $ne_config_info['app_path_without_host'];
+    header('Location: http://' . $host . 'login.php');
+}
 
-    //global variables
-    global $ne2_config_info;
-    global $g_current_user_permission;
-    global $g_current_user_name;
-    global $is_admin;
+/**
+ * Check if file is for public access
+ * @global array $ne_config_info
+ * @return boolean TRUE if public file
+ */
+function checkPublic() {
+    global $ne_config_info;
+    $uri = $_SERVER['SCRIPT_NAME'];
+    $appuri = $ne_config_info['app_path_without_host'];
+    $requested_file = str_replace($appuri, '', $uri);
 
-    //start or refresh session
-    \sessions\setSession();
+    return in_array($requested_file, $ne_config_info['public_php_files']);
+}
 
-    $um = new \UserMgmt();
+/**
+ * generates and shows "access denied" page
+ * @param string $msg messagee to show
+ */
+function access_denied($msg = 'Contact SERVER_ADMIN for your account information.') {
+    $backlink = '<A HREF="javascript:history.go(-1)">Click here to go back to previous page</A>';
+    echo $msg, '<br />', $backlink;
+    exit();
+}
 
-    //in case there are no users, have to activate, go to aktivierung.php
-    if (is_null($um->GetUsers())) {
-        header("Location: http://" . $_SERVER['HTTP_HOST'] . $ne2_config_info['app_path_without_host'] . "aktivierung.php");
+//global variables
+global $ne_config_info;
+global $g_current_user_permission;
+global $g_current_user_name;
+global $is_admin;
+global $g_UserMgmt;
 
-        //otherwise login process
-    } else {
+//start or refresh session
+\sessions\setSession();
 
-        $is_admin = FALSE;
-        $current_user_name = NULL;
-        $current_user_pwd = NULL;
+$g_UserMgmt = new \UserMgmt();
 
-        $loginResult = 'FAIL'; //values: FAIL, OK, WAIT
-        //waitTimeForLogin ist eine aufwaendige function, dafuer aber mehr sicherheit,
-        //da man theoretisch die session/cookie gesp. passwoerter immer ersetzen kann.
-        //Ob es sich lohnt..
-        $toWait = waitTimeForLogin();
-        if ($toWait > 5) {
-            //goToLogin();
-            //need to wait, too many login tries
-            $loginResult = 'WAIT';
+$is_admin = FALSE;
 
-            //dont need to wait, can try to login
-        } else {
-
-            //get username and password
-            $current_user_name = \NavTools::ifsetor($_SESSION['ne2_username'],'');
-            $current_user_pwd = \NavTools::ifsetor($_SESSION['ne2_password'],'');
+$loginResult = 'FAIL'; //values: FAIL, OK
+//get username and password
+$current_user_name = \NavTools::ifsetor($_SESSION['ne_username'], '');
+$current_user_pwd = \NavTools::ifsetor($_SESSION['ne_password'], '');
 
 
-            //try to login
-            if ($um->Login($current_user_name, $current_user_pwd) != 1) { // login failed
-                //login_failed();
-                $loginResult = 'FAIL';
-            } else { // login ok
-                $loginResult = 'OK';
+//try to login
+if (empty($current_user_name)
+        || $g_UserMgmt->Login($current_user_name, $current_user_pwd) != 1) {
+    // login failed
+    $loginResult = 'FAIL';
+} else { // login ok
+    $loginResult = 'OK';
 
-                //routine for logged in user
+    //routine for logged-in user
 
-                $g_current_user_permission = $um->GetPermission($current_user_name);
-                $g_current_user_name = $current_user_name;
+    $g_current_user_permission = $g_UserMgmt->GetPermission($current_user_name);
+    $g_current_user_name = $current_user_name;
 
-                //set $is_admin, fallback. TODO remove. replace with permissions check
-                if (strcmp($current_user_name, \NavTools::getServerAdmin()) == 0) {
-                    $is_admin = TRUE;
-                }
-            }
-        }
-
-
-
-
-
-        //test file access
-        //if not public... otherwise OK, nothing to do
-        if (!checkPublic()) {
-
-            //switch loginResult
-            switch (strtoupper($loginResult)) {
-                case 'OK'://if logged in
-                    //test access for the requested file
-                    $requested_file_path = str_replace($ne2_config_info['app_path_without_host'], '', $_SERVER["SCRIPT_NAME"]);
-                    if (!$um->isAllowAccesPHP($requested_file_path, $current_user_name)) {
-                        access_denied('You dont have permission for this file');
-                    }
-                    break;
-                case 'WAIT': //if have to wait
-                    goToLogin();
-                    break;
-
-                case 'FAIL': //if failed to login
-                    login_failed();
-                    break;
-                default:
-                    throw new \Exception('Cannot login...');
-                    break;
-            }
-        }
+    //set $is_admin, fallback. TODO remove. replace with permissions check
+    if (strcmp($current_user_name, \NavTools::getServerAdmin()) == 0) {
+        $is_admin = TRUE;
     }
 }
 
 
-//global usefull
 
-namespace {
+//test file access
+//if not public... otherwise OK, nothing to do
+if (!checkPublic()) {
 
-    function access_denied($msg = 'Contact SERVER_ADMIN for your account information.') {
-        $backlink = '<A HREF="javascript:javascript:history.go(-1)">Click here to go back to previous page</A>';
-        echo $msg, '<br />', $backlink;
-        exit;
+    //switch loginResult
+    switch (strtoupper($loginResult)) {
+        case 'OK'://if logged in
+            //test access for the requested file
+            $requested_file_path = str_replace($ne_config_info['app_path_without_host'], '', $_SERVER['SCRIPT_NAME']);
+            if (!$g_UserMgmt->isAllowAccesPHP($requested_file_path, $current_user_name)) {
+                access_denied('You dont have permission for this file');
+            }
+            break;
+        case 'FAIL': //if failed to login
+            login_failed();
+            break;
+        default:
+            throw new \Exception('Cannot login...');
+            break;
     }
-
 }
 ?>

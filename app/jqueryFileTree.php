@@ -16,30 +16,29 @@
 // Output a list of files for jQuery File Tree
 //
 
-require_once('config.php');
 require_once('../auth.php');
 require_once('classes/FileManager.php');
 
-$root = $ne2_config_info['upload_dir'];
+$root = $ne_config_info['upload_dir'];
 
 $dir = urldecode($_POST['dir']);
 $rechte = $_POST['rechte'];
 if( file_exists($root . $dir) ) {
 	$files = scandir($root . $dir);
-	natcasesort($files); 
+	natcasesort($files);
 	$html = "";
 	$filesinfo = array();
 	$fm = new FileManager();
 	if( count($files) > 2 ) { /* The 2 accounts for . and .. */
 		$html .= "<ul class=\"jqueryFileTree\" style=\"display: none;\">";
 		// All dirs
-		
+
 		/*spaeter benutzen. TODO, fuer rechte usw.
-		if($ne2_config_info['hide_sourceeditor'] == 0 && !$is_admin){
-			$forbFolders = $ne2_config_info['important_folders'];
+		if($ne_config_info['hide_sourceeditor'] == 0 && !$is_admin){
+			$forbFolders = $ne_config_info['important_folders'];
 			$files = array_diff($files, $forbFolders );
 		}*/
-                
+
                 //checkbox loading if post[checkbox] = 1;
 		foreach( $files as $file ) {
 			if( file_exists($root . $dir . $file) && $file != '.' && $file != '..' && is_dir($root . $dir . $file) ) {
@@ -53,7 +52,7 @@ if( file_exists($root . $dir) ) {
 		foreach( $files as $file ) {
 			if( file_exists($root . $dir . $file) && $file != '.' && $file != '..' && !is_dir($root . $dir . $file) ) {
 				$ext = preg_replace('/^.*\./', '', $file);
-				$relation = htmlentities($dir . $file); 
+				$relation = htmlentities($dir . $file);
                                 $chkHtml = ($rechte)? "<input class='check_box' type='checkbox' value='" . $relation . "'>": "";
                                 $origfile = $dir . $file;
 				$mainpath = $_SERVER['DOCUMENT_ROOT'];
@@ -61,8 +60,8 @@ if( file_exists($root . $dir) ) {
 				//datei info (array) zu dem $filesinfo array hinzufuegen
                                 $number=$number+1;
                                 $filesinfo[$number] = $fm->getFileInfo($mainpath. $origfile);
-                                
-                                
+
+
                              //   $filesinfo[$relation]['file_name'] = htmlentities($filesinfo[$relation]['file_name']);
 			}
 		}
@@ -79,7 +78,7 @@ if( file_exists($root . $dir) ) {
 //         function($matches)  {  return '&#'.hexdec($matches[1]).';';    }
 //        , json_encode($json_data));
 //        echo $json;
-        
+
         $json_data=array_utf8_encode_recursive($json_data);
       echo json_encode($json_data);
 	 // echo json_encode($json_data);
@@ -97,10 +96,10 @@ function array_utf8_encode_recursive($dat)
             }
             return $new;
           }
-         
+
           if (!is_array($dat)) return $dat;
           $ret = array();
           foreach($dat as $i=>$d) $ret[$i] = array_utf8_encode_recursive($d);
           return $ret;
-        } 
+        }
 ?>

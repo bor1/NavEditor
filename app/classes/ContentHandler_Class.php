@@ -18,29 +18,29 @@ class ContentHandler {
 	private $_content_marker_preinhaltsinfo;
 
 	function __construct($str_path) {
-		global $ne2_config_info;
+		global $ne_config_info;
 
-		$website_conf = $this->getConfValues($ne2_config_info['website']);
+		$website_conf = $this->getConfValues($ne_config_info['website']);
 		$this->_siteTitle = $website_conf['titel-des-Webauftritts'];
 		if($this->_siteTitle != '') {
 			$this->_siteTitle .= ': ';
 		}
-		$this->_defaultPath = $ne2_config_info['app_path'] . 'data/templates/seitenvorlage.html';
+		$this->_defaultPath = $ne_config_info['app_path'] . 'data/templates/seitenvorlage.html';
 		if(!file_exists($this->_defaultPath)) {
-			$this->_defaultPath = $ne2_config_info['app_path'] . 'data/templates/_seitenvorlage.html'; // fail-safe
+			$this->_defaultPath = $ne_config_info['app_path'] . 'data/templates/_seitenvorlage.html'; // fail-safe
 		}
 		$this->_newTemplateHtml = '';
 
-		$this->_content_block_pattern  = '/('.$ne2_config_info['page_content_marker_start'].')((\r|\n|\r\n|.)*?)('.$ne2_config_info['page_content_marker_end'].')/i';
+		$this->_content_block_pattern  = '/('.$ne_config_info['page_content_marker_start'].')((\r|\n|\r\n|.)*?)('.$ne_config_info['page_content_marker_end'].')/i';
 
 		$this->_content_block_pattern_fallback  = '/(<a name="contentmarke" id="contentmarke"><\/a>)((\r|\n|\r\n|.)*?)(<hr id="vorfooter" \/>)/i';
-		$this->_content_marker_start =  $ne2_config_info['page_content_marker_start']; //   || '<a name="contentmarke" id="contentmarke"></a>';
-		$this->_content_marker_end =  $ne2_config_info['page_content_marker_end']; //  || '<hr id="vorfooter" />';
+		$this->_content_marker_start =  $ne_config_info['page_content_marker_start']; //   || '<a name="contentmarke" id="contentmarke"></a>';
+		$this->_content_marker_end =  $ne_config_info['page_content_marker_end']; //  || '<hr id="vorfooter" />';
 		// fuer alte Templateversionen:
-		$this->_content_marker_start_fallback  =  $ne2_config_info['page_content_marker_start_fallback'];
-		$this->_content_marker_end_fallback =  $ne2_config_info['page_content_marker_end_fallback'];
+		$this->_content_marker_start_fallback  =  $ne_config_info['page_content_marker_start_fallback'];
+		$this->_content_marker_end_fallback =  $ne_config_info['page_content_marker_end_fallback'];
 
-                $this->_content_marker_preinhaltsinfo = $ne2_config_info['page_content_marker_preinhaltsinfo'];
+                $this->_content_marker_preinhaltsinfo = $ne_config_info['page_content_marker_preinhaltsinfo'];
 
 		$this->_filePath = $str_path;
 		if(file_exists($this->_filePath)) {
@@ -86,9 +86,9 @@ class ContentHandler {
 	}
 	private function replaceLogo() {
 		// <div id="logo">...</div>
-		global $ne2_config_info;
+		global $ne_config_info;
 		$pattern = '%<div id="logo">.*?</div>%s';
-		$logoValues = $this->getConfValues($ne2_config_info['website']);
+		$logoValues = $this->getConfValues($ne_config_info['website']);
 
 		If ($this->_filePath != $_SERVER['DOCUMENT_ROOT'].'/index.shtml'){
 			$hrefB = '<a href="/">';

@@ -1,12 +1,14 @@
 <?php
 /**
  * Logger + login wartezeit, bei brutforce.
- * @TODO neu als Klasse schreiben. +param max file size.
+ * @TODO neu als Klasse schreiben. +param max file size. +Klasse fuer sperrzeit extra
  */
-require_once('config.php');
 
-$logfile = $ne2_config_info['log_path'] . $ne2_config_info['file_loginlog'];
-$logHistory = $ne2_config_info['timeout_loghistory']; //Zeitperiode in Sekunden, die log beruecksichtigen muss.
+$logfile = $ne_config_info['log_file'];
+//Zeitperiode in Sekunden, die log beruecksichtigen muss.
+$logHistory = $ne_config_info['log_max_history'];
+//maximale user lock zeit
+$logMaxLock = $ne_config_info['login_max_lock_time'];
 
 function getOpName($operation) {
     switch ($operation) {
@@ -53,20 +55,15 @@ function logadd($operation, $msg = null) {
     if (isset($msg)) {
         $op .= ";  " . $msg;
     }
-    $logentry = time() . "\t" . date("d.m.Y - H:i:s ") . "\tIP/Hostname:\t" . $_SERVER["REMOTE_ADDR"] . "\t" . gethostbyaddr($_SERVER["REMOTE_ADDR"]) . "\tReferrer: " . $_SERVER["HTTP_REFERER"] . "\t" . $op . "\n";
+    $logentry = time() . "\t" . date("d.m.Y - H:i:s ") . "\tIP/Hostname:\t" . NavTools::ifsetor($_SERVER["REMOTE_ADDR"],'unknown') . "\t" . gethostbyaddr($_SERVER["REMOTE_ADDR"]) . "\tReferrer: " . NavTools::ifsetor($_SERVER["HTTP_REFERER"],'unknown') . "\t" . $op . "\n";
     //falls erfolgreich eingeloggt, alte gescheiterte versuche loeschen
     if ($operation == "loginOk" || $operation == "pwChanged") {
         delete_old_content($_SERVER["REMOTE_ADDR"]);
     }
 
-    if (file_exists($logfile)) {
-
-    }
-
-    $save = fopen($logfile, "a");
+    $save = fopen($logfile, 'a');
     fputs($save, $logentry);
     fclose($save);
-
 }
 
 //anzahl von bestimmten Erreignissen/operation
@@ -82,7 +79,7 @@ function countLog($operation, $newcontent = null) {
         //nun nur die benoetige log eintraege ($op) auslesen
         $ipAdresse = str_replace('.', '\.', $_SERVER["REMOTE_ADDR"]);
         $result = array();
-        preg_match_all('/([0-9]+).*\t' . $ipAdresse . '.*\t' . $op . '/', $newcontent, $result, PREG_PATTERN_ORDER);
+        preg_match_all('/^([0-9]+).*\t' . $ipAdresse . '.*\t' . $op . '/m', $newcontent, $result, PREG_PATTERN_ORDER);
         $counter = count($result[0]);
 
         $arr = array('counter' => $counter, 'lasttry' => end($result[1]));
@@ -93,9 +90,9 @@ function countLog($operation, $newcontent = null) {
 }
 
 function calcRestZeit($anzahlVersuche, $lastTry) {
-    global $logHistory;
+    global $logMaxLock;
     $toWaitFunc = ($anzahlVersuche * pow(1.5, $anzahlVersuche)) + $lastTry - time();
-    $maxTime = $logHistory;
+    $maxTime = $logMaxLock;
     if ($toWaitFunc >= ($maxTime)) {
         $toWaitFunc = $maxTime + $lastTry - time();
     } elseif ($toWaitFunc < 0) {
@@ -106,7 +103,7 @@ function calcRestZeit($anzahlVersuche, $lastTry) {
 
 //wartezeit fuer login, nach x fehlvesuche.
 function waitTimeForLogin() {
-    global $logfile, $ne2_config_info;
+    global $logfile, $ne_config_info;
     delete_old_content();
     $newcontent = file_get_contents($logfile);
     $logFail = countLog('loginFail', $newcontent);
@@ -131,7 +128,7 @@ function delete_old_content($ipAdresse = null) {
     $subject = file_get_contents($logfile);
 
     $newcontent = "";
-    preg_match_all('/([0-9]+).*/', $subject, $result, PREG_PATTERN_ORDER);
+    preg_match_all('/^([0-9]+).*/m', $subject, $result, PREG_PATTERN_ORDER);
 
     //alles was aelter einer bestimmter zeit ist, loeschen
     $timeLimit = time() - $logHistory;
@@ -143,9 +140,11 @@ function delete_old_content($ipAdresse = null) {
             }
         }
     }
-    $save = fopen($logfile, "w");
-    fputs($save, $newcontent);
-    fclose($save);
+
+    file_put_contents($logfile, $newcontent);
+//    $save = fopen($logfile, 'w');
+//    fputs($save, $newcontent);
+//    fclose($save);
 }
 
 function get_content_local($logfile){

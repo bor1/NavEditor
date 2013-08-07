@@ -11,21 +11,21 @@
  */
 
 require_once('../auth.php');
-require_once('../app/config.php');
+
 
 error_reporting(E_ALL | E_STRICT);
 
 class UploadHandler
 {
-	
+
     private $options;
     private $uploadDir;
 	private $rootDir;
-	
+
     function __construct($options=null) {
-	global $ne2_config_info;
+	global $ne_config_info;
 		$this->uploadDir = rawurldecode(isset($_REQUEST['folder']) ? $_REQUEST['folder'] : '/');
-		$this->rootDir = $ne2_config_info['upload_dir'];
+		$this->rootDir = $ne_config_info['upload_dir'];
         $this->options = array(
             'script_url' => $this->getFullUrl().'/'.basename(__FILE__),
 			'thumbprefix' => 'thumb_',
@@ -37,7 +37,7 @@ class UploadHandler
             'param_name' => 'files',
             // The php.ini settings upload_max_filesize and post_max_size
             // take precedence over the following max_file_size setting:
-            'max_file_size' => $ne2_config_info['max_upload_filesize']*1048576 ,
+            'max_file_size' => $ne_config_info['max_upload_filesize']*1048576 ,
             'min_file_size' => 1,
             'accept_file_types' => '/.+$/i',
             'max_number_of_files' => null,
@@ -67,7 +67,7 @@ class UploadHandler
             $this->options = array_replace_recursive($this->options, $options);
         }
     }
-	
+
 
 	function getFullUrl($mainPathOnly = null) {
 		return
@@ -78,7 +78,7 @@ class UploadHandler
 			$_SERVER['SERVER_PORT'] == 80 ? '' : ':'.$_SERVER['SERVER_PORT']))).
 			(isset($mainPathOnly) ? '' : substr($_SERVER['SCRIPT_NAME'],0, strrpos($_SERVER['SCRIPT_NAME'], '/')));
 	}
-    
+
     private function get_file_object($file_name) {
         $file_path = $this->options['upload_dir'].$file_name;
         if (is_file($file_path) && $file_name[0] !== '.') {
@@ -99,7 +99,7 @@ class UploadHandler
         }
         return null;
     }
-    
+
     private function get_file_objects() {
         return array_values(array_filter(array_map(
             array($this, 'get_file_object'),
@@ -161,7 +161,7 @@ class UploadHandler
         @imagedestroy($new_img);
         return $success;
     }
-    
+
     private function has_error($uploaded_file, $file, $error) {
         if ($error) {
             return $error;
@@ -191,18 +191,18 @@ class UploadHandler
         }
         return $error;
     }
-    
+
     private function trim_file_name($name, $type) {
         // Remove path information and dots around the filename, to prevent uploading
         // into different directories or replacing hidden system files.
         // Also remove control characters and spaces (\x00..\x20) around the filename:
-        // 
+        //
        $file_name = trim(basename(stripslashes($name)), ".\x00..\x1F");
-       $file_name =  preg_replace('/[\s]+/', '-', $file_name); 
-       $file_name =  preg_replace('/[\-]+/', '-', $file_name); 
+       $file_name =  preg_replace('/[\s]+/', '-', $file_name);
+       $file_name =  preg_replace('/[\-]+/', '-', $file_name);
        $file_name =  preg_replace('/[^A-Za-z0-9\-\._]/', '', $file_name);
-        
-        
+
+
         // Add missing file extension for known image types:
         if (strpos($file_name, '.') === false &&
             preg_match('/^image\/(gif|jpe?g|png)/', $type, $matches)) {
@@ -210,7 +210,7 @@ class UploadHandler
         }
         return strtolower($file_name);
     }
-    
+
     private function handle_file_upload($uploaded_file, $name, $size, $type, $error) {
         $file = new stdClass();
         $file->name = $this->trim_file_name($name, $type);
@@ -263,7 +263,7 @@ class UploadHandler
         }
         return $file;
     }
-	
+
     public function get() {
         // $file_name = isset($_REQUEST['file']) ?
             // basename(stripslashes($_REQUEST['file'])) : null;
@@ -276,7 +276,7 @@ class UploadHandler
         //echo json_encode($info);
 		echo "[]";
     }
-    
+
     public function post() {
         if (isset($_REQUEST['_method']) && $_REQUEST['_method'] === 'DELETE') {
             return $this->delete();
@@ -328,7 +328,7 @@ class UploadHandler
         }
         echo $json;
     }
-    
+
     public function delete() {
         $file_name = isset($_REQUEST['file']) ?
             basename(stripslashes($_REQUEST['file'])) : null;

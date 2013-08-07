@@ -1,5 +1,4 @@
 <?php
-require_once('config.php');
 require_once('../auth.php');
 require('classes/Snoopy.class.php');
 require_once('classes/FileManager.php');
@@ -59,7 +58,7 @@ function http_get_file($url) {
 
 $chlog = '';
 $updates_info = array(
-    'current_version' => $ne2_config_info['version'],
+    'current_version' => $ne_config_info['version'],
     'has_stable_update' => FALSE,
     'stable_version' => '',
     'stable_chlog' => '',
@@ -70,11 +69,11 @@ $updates_info = array(
 );
 
 function check_update() {
-    global $ne2_config_info;
+    global $ne_config_info;
     global $updates_info;
 
     $err = FALSE;
-    $url = $ne2_config_info['update_url'] . 'ver.txt';
+    $url = $ne_config_info['update_url'] . 'ver.txt';
     try {
         $ver = trim(http_get_file($url));
         if($ver) {
@@ -87,11 +86,11 @@ function check_update() {
                 $ver = (int)str_replace('.', '', $ver);
             }
 
-            $cur_ver = $ne2_config_info['version'];
+            $cur_ver = $ne_config_info['version'];
             $cur_ver = (int)str_replace('.', '', $cur_ver);
 
             if(($err === FALSE)) { // has stable update
-                $chlog = http_get_file($ne2_config_info['update_url'] . 'changelog_' . $updates_info['stable_version'] . '.txt');
+                $chlog = http_get_file($ne_config_info['update_url'] . 'changelog_' . $updates_info['stable_version'] . '.txt');
                 $chlog = str_replace(array("\r", "\n", "\r\n"), '<br />', $chlog);
                 if($cur_ver < $ver)
                     $updates_info['has_stable_update'] = TRUE;
@@ -108,7 +107,7 @@ function check_update() {
                 // if($cur_ver < $tver1) {
                     $updates_info['has_test_update'] = TRUE;
                     $updates_info['test_version'] = $tver;
-                    $tchlog = http_get_file($ne2_config_info['update_url'] . 'changelog_' . $updates_info['test_version'] . '.txt');
+                    $tchlog = http_get_file($ne_config_info['update_url'] . 'changelog_' . $updates_info['test_version'] . '.txt');
                     $tchlog = str_replace(array("\r", "\n", "\r\n"), '<br />', $tchlog);
                     $updates_info['test_chlog'] = $tchlog;
                 // }
@@ -122,19 +121,19 @@ function check_update() {
 }
 
 function do_update($file_name) {
-    global $ne2_config_info;
+    global $ne_config_info;
     global $fm;
     // download
-    $fname = $ne2_config_info['app_path'] . 'ne2_update_download.zip'; // temp filename
+    $fname = $ne_config_info['app_path'] . 'ne2_update_download.zip'; // temp filename
     $fh = fopen($fname, 'w');
-    $url = $ne2_config_info['update_url'] . $file_name;
+    $url = $ne_config_info['update_url'] . $file_name;
     $data = http_get_file($url);
     fwrite($fh, $data);
     fclose($fh);
 
     // Sichern der alten Configfiles
-    for($i=0;$i<count($ne2_config_info['live_update_backupfiles']);$i++) {
-        $backupconfigfile = $ne2_config_info['config_path'].$ne2_config_info['live_update_backupfiles'][$i];
+    for($i=0;$i<count($ne_config_info['live_update_backupfiles']);$i++) {
+        $backupconfigfile = $ne_config_info['config_path'].$ne_config_info['live_update_backupfiles'][$i];
         $fm->backupCurrentConfigFile($backupconfigfile);
     }
 
@@ -145,7 +144,7 @@ function do_update($file_name) {
     $zip = new ZipArchive();
     $zor = $zip->open($fname);
     if($zor) {
-        $rpath = substr($ne2_config_info['app_path'], 0, strlen($ne2_config_info['app_path']) - 11) . '';
+        $rpath = substr($ne_config_info['app_path'], 0, strlen($ne_config_info['app_path']) - 11) . '';
         $zip->extractTo($rpath); // !!!
         $zip->close();
         @unlink($fname);
@@ -153,8 +152,8 @@ function do_update($file_name) {
         // Und hier ggf. die alten Configs wieder einspielen
         // ggf. neue configs in _$name speichern
 
-        for($i=0;$i<count($ne2_config_info['live_update_backupfiles']);$i++) {
-            $backupconfigfile = $ne2_config_info['config_path'].$ne2_config_info['live_update_backupfiles'][$i];
+        for($i=0;$i<count($ne_config_info['live_update_backupfiles']);$i++) {
+            $backupconfigfile = $ne_config_info['config_path'].$ne_config_info['live_update_backupfiles'][$i];
             $fm->restoreCurrentConfigFile($backupconfigfile);
         }
 

@@ -1,17 +1,14 @@
 <?php
-require_once('app/config.php');
-require_once('app/classes/UserMgmt_Class.php');
-require_once('app/log_funcs.php');
-require_once ('app/sessions.php');
+require_once('auth.php');
 
 function removeLockFiles($dir, $cur_user) {
-    global $ne2_config_info;
+    global $ne_config_info;
     if(!$cur_user){return;}
     if (is_dir($dir)) {
         if ($dh = opendir($dir)) {
             while (FALSE !== ($file = readdir($dh))) {
                 // escaped dirs
-                if (!in_array($file, $ne2_config_info['nologoupdate_dir'])) {
+                if (!in_array($file, $ne_config_info['nologoupdate_dir'])) {
                     if (is_dir($dir . '/' . $file)) {
                         // recursively
                         removeLockFiles($dir . '/' . $file, $cur_user);
@@ -31,11 +28,10 @@ function removeLockFiles($dir, $cur_user) {
     }
 }
 
-\sessions\setSession();
 
 $cur_user = '';
-if (isset($_SESSION['ne2_username'])) {
-    $cur_user = $_SESSION['ne2_username'];
+if (isset($_SESSION['ne_username'])) {
+    $cur_user = $_SESSION['ne_username'];
 }
 
 // remoive self's .lock files
@@ -56,7 +52,7 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>Ausloggen - <?php echo($ne2_config_info['app_titleplain']); ?></title>
+        <title>Ausloggen - <?php echo($ne_config_info['app_titleplain']); ?></title>
         <link rel="stylesheet" type="text/css" href="css/styles.css?<?php echo date('Ymdis'); ?>" />
     </head>
 

@@ -1,8 +1,7 @@
 <?php
-require_once('config.php');
 require_once('../auth.php');
 
-$fpath = $ne2_config_info['usual_configs_path'];
+$fpath = $ne_config_info['usual_configs_path'];
 $htusers_file = $fpath . '.htusers';
 $hthosts_file = $fpath . 'hthosts';
 
@@ -23,7 +22,7 @@ $oper = $_REQUEST['oper'];
 $filename = $_REQUEST['conf_file_name'];
 $fpath = $fpath . $filename;
 if($filename == 'ne2_config.conf') {
-    $fpath = $ne2_config_info['config_path'] .'ne2_config.conf';
+    $fpath = $ne_config_info['config_path'] .'ne2_config.conf';
 }
 
 switch($oper) {

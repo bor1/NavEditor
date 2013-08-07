@@ -5,18 +5,15 @@
  */
 
 
-require_once('config.php');
 require_once('../auth.php');
-require_once('classes/UserMgmt_Class.php');
 require_once ('classes/Input.php');
 
 
 
 $oper = $_REQUEST['json_oper'];
-$um = new UserMgmt();
 
 if($oper == 'get_users') {
-    $users = $um->GetUsers('array');
+    $users = $g_UserMgmt->GetUsers('array');
             for($i = 0; $i< count($users); $i++){
                 $users[$i]['password_hash'] = "";
             }
@@ -26,7 +23,7 @@ if($oper == 'get_users') {
 if($oper == 'create_user') {
     $new_user_name = NavTools::filterSymbols(Input::get_post('user'));//nicht erlaubte symbole filtern
     $params = json_decode(stripslashes(Input::get_post('params')), true);
-    if(!$um->AddUser($new_user_name, $params)) {
+    if(!$g_UserMgmt->AddUser($new_user_name, $params)) {
         echo('Add user failed, maybe the username already exists!');
     } else {
         echo('Add user ' . $new_user_name . ' done!');
@@ -42,8 +39,8 @@ if($oper == 'update_user') {
                 unset($paramArray['password_hash']);
             }
             //remove not editable values
-            $userArray = array_diff_key($paramArray, get_ne2_user_params_not_editable());
-            if(!$um->UpdateUser($user, $userArray)) {
+            $userArray = array_diff_key($paramArray, get_ne_user_params_not_editable());
+            if(!$g_UserMgmt->UpdateUser($user, $userArray)) {
         echo('Update user failed!');
     } else {
         echo('Update user ' . $user . ' done!');
@@ -56,7 +53,7 @@ if($oper == 'remove_user') {
                 echo('Can not remove admin!');
                 return;
             }
-    if(!$um->RemoveUser($user_name)) {
+    if(!$g_UserMgmt->RemoveUser($user_name)) {
         echo('Remove user failed!');
     } else {
         echo('Remove user OK!');

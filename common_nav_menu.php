@@ -1,24 +1,25 @@
 <?php
-
+require_once('auth.php');
+\auth\no_direct_call(__FILE__);
 
 function createSubMenu($num)   {
-    global $ne2_menu;
+    global $ne_menu;
     global $g_current_user_name;
+    global $g_UserMgmt;
 
     $actualPage = $_SERVER['PHP_SELF'];
 //    $actualPath = $_SERVER['REQUEST_URI'];
     $actualPageName = basename($actualPage);
 
     $link = '';
-    $um = new UserMgmt();
-	foreach ($ne2_menu as $i => $v) {
+	foreach ($ne_menu as $i => $v) {
     		$class = '';
     		$attribute = '';
     		$desc = '';
     		$key = $v['id'];
 
     		if ($num == $v['up']) {
-                        if($um ->isAllowAccess($v['id'], $g_current_user_name)){
+                        if($g_UserMgmt->isAllowAccessMenu($v['id'], $g_current_user_name)){
 				if ($actualPageName == $v['link']) {
 					$class .= 'current';
 				}

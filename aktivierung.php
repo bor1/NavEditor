@@ -1,12 +1,11 @@
 <?php
-require_once('app/config.php');
-require_once('app/log_funcs.php');
-require_once('app/classes/UserMgmt_Class.php');
+require_once('auth.php');
+
 
 //TODO sicherheit ueberpruefen, refactoring, comments
 
 $toWait = 0;
-$keyfilepath = $ne2_config_info['temp_path'] . '.akt_key_tmp';
+$keyfilepath = $ne_config_info['temp_path'] . '.akt_key_tmp';
 
 function keyvergleichen($keyInput) {
     global $keyfilepath;
@@ -36,7 +35,7 @@ function calcWaitTimeByOper($operation) {
 }
 
 function sendmail($admin_mail, $key) {
-    $headers .= "MIME-Version: 1.0\r\n";
+    $headers = "MIME-Version: 1.0\r\n";
     $headers .= "Content-type: text/plain; charset=utf-8\r\n";
     //mail inhalt beginn
     $server_admin = NavTools::getServerAdmin();
@@ -61,8 +60,7 @@ function sendmail($admin_mail, $key) {
 }
 
 // wenn die seite unnoetig aufgerufen wird, zum login weiterleiten.
-$um = new UserMgmt();
-if (!is_null($um->GetUsers())) {
+if (!is_null($g_UserMgmt->GetUsers())) {
     header("Location: login.php");
 }
 
@@ -73,56 +71,68 @@ if (isset($_GET['oper'])) {
     $oper = "aktivierung"; //mit der operation anfangen
 }
 
-if ($oper == "sendmail") {
-    $toWait = calcWaitTimeByOper('mailSent');
-    if ($toWait > 5) {
-        $oper = "wait";
-        $message = "Mail zu oft angefordert, bitte warten Sie noch: ";
-    } else {
-        $admin_mail = $_SERVER['SERVER_ADMIN'];
-        $key = md5(uniqid(rand(), true));
-        $md5key = md5($key);
-        keyerstellen($md5key);
-        sendmail($admin_mail, $key);
-        logadd("mailSent");
-        $oper = "keyeingabe";
-    }
-} else if ($oper == "uselink") {
-    $toWait = calcWaitTimeByOper('wrongKey');
-    if ($toWait > 5) {
-        $oper = "wait";
-        $message = "Zu viele Fehlversuche den Schl&uuml;ssel einzugeben, bitte warten Sie noch: ";
-    } else {
-        $key = $_GET['key'];
-        logadd("aktLinkUsed"); //probably dont need
-        if (!keyvergleichen($key)) {
-            $oper = "wrongkey";
-            $message = "Der Schl&uuml;ssel ist falsch";
-            logadd("wrongKey");
+
+switch ($oper) {
+    case 'sendmail':
+        $toWait = calcWaitTimeByOper('mailSent');
+        if ($toWait > 5) {
+            $oper = "wait";
+            $message = "Mail zu oft angefordert, bitte warten Sie noch: ";
+        } else {
+            $admin_mail = $_SERVER['SERVER_ADMIN'];
+            $key = md5(uniqid(rand(), true));
+            $md5key = md5($key);
+            keyerstellen($md5key);
+            sendmail($admin_mail, $key);
+            logadd("mailSent");
+            $oper = "keyeingabe";
+        }
+        break;
+
+
+    case 'uselink':
+        $toWait = calcWaitTimeByOper('wrongKey');
+        if ($toWait > 5) {
+            $oper = "wait";
+            $message = "Zu viele Fehlversuche den Schl&uuml;ssel einzugeben, bitte warten Sie noch: ";
+        } else {
+            $key = $_GET['key'];
+            logadd("aktLinkUsed"); //probably dont need
+            if (!keyvergleichen($key)) {
+                $oper = "wrongkey";
+                $message = "Der Schl&uuml;ssel ist falsch";
+                logadd("wrongKey");
+                unlink($keyfilepath);
+            }
+        }
+        break;
+
+
+    case 'aktiviert':
+        $toWait = calcWaitTimeByOper('wrongKey');
+        if ($toWait > 5) {
+            $oper = "wait";
+            $message = "Zu viele Fehlversuche den Schl&uuml;ssel einzugeben, bitte warten Sie noch: ";
+        } else {
+            $key = $_POST['key'];
+            $server_admin = NavTools::getServerAdmin();
+            $user_pwd = $_POST['txtPw'];
+            if (keyvergleichen($key)) {
+                if ($g_UserMgmt->AddUser($server_admin, Array('password_hash' => md5($user_pwd)), '/')) {
+                    $message = "Webauftritt erfolgreich aktiviert!";
+                } else {
+                    $message = "Ein Fehler aufgetretten";
+                }
+            } else {
+                $message = "Key wrong!? Oo pls dont hack!";
+                logadd("wrongKey");
+            }
             unlink($keyfilepath);
         }
-    }
-} else if ($oper == "aktiviert") {
-    $toWait = calcWaitTimeByOper('wrongKey');
-    if ($toWait > 5) {
-        $oper = "wait";
-        $message = "Zu viele Fehlversuche den Schl&uuml;ssel einzugeben, bitte warten Sie noch: ";
-    } else {
-        $key = $_POST['key'];
-        $server_admin = NavTools::getServerAdmin();
-        $user_pwd = $_POST['txtPw'];
-        if (keyvergleichen($key)) {
-            if ($um->AddUser($server_admin, Array('password_hash' => md5($user_pwd)), '/')) {
-                $message = "Webauftritt erfolgreich aktiviert!";
-            } else {
-                $message = "Ein Fehler aufgetretten";
-            }
-        } else {
-            $message = "Key wrong!? Oo pls dont hack!";
-            logadd("wrongKey");
-        }
-        unlink($keyfilepath);
-    }
+        break;
+
+    default://aktivierung
+        break;
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -130,7 +140,7 @@ if ($oper == "sendmail") {
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>Aktivierung - <?php echo($ne2_config_info['app_titleplain']); ?></title>
+        <title>Aktivierung - <?php echo($ne_config_info['app_titleplain']); ?></title>
         <link rel="stylesheet" type="text/css" href="css/styles.css?<?php echo date('Ymdis'); ?>" />
     </head>
     <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
@@ -199,62 +209,77 @@ if ($oper == "sendmail") {
         <div id="wrapper">
             <h1 id="header">Aktivierung</h1>
             <div id="textbereich" style="text-align: center">
-                <?php if (strcmp($oper, "aktivierung") == 0) { ?>
-                    <p>Der NavEditor wurde noch nicht aktiviert und kann daher noch nicht benutzt werden.<br/>
-                        Zur Aktivierung fordern Sie durch Klicken auf den folgenden Button ein Aktivierungsschl&uuml;ssel
-                        an:</p>
-                    <input type="button" id="getActKey" name="getActKey" class="button" value=" Aktivierungsschl&uuml;ssel anfordern" /></center><br/>
-                    <p>Dieser Schl&uuml;ssel wird &uuml;ber E-Mail an die Adresse des f&uuml;r den Webauftritt eingetragenen Hauptwebmasters geschickt.<br/>
-                        Nach Zustellung des Aktivierungsschl&uuml;ssel geben Sie diesen auf der folgenden Seite ein oder klicken einfach auf den Link in der E-Mail.<br/>
-                        Danach werden Sie aufgefordert ein neues Passwort zu vergeben, mit dem Sie sich zuk&uuml;nftig im NavEditor authentifizieren.
-                    </p>
-                    <p>
-                        <b>
-                            Hinweis:
-                        </b>
-                        Sollten Sie als Hauptwebmaster innerhalb der nächsten Minuten keine E-Mail erhalten,<br/>
-                        liegt m&ouml;glicherweise eine falsche Zuordnung der Webmasterkennung zu der E-Mailadresse
-                        vor.<br/> Wenden Sie sich in diesem Fall an <a href="mailto:webmaster@rrze.uni-erlangen.de">webmaster@rrze.fau.de</a>.
 
-                    </p>
+                <?php
+                switch ($oper) {
+                    //Standardausgabe
+                    case 'aktivierung':
+                        ?>
 
-                    <?php
-                }
-                //code anfordern geklickt
-                elseif (strcmp($oper, "keyeingabe") == 0) {
-                    ?>
-                    <p>Geben Sie hier den Aktivierungsschl&uuml;ssel ein, den Sie via E-Mail erhalten haben:</p>
-                    <form id="frmKey" name="frmKey" action="aktivierung.php" method="get" style="width: 100%;text-align: center;">
-                        <input type="text" id="key" name="key" size="37" class="textBox" /><br/>
-                        <input type="submit" id="weiter" name="weiter" class="button" value="weiter" />
-                        <input type="hidden" id="oper" name="oper" value="uselink">
-                    </form>
-                    <?php
-                }
-                // link benutzt oder code eingegeben
-                elseif (strcmp($oper, "uselink") == 0) {
-                    ?>
+                        <p>Der NavEditor wurde noch nicht aktiviert und kann daher noch nicht benutzt werden.<br/>
+                            Zur Aktivierung fordern Sie durch Klicken auf den folgenden Button ein Aktivierungsschl&uuml;ssel
+                            an:</p>
+                        <input type="button" id="getActKey" name="getActKey" class="button" value=" Aktivierungsschl&uuml;ssel anfordern" /></center><br/>
+                        <p>Dieser Schl&uuml;ssel wird &uuml;ber E-Mail an die Adresse des f&uuml;r den Webauftritt eingetragenen Hauptwebmasters geschickt.<br/>
+                            Nach Zustellung des Aktivierungsschl&uuml;ssel geben Sie diesen auf der folgenden Seite ein oder klicken einfach auf den Link in der E-Mail.<br/>
+                            Danach werden Sie aufgefordert ein neues Passwort zu vergeben, mit dem Sie sich zuk&uuml;nftig im NavEditor authentifizieren.
+                        </p>
+                        <p>
+                            <b>
+                                Hinweis:
+                            </b>
+                            Sollten Sie als Hauptwebmaster innerhalb der nächsten Minuten keine E-Mail erhalten,<br/>
+                            liegt m&ouml;glicherweise eine falsche Zuordnung der Webmasterkennung zu der E-Mailadresse
+                            vor.<br/> Wenden Sie sich in diesem Fall an <a href="mailto:webmaster@rrze.uni-erlangen.de">webmaster@rrze.fau.de</a>.
 
-                    <form id="frmPw" name="frmPw" action="aktivierung.php?oper=aktiviert" method="post" style="width: 100%;text-align: left;margin-left:100px;"><br/><br/>
-                        <label for="txtPw" style="width:20em;display:inline-block;">Neues Passwort:</label>
-                        <input type="password" id="txtPw" name="txtPw" size="16" class="textBox" /><br/><br/>
-                        <label for="txtPwRe"style="width:20em;display:inline-block;">Best&auml;tigung des Passworts:</label>
-                        <input type="password" id="txtPwRe" name="txtPwRe" size="16" class="textBox" /><br/><br/>
-                        <input type="submit" id="btnPwSet" name="btnPwSet" class="button" value="aktivieren" />
-                        <input type="hidden" id="key" name="key" value="<?php echo htmlspecialchars($_GET['key']) ?>">
-                    </form>
+                        </p>
 
-                    <?php
-                }
-                // code war falsch
-                elseif (strcmp($oper, "wrongkey") == 0) {
-                    echo "<p style='color:red;text-align:center;'>" . $message . "<br/>\n";
-                    echo "<a href='aktivierung.php?oper=sendmail'>Noch mal den Schl&uuml;ssel senden</a><p>";
-                } elseif (strcmp($oper, "wait") == 0) {
-                    echo "<p style='text-align:center;font-size:large;'>" . $message . "<div id='timeBlock' name='timeBlock' style='color: red;text-align:center;font-size:x-large;'></div><p><br/>\n";
-                } elseif (strcmp($oper, "aktiviert") == 0) {
-                    echo "<script type='text/javascript'>alert('" . $message . "');";
-                    echo "window.location.href = 'login.php';</script>";
+                        <?php
+                        break;
+
+                    case 'keyeingabe':
+                        ?>
+                        <p>Geben Sie hier den Aktivierungsschl&uuml;ssel ein, den Sie via E-Mail erhalten haben:</p>
+                        <form id="frmKey" name="frmKey" action="aktivierung.php" method="get" style="width: 100%;text-align: center;">
+                            <input type="text" id="key" name="key" size="37" class="textBox" /><br/>
+                            <input type="submit" id="weiter" name="weiter" class="button" value="weiter" />
+                            <input type="hidden" id="oper" name="oper" value="uselink" />
+                        </form>
+                        <?php
+                        break;
+
+                    case 'uselink':
+                        ?>
+
+                        <form id="frmPw" name="frmPw" action="aktivierung.php?oper=aktiviert" method="post" style="width: 100%;text-align: left;margin-left:100px;"><br/><br/>
+                            <label for="txtPw" style="width:20em;display:inline-block;">Neues Passwort:</label>
+                            <input type="password" id="txtPw" name="txtPw" size="16" class="textBox" /><br/><br/>
+                            <label for="txtPwRe"style="width:20em;display:inline-block;">Best&auml;tigung des Passworts:</label>
+                            <input type="password" id="txtPwRe" name="txtPwRe" size="16" class="textBox" /><br/><br/>
+                            <input type="submit" id="btnPwSet" name="btnPwSet" class="button" value="aktivieren" />
+                            <input type="hidden" id="key" name="key" value="<?php echo htmlspecialchars($_GET['key']) ?>" />
+                        </form>
+
+                        <?php
+                        break;
+
+                    case 'wrongkey':
+                        echo '<p style="color:red;text-align:center;">' . $message . '<br/>';
+                        echo '<a href="aktivierung.php?oper=sendmail">Noch mal den Schl&uuml;ssel senden</a><p>';
+                        break;
+
+                    case 'wait':
+                        echo '<p style="text-align:center;font-size:large;">'
+                        . $message .
+                        '<div id="timeBlock" name="timeBlock" style="color: red;text-align:center;font-size:x-large;"></div><p><br/>';
+                        break;
+
+                    case 'aktiviert':
+                        echo '<script type="text/javascript">alert("' . $message . '");';
+                        echo 'window.location.href = "login.php";</script>';
+                        break;
+                    default:
+                        break;
                 }
                 ?>
             </div>

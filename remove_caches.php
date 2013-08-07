@@ -1,6 +1,5 @@
 <?php
 require_once('auth.php');
-require_once('app/config.php');
 
 
 $caches = Array(
@@ -44,15 +43,15 @@ function delFilesInFolder($dir){
 if(is_array($toRemovePaths) && count($toRemovePaths) > 0){
     //loeschen
     foreach($toRemovePaths as $pathToClear){
-        delFilesInFolder($ne2_config_info['cgi-bin_path'].$pathToClear);
+        delFilesInFolder($ne_config_info['cgi-bin_path'].$pathToClear);
     }
 }
 
 
 // help
 function has_help_file() {
-	global $ne2_config_info;
-	$help_file = $ne2_config_info['help_path'] .'remove_caches'. $ne2_config_info['help_filesuffix'] ;
+	global $ne_config_info;
+	$help_file = $ne_config_info['help_path'] .'remove_caches'. $ne_config_info['help_filesuffix'] ;
 	return file_exists($help_file);
 }
 
@@ -64,7 +63,7 @@ function has_help_file() {
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Cache leeren - <?php echo($ne2_config_info['app_titleplain']); ?></title>
+<title>Cache leeren - <?php echo($ne_config_info['app_titleplain']); ?></title>
 
 <?php
     echo NavTools::includeHtml("default",
@@ -82,7 +81,7 @@ $(document).ready(function() {
 
 <body id="bd_removeCaches">
 <div id="wrapper">
-	<h1 id="header"><?php echo($ne2_config_info['app_title']); ?></h1>
+	<h1 id="header"><?php echo($ne_config_info['app_title']); ?></h1>
 	<div id="navBar">
 		<?php require('common_nav_menu.php'); ?>
 	</div>

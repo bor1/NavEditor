@@ -1,12 +1,11 @@
 <?php
 require_once('auth.php');
-require_once('app/config.php');
 
 
 // help
 function has_help_file() {
-	global $ne2_config_info;
-	$help_file = $ne2_config_info['help_path'] .'nav_editor'. $ne2_config_info['help_filesuffix'] ;
+	global $ne_config_info;
+	$help_file = $ne_config_info['help_path'] .'nav_editor'. $ne_config_info['help_filesuffix'] ;
 	return file_exists($help_file);
 }
 
@@ -39,11 +38,11 @@ function removeTempFiles($dir) {
 }
 
 // prepare for the first run!
-$updated_mark_file = $ne2_config_info['app_path'] . 'data/just_updated.txt';
+$updated_mark_file = $ne_config_info['app_path'] . 'data/just_updated.txt';
 // check for template existence
 
-$templ_path_sv0 = $ne2_config_info['template_path'] . '_'. $ne2_config_info['template_default'];
-$templ_path_sv1 = $ne2_config_info['template_path'] . $ne2_config_info['template_default'];
+$templ_path_sv0 = $ne_config_info['template_path'] . '_'. $ne_config_info['template_default'];
+$templ_path_sv1 = $ne_config_info['template_path'] . $ne_config_info['template_default'];
 
 
 if(!file_exists($templ_path_sv1)) {
@@ -64,9 +63,9 @@ if(file_exists($dirty_indicator)) {
 }
 
 $custom_css_classes = '';
-if($ne2_config_info['custom_content_css_classes'] != '') {
+if($ne_config_info['custom_content_css_classes'] != '') {
 	$custom_css_classes = array();
-	$arr_cls = explode('|', $ne2_config_info['custom_content_css_classes']);
+	$arr_cls = explode('|', $ne_config_info['custom_content_css_classes']);
 	foreach($arr_cls as $ac) {
 		array_push($custom_css_classes, $ac . '=' . $ac);
 	}
@@ -74,7 +73,7 @@ if($ne2_config_info['custom_content_css_classes'] != '') {
 }
 
 $navtree_start_open = 'true';
-if($ne2_config_info['navtree_start_open'] == '0') {
+if($ne_config_info['navtree_start_open'] == '0') {
 	$navtree_start_open = 'false';
 }
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -82,9 +81,9 @@ if($ne2_config_info['navtree_start_open'] == '0') {
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Seiten bearbeiten - <?php echo($ne2_config_info['app_titleplain']); ?></title>
+<title>Seiten bearbeiten - <?php echo($ne_config_info['app_titleplain']); ?></title>
 <link rel="stylesheet" type="text/css" href="css/styles.css?<?php echo date('Ymdis'); ?>" />
-<?php if($ne2_config_info['show_navtree_numbers'] == '0') { ?>
+<?php if($ne_config_info['show_navtree_numbers'] == '0') { ?>
 <style type="text/css">
 #dirTreePanel li em.treeKey {
 	display: none;
@@ -117,7 +116,7 @@ tinymce.create('tinymce.plugins.VarsPlugin', {
                 // jquery -> json config vars von variables.conf holen, und dynamisch listbox erstellen
 					$.getJSON("app/edit_conf.php?r=" + Math.random(), {
 						"oper": "get_conf",
-						"conf_file_name": '<?php echo($ne2_config_info['variables']); ?>'
+						"conf_file_name": '<?php echo($ne_config_info['variables']); ?>'
 					}, function(rdata){
 						for(var i = 0; i < rdata.length; i++) {
 							var ciName = rdata[i].opt_name;
@@ -1203,7 +1202,7 @@ $(document).ready(function() {
 
 	makeTreeDirty(g_treeIsDirty);
 
-	setInterval("keepSession()", 1000 * <?php echo($ne2_config_info['js_keep_session_time']); ?>);
+	setInterval("keepSession()", 1000 * <?php echo($ne_config_info['js_keep_session_time']); ?>);
 });
 
 
@@ -1221,7 +1220,7 @@ function trythis(){
 
 <body id="bd_Nav" onload="btnStartClick();">
 <div id="wrapper">
-	<h1 id="header"><?php echo($ne2_config_info['app_title']); ?></h1>
+	<h1 id="header"><?php echo($ne_config_info['app_title']); ?></h1>
 	<div id="navBar">
 		<?php require('common_nav_menu.php'); ?>
 	</div>

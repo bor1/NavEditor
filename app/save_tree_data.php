@@ -1,5 +1,4 @@
 <?php
-require_once('config.php');
 require_once('../auth.php');
 require_once('classes/SimpleLogger_Class.php');
 require_once('classes/FileHandler_Class.php');
@@ -19,7 +18,7 @@ if(get_magic_quotes_gpc()) {
 	$jsonArray = json_decode($jsonTreeData, TRUE);
 }
 
-$lgr = new SimpleLogger($ne2_config_info['app_path'] . 'data/.htNavEditor.log');
+$lgr = new SimpleLogger($ne_config_info['app_path'] . 'data/.htNavEditor.log');
 $fhr = new FileHandler();
 
 $fhr->setLogger($lgr);
