@@ -8,7 +8,7 @@ function has_help_file() {
 	return file_exists($help_file);
 }
 
-if(!file_exists("../../".$ne_config_info['website']) || !file_exists("../../".$ne_config_info['variables'])){
+if(!file_exists("../../".$ne_config_info['website_conf_filename']) || !file_exists("../../".$ne_config_info['variables_conf_filename'])){
 	header('Location: website_editor.php');
 }
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">

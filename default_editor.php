@@ -1,12 +1,12 @@
 <?php
 require_once('auth.php');
-require_once('app/classes/BereichsManager.php');
+require_once('app/classes/AreasManager.php');
 
 
 $thiseditor = null;
 
-$BerManager = new BereichsManager();
-$alleBereiche = $BerManager->getAllAreaSettings();
+$AreaManager = new AreasManager();
+$alleBereiche = $AreaManager->getAllAreaSettings();
 
 foreach ($alleBereiche as $value) {
     if(isset($_GET[$value['name']])){
@@ -85,7 +85,7 @@ var this_editor_name = '<?php echo $thiseditor['name'];?>';
 function loadContent() {
 	if(tinymceReady) {
 
-        NavTools.call_php('app/classes/BereichsEditor.php', 'get_content',
+        NavTools.call_php('app/classes/AreasEditor.php', 'get_content',
                         {tinymce: true, bereich: this_editor_name},
                         loadContentCallback);
 
@@ -113,7 +113,7 @@ $(document).ready(function() {
 			cnt = cnt.replace(/<!--/g, "<comment>");
 			cnt = cnt.replace(/-->/g, "</comment>");
 
-            NavTools.call_php('app/classes/BereichsEditor.php', 'update_content',
+            NavTools.call_php('app/classes/AreasEditor.php', 'update_content',
                         {tinymce: true, bereich: this_editor_name, new_content: cnt},
                         saveContentCallback);
 		}

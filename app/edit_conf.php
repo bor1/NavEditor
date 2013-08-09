@@ -1,7 +1,7 @@
 <?php
 require_once('../auth.php');
 
-$fpath = $ne_config_info['usual_configs_path'];
+$fpath = $ne_config_info['default_configs_path'];
 $htusers_file = $fpath . '.htusers';
 $hthosts_file = $fpath . 'hthosts';
 

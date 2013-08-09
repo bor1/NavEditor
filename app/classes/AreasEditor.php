@@ -8,10 +8,10 @@ require_once 'NavTools.php';
  * @uses config.php some global variables
  * @uses NavTools.php some functions
  * @author Dmitry Gorelenkov
- * @internal Purpose: learning PHP -> probably low quality code, sorry :/
+ * @internal note: learning PHP -> probably low quality code, sorry :/
  *
  */
-class BereichsEditor {
+class AreasEditor {
 
     private $_fpath; //file path
     private $_areaname; //areaname
@@ -28,17 +28,16 @@ class BereichsEditor {
      *
      * @global array $ne_config_info
      * @param string $areaname Name des Bereichs
-
      */
     public function __construct($areaname) {
         global $ne_config_info;
         $this->_areaname = $areaname;
-        $config_file_path = $ne_config_info['config_file_path_bereiche'];
+        $config_file_path = $ne_config_info['area_conf_filepath'];
         $confMngr = new ConfigFileManagerJSON($config_file_path);
         $this->_conf_array = $confMngr->getSetting($areaname);
         $this->_start_marker = \NavTools::ifsetor($this->_conf_array[$ne_config_info['content_marker_start_setting']]);
         $this->_end_marker = \NavTools::ifsetor($this->_conf_array[$ne_config_info['content_marker_end_setting']]);
-        $filename_setting = $ne_config_info['bereich_filename_setting']; //einfach file_name ?
+        $filename_setting = 'file_name';
         $filename = \NavTools::ifsetor($this->_conf_array[$filename_setting]);
         if (strlen($filename) == 0) {
             throw new Exception('No filename setting: "'.$filename_setting.'" in config: "'.$config_file_path.'" found');
@@ -175,7 +174,7 @@ class BereichsEditor {
 
     //================FALLBACK FUNCS============================================
     //temp fallBack getDataArray
-    private function _getFallBackData($bereich) {
+    private function _getFallBackData($area) {
         $data = Array(
             'kurzinfo' => Array(
                 'startMarks' => Array('<div id="kurzinfo">',
@@ -221,7 +220,7 @@ class BereichsEditor {
             ),
         );
 
-        return NavTools::ifsetor($data[$bereich],Array());
+        return NavTools::ifsetor($data[$area],Array());
     }
 
     //try to find position with mark or regex
@@ -251,8 +250,8 @@ class BereichsEditor {
     }
 
     //temp fallBack start marker
-    private function _tryFallBack_start_mark(&$content, $bereich) {
-        $data = $this->_getFallBackData($bereich);
+    private function _tryFallBack_start_mark(&$content, $area) {
+        $data = $this->_getFallBackData($area);
         if(empty($data)){return false;}
 
         $marksArray = $data['startMarks'];
@@ -262,8 +261,8 @@ class BereichsEditor {
     }
 
     //temp fallBack end marker
-    private function _tryFallBack_end_mark(&$content, $bereich) {
-        $data = $this->_getFallBackData($bereich);
+    private function _tryFallBack_end_mark(&$content, $area) {
+        $data = $this->_getFallBackData($area);
         if(empty($data)){return false;}
 
         $marksArray = $data['endMarks'];

@@ -1,10 +1,10 @@
 <?php
 //require_once 'config_users.php';
-global $g_aBereicheditors;
+global $g_aAreaeditors;
 global $ne_user_roles;
-global $g_bereich_settings;
+global $g_areas_settings;
 
-$g_aBereicheditors = Array(
+$g_aAreaeditors = Array(
     'kurz_editor' => Array(
         'name' => 'kurzinfo',
         'edit_file_path' => 'app/edit_kurz.php',
@@ -63,13 +63,13 @@ $g_aBereicheditors = Array(
 //Array('admin'=>'Administrator','user'=>'Benutzer'...);
 //!! config_users.php must be loaded before!
 foreach($ne_user_roles as $roleName=>$roleData){
-    $g_bereich_settings['user_roles_key_value'][$roleName] = $roleData['name'];
+    $g_areas_settings['user_roles_key_value'][$roleName] = $roleData['name'];
 }
 
 
 //bereich settings mit typ usw..
 //TODO typ mit variablen bestimmen. z.B.  $ne2SettingTypMemo, $ne2SettingTypText
-$g_bereich_settings['bereich_settings'] = Array(
+$g_areas_settings['area_settings'] = Array(
     'name'                  => Array('type'=>'text', 'name'=>'Name', 'notempty'=>true),
     'title'                 => Array('type'=>'text', 'name'=>'Titel', 'notempty'=>true),
     'file_name'             => Array('type'=>'text', 'name'=>'Dateiname', 'notempty'=>true),
@@ -79,11 +79,11 @@ $g_bereich_settings['bereich_settings'] = Array(
     'content_marker_end'    => Array('type'=>'text', 'name'=>'End Marker'),
 //    'content_after'       => Array('type'=>'memo', 'name'=>'Inhalt nach dem End Marker'),
     'help_page_name'        => Array('type'=>'text', 'name'=>'HelpPage Name'),
-    'user_role_required'    => Array('type'=>'values','values'=>$g_bereich_settings['user_roles_key_value'], 'name'=>'Minimum Rolle', 'notempty'=>true)
+    'user_role_required'    => Array('type'=>'values','values'=>$g_areas_settings['user_roles_key_value'], 'name'=>'Minimum Rolle', 'notempty'=>true)
 );
 
 //moegliche einstellungen fuer bereiche
-$g_bereich_settings['possible_bereich_settings'] = array_keys($g_bereich_settings['bereich_settings']);
+$g_areas_settings['possible_area_settings'] = array_keys($g_areas_settings['area_settings']);
 
 
 

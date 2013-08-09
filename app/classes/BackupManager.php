@@ -28,7 +28,7 @@ class BackupManager {
 		$dir = substr($bak_file_path, 0, strrpos($bak_file_path, "/"));
 		if(!file_exists($bak_file_path)) {
 			if(!is_dir($dir)) {
-				umask(0022); // !!!
+//				umask(0022); // !!!
 				mkdir($dir, 0755, TRUE);
 			}
 			if(!copy($file_path, $bak_file_path)) {

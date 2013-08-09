@@ -167,11 +167,11 @@ $ne_user_php_persmissions = array(
     'app/jqueryFileTree.php'    => 'redaktor',
     'app/ma_photo_upload.php'   => 'redaktor',
     'app/upload.php'            => 'redaktor',
-    'app/classes/BereichsEditor.php' => 'redaktor',//for ajax_handler
+    'app/classes/AreasEditor.php' => 'redaktor',//for ajax_handler
 
 
     //Admin
-    'bereiche_manager.php'      => 'admin',
+    'areas_manager.php'      => 'admin',
     'conf_editor.php'           => 'admin',
     'design_editor.php'         => 'admin',
     'update.php'                => 'admin',
@@ -186,7 +186,7 @@ $ne_user_php_persmissions = array(
     'app/live_update.php'       => 'admin',
     'app/load_osm.php'          => 'admin',
     'app/save_osm.php'          => 'admin',
-    'app/classes/BereichsManager.php'       => 'admin',//for ajax_handler
+    'app/classes/AreasManager.php'       => 'admin',//for ajax_handler
 
     //no need yet, but listed..
     'app/classes/BackupManager.php'         => 'admin',

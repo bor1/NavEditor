@@ -15,8 +15,8 @@ class NavTools {
      * @param String $Filenames<p>
      * Filenames, single filename or array of strings.
      * Additional html string (parameter?) after comma.<br />
-     * example includeHtml("folder/file.css, version=2", "some.js")
-     * output: <link rel="stylesheet"... /folder/file.css?version=2 ...<br />
+     * example includeHtml("folder/file.css, version=2", "some.js")<br />
+     * output:<br /> <link rel="stylesheet"... /folder/file.css?version=2...<br />
      *         <script type="text/javascript" src=".../some.js"...
      * </p>
      * @return String like <link rel="stylesheet" ... / <script src=" ...
@@ -24,10 +24,9 @@ class NavTools {
      * <p>with no params "default" files will be loaded  </p>
      * <p>*html source will be full url to the file  </p>
      */
-    public static function includeHtml(/* ARGS */) {
+    public static function includeHtml($Filenames = NULL /* ARGS */) {
         global $ne_config_info;
         $retString = '';
-
         //if no arguments, set to "default".
         if (func_num_args() == 0) {
             $arrayFiles = Array('default');
@@ -171,12 +170,12 @@ class NavTools {
     }
 
     /**
-     * Filters path, in case it is over DOCUMENT_ROOT path
+     * Filters path, in case it is not under DOCUMENT_ROOT path
      * @param String $path Path to test
      * @return String $path or empty string in case the path is over the root
      */
     public static function root_filter($path) {
-        $ret_path = "";
+        $ret_path = '';
         $root_path = $_SERVER['DOCUMENT_ROOT'];
         $path = self::simpleResolvePath($path);
         if (strlen($path) >= strlen($root_path)) {
@@ -229,8 +228,9 @@ class NavTools {
      * log errors/warnings to specified file
      * @global array $ne_config_info
      * @param string $error_text
+     * @param string $callerFunc [Optional] function that makes error_log call, usual simple __METHOD__
      */
-    public static function error_log($error_text, $callerFunc = "") {
+    public static function error_log($error_text, $callerFunc = '') {
         global $ne_config_info;
         if (!empty($callerFunc)) {
             $callerFunc = $callerFunc . ': ';

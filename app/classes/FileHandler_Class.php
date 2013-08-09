@@ -329,7 +329,7 @@ class FileHandler {
 		if(!file_exists($path)) {
 			if(!is_dir($dir)) {
 				$this->_doLog('mkdir: ' . $dir);
-				umask(0022); // !!!
+//				umask(0022); // !!!
 				mkdir($dir, 0755, TRUE);
 			}
 			$this->_doLog('copy: ' . $this->_templateFilePath . ' -> ' . $path);

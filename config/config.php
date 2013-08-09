@@ -5,7 +5,10 @@ define ('NE_DIR_CONFIG', NE_DIR_ROOT.'config/');
 
 require_once(NE_DIR_ROOT.'app/classes/NavTools.php');
 require_once (NE_DIR_CONFIG.'config_users.php');
-require_once(NE_DIR_CONFIG.'config_bereichseditor.php');
+require_once(NE_DIR_CONFIG.'config_areaeditor.php');
+
+require_once(NE_DIR_ROOT.'app/classes/ConfigManager.php');
+
 // error_reporting(E_ALL & ~E_STRICT);
 // ini_set('display_errors', 'on');
 
@@ -13,13 +16,15 @@ global $ne_config_info;
 global $ne_menu;
 global $ne_user_php_persmissions;
 global $ne_user_public_php;
+global $g_areas_settings;
 
 //===========FROM OTHER CONFIGS, ALIASES========================================
 //This php files are public for access, no need to login before.
 $ne_config_info['public_php_files'] = $ne_user_public_php;
 //array wih permissions for php files
 $ne_config_info['php_file_permissions'] = $ne_user_php_persmissions;
-
+//settings and information about areas
+$ne_config_info['data.areas'] = $g_areas_settings;
 
 
 //========================USUAL SETTINGS========================================
@@ -82,8 +87,6 @@ $ne_config_info['ssi_folder_path'] = $_SERVER['DOCUMENT_ROOT']. "/ssi/";
 
 
 // new in editor editable conf-items
-require_once(NE_DIR_ROOT.'app/classes/ConfigManager.php');
-//NavTools::save_execution_time("Reading Config", $ne_config_info['debug_execution_file'], $ne_config_info['debug_time']);
 
 $default_conf_file = $ne_config_info['config_path'] . 'ne2_config.conf';
 if(!file_exists($default_conf_file)) {
@@ -92,24 +95,39 @@ if(!file_exists($default_conf_file)) {
 }
 $config_manager = new ConfigManager($default_conf_file);
 
+//einige .conf dateinamen.
+$ne_config_info['website_conf_filename']    = $config_manager->get_conf_item('website', 'website.conf');
+$ne_config_info['variables_conf_filename']  = $config_manager->get_conf_item('variables', 'variables.conf');
+//config file path fuer bereiche
+$ne_config_info['area_conf_filepath']       = $config_manager->get_conf_item('area_conf_filepath', $ne_config_info['config_path'] . 'bereiche.conf');
 
-//bestimmt ob irgendwas geloggt werden muss
-$ne_config_info['log_activated']    = $config_manager->get_conf_item('log_activated',TRUE);
+
+//bestimmt ob irgendwas geloggt werden muss //TODO
+$ne_config_info['log_activated']        = $config_manager->get_conf_item('log_activated',1);
+//maximale dateiegroesse des logs in bytes //TODO
+$ne_config_info['log_max_file_size']    = $config_manager->get_conf_item('log_max_file_size',1024*1024); //1mb
+
 //default log file path
-$ne_config_info['log_file']         = $config_manager->get_conf_item('log_file', $ne_config_info['log_path'].'editing.log');
+$ne_config_info['log_file']         = $config_manager->get_conf_item('log_file', $ne_config_info['log_path'].'ne.log');
 //maximum log history time (in Seconds)
-$ne_config_info['log_max_history']  = $config_manager->get_conf_item('log_max_history', 86400);//1 day
+$ne_config_info['log_max_history']  = $config_manager->get_conf_item('log_max_history', 4*24*3600);//4 days
 
 //maximum user lock time after wrong pw etc. (in Seconds)
 $ne_config_info['login_max_lock_time']     = $config_manager->get_conf_item('timeout_loghistory', 3600);
 
-
+//tiny_mce theme_advanced_styles
 $ne_config_info['custom_content_css_classes']  = $config_manager->get_conf_item('custom_content_css_classes', 'clear|unsichtbar|marker|hinweis|links|rechts|marker|bildrechts|bildlinks|vollbox|klein_box_links|klein_box_rechts|box_rechts|box_links');
+//zeigt in nav_editor neben jedem menue eigene ID
 $ne_config_info['show_navtree_numbers'] 		= $config_manager->get_conf_item('show_navtree_numbers', 0); // 1 or 0
+//beim laden wird das Tree geoffnen sein
 $ne_config_info['navtree_start_open'] 			= $config_manager->get_conf_item('navtree_start_open', 0);
+
+//==========================SESSIONS============================================
 $ne_config_info['session_timeout'] 			= $config_manager->get_conf_item('session_timeout', 7200 );
-// js_keep_session_time sollte kleiner sein als session_timeout:
-$ne_config_info['js_keep_session_time'] 		= $config_manager->get_conf_item('js_keep_session_time', 1200 );
+
+//gibt an, wie oft bei editierung in nav_editor.php session verlaengert wird.
+//js_keep_session_time sollte kleiner sein als session_timeout:
+$ne_config_info['js_keep_session_time'] 	= $config_manager->get_conf_item('js_keep_session_time', 1200 );
 
 // Sicherung, dass die Session-Times nicht zu klein ausfallen:
 if ($ne_config_info['session_timeout'] < 1800) {
@@ -118,21 +136,21 @@ if ($ne_config_info['session_timeout'] < 1800) {
 if ($ne_config_info['js_keep_session_time'] > $ne_config_info['session_timeout']) {
 	$ne_config_info['js_keep_session_time'] = 600;
 }
+//==========================SESSIONS END========================================
 
 $ne_config_info['dashboard_feed']               = $config_manager->get_conf_item('dashboard_feed', 'http://blogs.fau.de/webworking/feed');
+//source editor bei file_editor.php
 $ne_config_info['hide_sourceeditor'] 			= $config_manager->get_conf_item('hide_sourceeditor', 1);
 $ne_config_info['max_upload_filesize']          = $config_manager->get_conf_item('max_upload_filesize', 50); // megabytes
 $ne_config_info['show_logoupdate_allwebpages']  = $config_manager->get_conf_item('show_logoupdate_allwebpages', 1);
- $ne_config_info['defaulthtml_filesuffix']  	= $config_manager->get_conf_item('defaulthtml_filesuffix', 'shtml');
+$ne_config_info['defaulthtml_filesuffix']   	= $config_manager->get_conf_item('defaulthtml_filesuffix', 'shtml');
 // helpfilesuffix:
 $ne_config_info['help_filesuffix']  			= $config_manager->get_conf_item('help_filesuffix', '.html');
 // path for help files
 $ne_config_info['help_path']                    = $config_manager->get_conf_item('help_path', $ne_config_info['app_path'] .'data/helps/');   ;
 // path for temp files
 $ne_config_info['temp_path']                    = $config_manager->get_conf_item('temp_path',$ne_config_info['app_path'] . '_tmp/');
-//einige .conf dateinamen.
-$ne_config_info['website']                      = $config_manager->get_conf_item('website', 'website.conf');
-$ne_config_info['variables']                    = $config_manager->get_conf_item('variables', 'variables.conf');
+
 // indexdatei:
 $ne_config_info['directoryindex_file']  		= $config_manager->get_conf_item('directoryindex_file', 'index.shtml');
 // where to store backup files
@@ -143,20 +161,9 @@ $ne_config_info['backup_type']                  = $config_manager->get_conf_item
 $ne_config_info['navindex_backup_dir']  		= $config_manager->get_conf_item('navindex_backup_dir', $_SERVER['DOCUMENT_ROOT'] . '/vkdaten/navindex_backup/');
 
  //webauftritt configfiles ordner
-$ne_config_info['usual_configs_path']           = $config_manager->get_conf_item('usual_configs_path', $_SERVER['DOCUMENT_ROOT'] . "/vkdaten/");
-
-//config file path fuer bereiche
-$ne_config_info['config_file_path_bereiche']    = $config_manager->get_conf_item('config_file_path_bereiche', $ne_config_info['config_path'] . 'bereiche.conf');
-
-// Optionen fuer Funktionen
-
-// activate_univis_mitarbeitereditor:  Wird der Editor fuer UnivIS-Extra Personendaten angezeigt? (Alter Editor war er default an, ab 2012 besser default aus)
-$ne_config_info['tool_univis_mitarbeitereditor'] 	= $config_manager->get_conf_item('tool_univis_mitarbeitereditor', 0); // 1 or 0
+$ne_config_info['default_configs_path']           = $config_manager->get_conf_item('default_configs_path', $_SERVER['DOCUMENT_ROOT'] . "/vkdaten/");
 
 
-if ($ne_config_info['tool_univis_mitarbeitereditor'] ) {
-	$ne_config_info['activate_toolmenu']  = 1;
-}
 
 $ne_config_info['page_content_marker_start']           = $config_manager->get_conf_item('page_content_marker_start',  '<!-- TEXT AB HIER -->');
 $ne_config_info['page_content_marker_end']             = $config_manager->get_conf_item('page_content_marker_end', '<!-- AB HIER KEIN TEXT MEHR -->');
@@ -167,10 +174,16 @@ $ne_config_info['page_content_marker_preinhaltsinfo']  = $config_manager->get_co
 // Definition der Seitenbereiche
 $ne_config_info['content_marker_start_setting']        = 'content_marker_start';
 $ne_config_info['content_marker_end_setting']          = 'content_marker_end';
-$ne_config_info['bereich_filename_setting']            = 'file_name';
 
 
 //========================= LOESCHEN SPAETER BEGIN =============================
+// activate_univis_mitarbeitereditor:  Wird der Editor fuer UnivIS-Extra Personendaten angezeigt? (Alter Editor war er default an, ab 2012 besser default aus)
+$ne_config_info['tool_univis_mitarbeitereditor'] 	= $config_manager->get_conf_item('tool_univis_mitarbeitereditor', 0); // 1 or 0
+if ($ne_config_info['tool_univis_mitarbeitereditor'] ) {
+	$ne_config_info['activate_toolmenu']  = 1;
+}
+
+
 $ne_config_info['zusatzinfo_file']                      = $config_manager->get_conf_item('zusatzinfo_file', '/ssi/zusatzinfo.shtml');
 // Marker fuer Zusatzinfo:
 $ne_config_info['zusatzinfo_content_marker_start']      = $config_manager->get_conf_item('zusatzinfo_content_marker_start',  '<div id="zusatzinfo" class="noprint">  <!-- begin: zusatzinfo -->');
@@ -309,7 +322,7 @@ $ne_menu = array(
 		'up'	=> 0,
 		'desc'	=> 'Allgemeine Information von jeder Seiten bearbeiten',
 	),
-//	21...3x loaded from config_bereichseditor
+//	21...3x loaded from config_areaeditor
 
 	40 => array(
 		'id'		=> 40,
@@ -389,7 +402,7 @@ $ne_menu = array(
     55 => array(
         'id' => 55,
         'title' => 'Bereiche verwalten',
-        'link'  => 'bereiche_manager.php',
+        'link'  => 'areas_manager.php',
         'role'  => 'admin',
         'sub'   => 0,
         'up'    => 50,
@@ -480,16 +493,16 @@ $ne_menu = array(
 	)
  );
 
-//dynamisch bereichseditors binden
+//dynamisch AreasEditors binden
 //MUST BE SET BEFORE:
-//          $ne_config_info['config_file_path_bereiche'],
+//          $ne_config_info['area_conf_filepath'],
 //          $ne_config_info[{bereich}.'_content_marker_start']
 //          $ne_config_info[{bereich}.'_content_marker_end']
 
-require_once (NE_DIR_ROOT . 'app/classes/BereichsManager.php');
+require_once (NE_DIR_ROOT . 'app/classes/AreasManager.php');
 
-$BerManager = new BereichsManager();
-$alleBereiche = $BerManager->getAllAreaSettings();
+$AreaManager = new AreasManager();
+$alleBereiche = $AreaManager->getAllAreaSettings();
 
 foreach ($alleBereiche as $aBereich) {
     static $i = 21;
@@ -516,15 +529,5 @@ foreach ($ne_menu as $key=>$params) {
     }
 }
 //=======================END MENU===============================================
-
-
-//NavTools::save_execution_time("Config Initialised", $ne_config_info['debug_execution_file'], $ne_config_info['debug_time']);
-
-// no cache! hm? add to auth.php?
-header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
-header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
-
-
-
 
 ?>

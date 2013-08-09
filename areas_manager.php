@@ -4,7 +4,7 @@ require_once('auth.php');
 // help
 function has_help_file() {
     global $ne_config_info;
-    $help_file = $ne_config_info['help_path'] . 'bereich_manager' . $ne_config_info['help_filesuffix'];
+    $help_file = $ne_config_info['help_path'] . 'areas_manager' . $ne_config_info['help_filesuffix'];
     return file_exists($help_file);
 }
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -13,7 +13,7 @@ function has_help_file() {
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-        <title>Bereich management - <?php echo($ne_config_info['app_titleplain']); ?></title>
+        <title>Bereich Management - <?php echo($ne_config_info['app_titleplain']); ?></title>
 
         <?php
         echo NavTools::includeHtml('default',
@@ -99,17 +99,17 @@ function has_help_file() {
             /**
              * array with data for current selected item. Will be dinamically created by item selection
              */
-            var _bereich_data_array = [];
+            var _area_data_array = [];
 
             /**
              * associative array with all settings without values
              */
-            var _empty_bereich_data_array = [];
+            var _empty_area_data_array = [];
 
             /**
              * array with all possible settings-names
              */
-            var _bereich_params_full = [];
+            var _area_params_full = [];
 
             /**
              * array to save some dinamically values
@@ -119,12 +119,12 @@ function has_help_file() {
             /**
              * associative array/object with all information about any possible setting
              */
-            var _bereich_params_data = $.parseJSON('<?php echo(json_encode($g_bereich_settings['bereich_settings'])); ?>');
+            var _area_params_data = $.parseJSON('<?php echo(json_encode($g_areas_settings['area_settings'])); ?>');
 
-            //generate _bereich_params_full and _empty_bereich_data_array
-            for(var bereichName in _bereich_params_data){
-                _bereich_params_full.push(bereichName);
-                _empty_bereich_data_array[bereichName] = '';
+            //generate _area_params_full and _empty_area_data_array
+            for(var areaName in _area_params_data){
+                _area_params_full.push(areaName);
+                _empty_area_data_array[areaName] = '';
             }
 
             /**
@@ -152,10 +152,10 @@ function has_help_file() {
 
                 }
                 //fuer alle not empty settings, validation object erstellen, in arrayToValidate hinzufuegen
-                for(var field in _bereich_params_data){
-                    if(_bereich_params_data[field]['notempty'] == true){
+                for(var field in _area_params_data){
+                    if(_area_params_data[field]['notempty'] == true){
                         var tmpValObj = new LiveValidation(field, {onValid: function(){}});
-                        tmpValObj.add(Validate.Presence, {failureMessage: _bereich_params_data[field]['name']+' darf nicht leer sein!'});
+                        tmpValObj.add(Validate.Presence, {failureMessage: _area_params_data[field]['name']+' darf nicht leer sein!'});
                         arrayToValidate.push(tmpValObj);
                     }
                 }
@@ -176,15 +176,15 @@ function has_help_file() {
              * erstellt felder und fuellt die mit Data dataArray
              *
              * @param Object dataArray assoziatives array mit data ueber aktuelles Bereich<br/>
-             * format: siehe config_bereichseditor.php
+             * format: siehe config_areaeditor.php
              */
             function fillFieldsWithData(dataArray){
                 var html = "";
                 for(var element in dataArray){
                     //falls in parameters vorhanden..   (eigentlich muss immer der Fall sein!)
-                    if($.inArray(element, _bereich_params_data)){
+                    if($.inArray(element, _area_params_data)){
                         //info ueber diesen parameter
-                        var parameterInfo = _bereich_params_data[element];
+                        var parameterInfo = _area_params_data[element];
                         //fuer bestimmte parameter typen..
                         switch (parameterInfo.type) {
                             case 'memo':
@@ -335,12 +335,12 @@ function has_help_file() {
              */
             function loadContentCallback(data) {
 
-                _bereich_data_array = $.parseJSON(data);
+                _area_data_array = $.parseJSON(data);
 
                 var ulhtml = "<ul>";
 
-                for (var key in _bereich_data_array) {
-                    if (_bereich_data_array.hasOwnProperty(key) && key != 'undefined') {
+                for (var key in _area_data_array) {
+                    if (_area_data_array.hasOwnProperty(key) && key != 'undefined') {
                         ulhtml += '<li><button class="bereich_button" id="'+ key +'">'+key+'</button></li>';
                     }
                 }
@@ -457,7 +457,7 @@ function has_help_file() {
                 $("button").button();
 
                 //loading all info about areas
-                NavTools.call_php('app/classes/BereichsManager.php', 'getAllAreaSettings',
+                NavTools.call_php('app/classes/AreasManager.php', 'getAllAreaSettings',
                 {},
                 loadContentCallback);
 
@@ -467,9 +467,9 @@ function has_help_file() {
                     if(checkInputChange()){$(this).blur();return;}
 
                     var thisBereichName = $(this).attr("id");
-                    var bereichArray = _bereich_data_array[thisBereichName]
+                    var bereichArray = _area_data_array[thisBereichName]
                     fillFieldsWithData(bereichArray);
-                    _currentValues['bereich'] = thisBereichName;
+                    _currentValues['area'] = thisBereichName;
                     //ui bug ? ..
                     addContentToElement($('#bereichSettings'), createButtonHtml('updateBereich', 'Speichern') + createButtonHtml('removeBereich', 'L&ouml;schen'));
                     //addContentToElement($('#bereichSettings'), createButtonHtml('removeBereich', 'Delete Bereich'));
@@ -484,10 +484,10 @@ function has_help_file() {
                     //ask by changes, prevent if needed
                     if(checkInputChange()){$(this).blur();return;}
 
-                    fillFieldsWithData(_empty_bereich_data_array);
+                    fillFieldsWithData(_empty_area_data_array);
                     clearTempButtons();
                     addContentToElement($('#bereichSettings'), createButtonHtml('createBereich', 'Erstellen'));
-                    _currentValues['bereich'] = "";
+                    _currentValues['area'] = "";
                     checkInputChange(false);
                     selectMenu($(this));
                 });
@@ -497,13 +497,13 @@ function has_help_file() {
                     if(!checkForm(true)){
                         return;
                     }
-                    var bereichName = $("#bereichmanager input[name='name']").val();
+                    var areaName = $("#bereichmanager input[name='name']").val();
                     var params = readInput();
                     //                    params = JSON.stringify(params);
 
-                    NavTools.call_php('app/classes/BereichsManager.php', 'addAreaSettings',
+                    NavTools.call_php('app/classes/AreasManager.php', 'addAreaSettings',
                     {
-                        name: bereichName,
+                        name: areaName,
                         settings: params
                     },
                     createBereichCallback);
@@ -514,14 +514,14 @@ function has_help_file() {
                     if(!checkForm()){
                         return;
                     }
-                    var bereichName = _currentValues['bereich'];
+                    var areaName = _currentValues['area'];
 
-                    if(confirm(unescape('Den Bereich: \"'+ bereichName + '" aktualisieren?'))){
+                    if(confirm(unescape('Den Bereich: \"'+ areaName + '" aktualisieren?'))){
                         var params = readInput()
                         //                        params = JSON.stringify(params);
-                        NavTools.call_php('app/classes/BereichsManager.php', 'updateAreaSettings',
+                        NavTools.call_php('app/classes/AreasManager.php', 'updateAreaSettings',
                         {
-                            name: bereichName,
+                            name: areaName,
                             settings: params
                         },
                         updateBereichCallback);
@@ -532,11 +532,11 @@ function has_help_file() {
 
                 //button delete bereich
                 $("#bereichmanager #removeBereich").live('click',function() {
-                    var bereichName = _currentValues['bereich'];
-                    if(confirm(unescape('Den Bereich: \"'+ bereichName + '" l%F6schen?'))){
-                        NavTools.call_php('app/classes/BereichsManager.php', 'deleteAreaSettings',
+                    var areaName = _currentValues['area'];
+                    if(confirm(unescape('Den Bereich: \"'+ areaName + '" l%F6schen?'))){
+                        NavTools.call_php('app/classes/AreasManager.php', 'deleteAreaSettings',
                         {
-                            name: bereichName
+                            name: areaName
                         },
                         removeBereichCallback);
                     }
@@ -544,8 +544,8 @@ function has_help_file() {
 
                 //bind event 'change' to every input, to catch any changes, for checkInputChange() function
                 $('#bereichmanager').find(':input').live('change', function(){
-                    if(_currentValues['bereich'] != null){
-                        if( _currentValues['bereich'].length > 0){
+                    if(_currentValues['area'] != null){
+                        if( _currentValues['area'].length > 0){
                             _somethingChanged = true;
                         }
                     }

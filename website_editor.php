@@ -21,7 +21,7 @@ function has_help_file() {
 var imgObj, imgW, imgH, jsonArray;
 
 var helpText = "";
-var thisConf = "<?php echo($ne_config_info['website']); ?>";
+var thisConf = "<?php echo($ne_config_info['website_conf_filename']); ?>";
 function loadConf(confFileName) {
 	$.getJSON("app/edit_conf.php?r=" + Math.random(), {
 		"oper": "get_conf",
@@ -272,12 +272,12 @@ $(document).ready(function() {
 
 //wenn neue conf Dateien fehlen, die neu generieren.
 		<?php
-		if(!file_exists("../../".$ne_config_info['website']) || !file_exists("../../".$ne_config_info['variables'])){
+		if(!file_exists("../../".$ne_config_info['website_conf_filename']) || !file_exists("../../".$ne_config_info['variables_conf_filename'])){
 		?>
 			//only for loading /beginn------------
 			var loaded = new Object;
-			var website = "<?php echo $ne_config_info['website']; ?>";
-			var variables = "<?php echo $ne_config_info['variables']; ?>";
+			var website = "<?php echo $ne_config_info['website_conf_filename']; ?>";
+			var variables = "<?php echo $ne_config_info['variables_conf_filename']; ?>";
 			loaded[website] = false;
 			loaded[variables] = false;
 			$(document).ready(function() {

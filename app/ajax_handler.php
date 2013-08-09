@@ -7,7 +7,9 @@
  */
 try {
     require_once '../auth.php';
-    require_once 'classes/Input.php';
+    require_once NE_DIR_ROOT.'app/classes/Input.php';
+
+    global $g_UserMgmt, $ne_config_info;
 
     //returned data variable
     $data_to_return = '';
@@ -31,8 +33,8 @@ try {
     //test what file, then test what function
     switch ($file_to_call) {
 
-        //BereichsEditor------------------------------------------------------------
-        case 'app/classes/BereichsEditor.php':
+        //AreasEditor------------------------------------------------------------
+        case 'app/classes/AreasEditor.php':
 
             $bereichsname = $data_to_pass['bereich'];
             //falls bereich undefiniert, return error
@@ -42,12 +44,12 @@ try {
 
             require_once $ne_config_info['app_path'] . $file_to_call;
 
-            $BerEditor = new BereichsEditor($bereichsname);
-            //BereichsEditor/functions----------------------------------------------
+            $AreaEditor = new AreasEditor($bereichsname);
+            //AreasEditor/functions----------------------------------------------
             switch ($function_to_call) {
 
                 case 'get_content':
-                    $data_to_return = $BerEditor->get_content();
+                    $data_to_return = $AreaEditor->get_content();
                     //falls feur tinyMCE comments ersetzen
                     if ($data_to_pass['tinymce'] == true) {
                         $data_to_return = str_replace(array('<!--#', '<!--', '-->'), array('<comment_ssi>', '<comment>', '</comment>'), $data_to_return);
@@ -63,7 +65,7 @@ try {
                         $new_content = str_replace(array('<comment_ssi>', '<comment>', '</comment>'), array('<!-' . '-#', '<!--', '-->'), $new_content);
                     }
 
-                    $data_to_return = $BerEditor->update_content($new_content);
+                    $data_to_return = $AreaEditor->update_content($new_content);
                     break;
 
 
@@ -75,33 +77,33 @@ try {
 
 
 
-        //BereichsManager-----------------------------------------------------------
-        case 'app/classes/BereichsManager.php':
+        //AreasManager-----------------------------------------------------------
+        case 'app/classes/AreasManager.php':
 
             require_once $ne_config_info['app_path'] . $file_to_call;
-            $BerManager = new BereichsManager();
-            //BereichsManager/functions---------------------------------------------
+            $AreaManager = new AreasManager();
+            //AreasManager/functions---------------------------------------------
             switch ($function_to_call) {
                 //no need?
                 case 'getAreaList':
-                    $data_to_return = json_encode($BerManager->getAreaList());
+                    $data_to_return = json_encode($AreaManager->getAreaList());
                     break;
 
                 case 'getAllAreaSettings':
 
-                    $data_to_return = json_encode($BerManager->getAllAreaSettings());
+                    $data_to_return = json_encode($AreaManager->getAllAreaSettings());
                     break;
 
                 case 'addAreaSettings':
-                    $data_to_return = $BerManager->addAreaSettings($data_to_pass['name'], $data_to_pass['settings']);
+                    $data_to_return = $AreaManager->addAreaSettings($data_to_pass['name'], $data_to_pass['settings']);
                     break;
 
                 case 'deleteAreaSettings':
-                    $data_to_return = $BerManager->deleteAreaSettings($data_to_pass['name']);
+                    $data_to_return = $AreaManager->deleteAreaSettings($data_to_pass['name']);
                     break;
 
                 case 'updateAreaSettings':
-                    $data_to_return = $BerManager->updateAreaSettings($data_to_pass['name'], $data_to_pass['settings']);
+                    $data_to_return = $AreaManager->updateAreaSettings($data_to_pass['name'], $data_to_pass['settings']);
                     break;
             }
             break;

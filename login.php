@@ -22,8 +22,8 @@ if (isset($_POST['btnLogin'])) {
             logadd('loginOk');
 
             //TODO NavTools::testFallBack?
-            if (!file_exists($ne_config_info['usual_configs_path'] . $ne_config_info['website'])
-                    || !file_exists($ne_config_info['usual_configs_path'] . $ne_config_info['variables'])) {
+            if (!file_exists($ne_config_info['default_configs_path'] . $ne_config_info['website_conf_filename'])
+                    || !file_exists($ne_config_info['default_configs_path'] . $ne_config_info['variables_conf_filename'])) {
                 header('Location: website_editor.php');
             } else {
                 header('Location: dashboard.php');

@@ -83,7 +83,7 @@ if($ne_config_info['navtree_start_open'] == '0') {
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Seiten bearbeiten - <?php echo($ne_config_info['app_titleplain']); ?></title>
 <link rel="stylesheet" type="text/css" href="css/styles.css?<?php echo date('Ymdis'); ?>" />
-<?php if($ne_config_info['show_navtree_numbers'] == '0') { ?>
+<?php if(intval($ne_config_info['show_navtree_numbers']) == 0) { ?>
 <style type="text/css">
 #dirTreePanel li em.treeKey {
 	display: none;
@@ -116,7 +116,7 @@ tinymce.create('tinymce.plugins.VarsPlugin', {
                 // jquery -> json config vars von variables.conf holen, und dynamisch listbox erstellen
 					$.getJSON("app/edit_conf.php?r=" + Math.random(), {
 						"oper": "get_conf",
-						"conf_file_name": '<?php echo($ne_config_info['variables']); ?>'
+						"conf_file_name": '<?php echo($ne_config_info['variables_conf_filename']); ?>'
 					}, function(rdata){
 						for(var i = 0; i < rdata.length; i++) {
 							var ciName = rdata[i].opt_name;
@@ -585,6 +585,12 @@ function addNodeCallback(data) {
 		return;
 	}
 
+    if(data == 'ERR_WRONG_PATH'){
+        alert("Bad Path! :(");
+		return;
+    }
+
+
 	alert(data);
 	resetTextBox();
 
@@ -610,6 +616,11 @@ function removeCallback(data) {
 		return;
 	}
 
+    if(data == 'ERR_WRONG_PATH'){
+        alert("Bad Path! :(");
+		return;
+    }
+
 	alert(data);
 	resetTextBox();
 
@@ -631,6 +642,11 @@ function updateContentsCallback(data) {
 		alert("Permission denied!");
 		return;
 	}
+
+    if(data == 'ERR_WRONG_PATH'){
+        alert("Bad Path! :(");
+		return;
+    }
 
 	alert(data);
 

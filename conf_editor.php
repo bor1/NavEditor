@@ -71,7 +71,7 @@ function loadConfListCallback(rdata) {
 				showPanel("fld_hthosts");
 				loadHtHosts();
 				break;
-			case "<?php echo($ne_config_info['website']); ?>":
+			case "<?php echo($ne_config_info['website_conf_filename']); ?>":
 				showPanel("fld_website");
 				$("#fld_common legend").text(cfn);
 				loadWebsiteConf();

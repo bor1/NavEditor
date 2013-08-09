@@ -37,9 +37,8 @@ function no_direct_call($__FILE__) {
  * Call if login failed
  */
 function login_failed() {
-    logadd('loginFail');
     goToLogin();
-    exit;
+    exit();
 }
 
 /**
@@ -53,7 +52,7 @@ function goToLogin() {
 }
 
 /**
- * Check if file is for public access
+ * Check if file has public access
  * @global array $ne_config_info
  * @return boolean TRUE if public file
  */
@@ -99,7 +98,7 @@ $current_user_pwd = \NavTools::ifsetor($_SESSION['ne_password'], '');
 //try to login
 if (empty($current_user_name)
         || $g_UserMgmt->Login($current_user_name, $current_user_pwd) != 1) {
-    // login failed
+    // login failed or no user logged in
     $loginResult = 'FAIL';
 } else { // login ok
     $loginResult = 'OK';
@@ -138,4 +137,10 @@ if (!checkPublic()) {
             break;
     }
 }
+
+
+
+// no cache!
+header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
+header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 ?>

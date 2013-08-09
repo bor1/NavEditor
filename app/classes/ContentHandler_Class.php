@@ -71,7 +71,9 @@ class ContentHandler {
 		if($this->_content == '') {
 			$str_pattern = $this->_content_block_pattern;
 			preg_match($str_pattern, $this->_templateHtml, $matches);
-			$this->_content = trim($matches[2]);
+            if(count($matches)>2){
+                $this->_content = trim($matches[2]);
+            }
 		}
 	}
 

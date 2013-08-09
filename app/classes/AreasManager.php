@@ -10,7 +10,7 @@ require_once 'NavTools.php';
  * @internal Purpose: learning PHP -> probably low quality code, sorry :/
  * @todo Result Class, um Ergebnis mit Warnungen/Beschreibungen/Fehler zuruckzugeben
  */
-class BereichsManager {
+class AreasManager {
     /**
      * Manager for config file
      * @var ConfigFileManager
@@ -45,11 +45,11 @@ class BereichsManager {
     /**
      * Constructor
      * @global array $ne_config_info
-     * @global array $g_bereich_settings
+     * @global array $g_areas_settings
      */
     public function __construct() {
-        global $ne_config_info, $g_bereich_settings, $ne_user_roles;
-        $configPath = $ne_config_info['config_file_path_bereiche'];
+        global $ne_config_info, $g_areas_settings, $ne_user_roles;
+        $configPath = $ne_config_info['area_conf_filepath'];
         $bFirstTime = false;
         //falls kein config datei vorhanden, erstellen, danach mit default values fuellen
         if(!is_file($configPath)){
@@ -59,7 +59,7 @@ class BereichsManager {
             $bFirstTime = true;
         }
         $this->_ConfigManager = new ConfigFileManagerJSON($configPath);
-        $this->_aPossibleSettings = $g_bereich_settings['possible_bereich_settings'];
+        $this->_aPossibleSettings = $g_areas_settings['possible_area_settings'];
         $this->_aEmptySettings = array_fill_keys($this->_aPossibleSettings, '');
         $this->_sPathToSSI = $ne_config_info['ssi_folder_path'];
         $this->_aUserRoles = $ne_user_roles;
@@ -153,7 +153,7 @@ class BereichsManager {
      * @param array $aSettings associative array of area settings
      * @return success
      * @throws Exception
-     * @internal TODO vllt allgemein BereichFileHandler Klass erstellen.
+     * @internal TODO vllt allgemein AreaFileHandler Klass erstellen.
      */
     public function updateAreaSettings($sAreaName, array $aSettings){
         //testen ob $sAreaName existiert
@@ -230,14 +230,14 @@ class BereichsManager {
 
     /**
      * Add default areas settings to file (fallback)
-     * @global array $g_aBereicheditors
+     * @global array $g_aAreaeditors
      */
     public function addDefaultAreaSettings(){
-        global $g_aBereicheditors, $ne_config_info;
+        global $g_aAreaeditors, $ne_config_info;
 
         $aSettings = array();
 
-        foreach ($g_aBereicheditors as $values) {
+        foreach ($g_aAreaeditors as $values) {
             $aSettings = $values;
             $sSettingName = $aSettings['name'];
             $aSettings['content_marker_start'] = NavTools::ifsetor($ne_config_info[$sSettingName.'_content_marker_start'],'');
