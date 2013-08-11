@@ -1,13 +1,14 @@
 <?php
 define ('NE_DIR_ROOT', $_SERVER['DOCUMENT_ROOT'].'/vkdaten/tools/NavEditor2/');
 define ('NE_DIR_CONFIG', NE_DIR_ROOT.'config/');
+define ('NE_DIR_CLASSES', NE_DIR_ROOT.'app/classes/');
 
-
-require_once(NE_DIR_ROOT.'app/classes/NavTools.php');
+require_once(NE_DIR_CLASSES.'NavTools.php');
+require_once(NE_DIR_CLASSES.'Logger/LoggerCSV.php');
 require_once (NE_DIR_CONFIG.'config_users.php');
 require_once(NE_DIR_CONFIG.'config_areaeditor.php');
 
-require_once(NE_DIR_ROOT.'app/classes/ConfigManager.php');
+require_once(NE_DIR_CLASSES.'ConfigManager.php');
 
 // error_reporting(E_ALL & ~E_STRICT);
 // ini_set('display_errors', 'on');
@@ -57,7 +58,7 @@ $ne_config_info['app_title'] = 'NavEditor 2 <sup>Delta</sup>';
 $ne_config_info['app_titleplain'] = 'NavEditor 2 Delta';
 
 // current version
-$ne_config_info['version'] = '2.13.0807';
+$ne_config_info['version'] = '2.13.0812';
 
 // update host
 $ne_config_info['update_url'] = 'http://www.vorlagen.uni-erlangen.de/downloads/naveditor/';
@@ -101,17 +102,6 @@ $ne_config_info['variables_conf_filename']  = $config_manager->get_conf_item('va
 //config file path fuer bereiche
 $ne_config_info['area_conf_filepath']       = $config_manager->get_conf_item('area_conf_filepath', $ne_config_info['config_path'] . 'bereiche.conf');
 
-
-//bestimmt ob irgendwas geloggt werden muss //TODO
-$ne_config_info['log_activated']        = $config_manager->get_conf_item('log_activated',1);
-//maximale dateiegroesse des logs in bytes //TODO
-$ne_config_info['log_max_file_size']    = $config_manager->get_conf_item('log_max_file_size',1024*1024); //1mb
-
-//default log file path
-$ne_config_info['log_file']         = $config_manager->get_conf_item('log_file', $ne_config_info['log_path'].'ne.log');
-//maximum log history time (in Seconds)
-$ne_config_info['log_max_history']  = $config_manager->get_conf_item('log_max_history', 4*24*3600);//4 days
-
 //maximum user lock time after wrong pw etc. (in Seconds)
 $ne_config_info['login_max_lock_time']     = $config_manager->get_conf_item('timeout_loghistory', 3600);
 
@@ -121,6 +111,24 @@ $ne_config_info['custom_content_css_classes']  = $config_manager->get_conf_item(
 $ne_config_info['show_navtree_numbers'] 		= $config_manager->get_conf_item('show_navtree_numbers', 0); // 1 or 0
 //beim laden wird das Tree geoffnen sein
 $ne_config_info['navtree_start_open'] 			= $config_manager->get_conf_item('navtree_start_open', 0);
+
+//==========================LOGGER==============================================
+//bestimmt ob irgendwas geloggt werden muss
+$ne_config_info['log_activated']        = $config_manager->get_conf_item('log_activated',1);
+//maximale dateiegroesse des logs in bytes
+$ne_config_info['log_max_file_size']    = $config_manager->get_conf_item('log_max_file_size',1024*1024); //1mb
+//maximum log history time (in Seconds)
+$ne_config_info['log_max_history']      = $config_manager->get_conf_item('log_max_history', 4*24*3600);//4 days
+//default log file path
+$ne_config_info['log_file']             = $config_manager->get_conf_item('log_file', $ne_config_info['log_path'].'ne.log');
+//separator for CSV log file
+$ne_config_info['log_csv_separator']    = $config_manager->get_conf_item('log_csv_separator', ',');
+//format for CSV log file
+$ne_config_info['log_csv_format']           = $config_manager->get_conf_item('log_format', 'timestamp|date-time|errorlevel|ip|host|referrer|file|line|message');
+//mask for errorlevels of Logger
+$ne_config_info['log_errormask']        = $config_manager->get_conf_item('log_errormask', LoggerCSV::MASK_DEBUG | LoggerCSV::MASK_INFO | LoggerCSV::MASK_WARNING | LoggerCSV::MASK_ERROR);
+//==========================LOGGER END==========================================
+
 
 //==========================SESSIONS============================================
 $ne_config_info['session_timeout'] 			= $config_manager->get_conf_item('session_timeout', 7200 );
@@ -499,7 +507,7 @@ $ne_menu = array(
 //          $ne_config_info[{bereich}.'_content_marker_start']
 //          $ne_config_info[{bereich}.'_content_marker_end']
 
-require_once (NE_DIR_ROOT . 'app/classes/AreasManager.php');
+require_once (NE_DIR_CLASSES. 'AreasManager.php');
 
 $AreaManager = new AreasManager();
 $alleBereiche = $AreaManager->getAllAreaSettings();
