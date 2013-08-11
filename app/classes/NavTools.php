@@ -91,6 +91,8 @@ class NavTools {
      */
     public static function save_execution_time($message = "", $logfile = "", $debug = -1) {
         global $ne_config_info;
+        static $last_saved_time = 0;
+
         if (strcmp($logfile, "") == 0) {
             $logfile = $ne_config_info['debug_execution_file'];
         }
@@ -103,8 +105,10 @@ class NavTools {
             return;
         }
         $nowtime = self::get_execution_time();
+        $difference = $nowtime - $last_saved_time;
+        $last_saved_time = $nowtime;
         if (isset($message)) {
-            $nowtime = $nowtime . "\t" . $_SERVER['SCRIPT_FILENAME'] . "\t" . $message . "\n";
+            $nowtime = $nowtime . " (dif:".$difference.")\t" . $_SERVER['SCRIPT_FILENAME'] . "\t" . $message . "\n";
         }
         file_put_contents($logfile, $nowtime, FILE_APPEND | LOCK_EX);
         return;
@@ -261,6 +265,36 @@ class NavTools {
             setcookie($cookieToRemove,'',1);
             unset($_COOKIE[$cookieToRemove]);
         }
+    }
+
+
+    /**
+     * Convert a comma separated file into an associated array.
+     * The first row should contain the array keys.
+     *
+     * @param string $filename Path to the CSV file
+     * @param string $delimiter The separator used in the file
+     * @return array
+     * @link http://gist.github.com/385876
+     * @author Jay Williams <http://myd3.com/>
+     * @copyright Copyright (c) 2010, Jay Williams
+     * @license http://www.opensource.org/licenses/mit-license.php MIT License
+     */
+    static function csv_to_array($filename = '', $delimiter = ',') {
+        if (!file_exists($filename) || !is_readable($filename))
+            return FALSE;
+        $header = NULL;
+        $data = array();
+        if (($handle = fopen($filename, 'r')) !== FALSE) {
+            while (($row = fgetcsv($handle, 1000, $delimiter)) !== FALSE) {
+                if (!$header)
+                    $header = $row;
+                else
+                    $data[] = array_combine($header, $row);
+            }
+            fclose($handle);
+        }
+        return $data;
     }
 
 }
