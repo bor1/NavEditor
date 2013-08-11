@@ -10,13 +10,11 @@ require_once 'NE_Logger.php';
  */
 class LoggerCSV extends NE_Logger {
 
-    private $_separator;
-    private $_format;
-    private $_headers;
-    private $_maxLogHistory;
-    private $_maxFileSize;
+    protected $_separator;
+    protected $_format;
+    protected $_headers;
 
-    protected static $_unknownMessage = 'unknown';
+    protected static $_unknownDataText = 'unknown';
 
 
 
@@ -46,13 +44,6 @@ class LoggerCSV extends NE_Logger {
         $this->setMaxLogHistory($iMaxLogHistoryInSeconds);
         $this->setActivated($bActivated);
 
-    }
-
-    public function __destruct()
-    {
-        if (is_resource($this->_logFilePath)) {
-            fclose($this->_logFilePath);
-        }
     }
 
     /**
@@ -113,27 +104,9 @@ class LoggerCSV extends NE_Logger {
      */
     public function setFormat($sFormat) {
         $this->_format = NavTools::ifsetor($sFormat,
-                parent::getNESetting('log_format', 'timestamp|date-time|errorlevel|ip|host|referrer|file|line|message'));
+                parent::getNESetting('log_csv_format', 'timestamp|date-time|errorlevel|ip|host|referrer|file|line|message'));
     }
 
-
-    /**
-     * Set $_maxFileSize
-     * @param int $iMaxFileSizeInBytes Max allowed log-filesize in bytes
-     */
-    public function setMaxFileSize($iMaxFileSizeInBytes) {
-        $this->_maxFileSize = NavTools::ifsetor($iMaxFileSizeInBytes,
-                parent::getNESetting('log_max_file_size', 1048576));
-    }
-
-    /**
-     * Set $_maxLogHistory
-     * @param int $iMaxLogHistoryInSeconds time in seconds how old can be log entries
-     */
-    public function setMaxLogHistory($iMaxLogHistoryInSeconds) {
-        $this->_maxLogHistory = NavTools::ifsetor($iMaxLogHistoryInSeconds,
-                parent::getNESetting('log_max_history', 3600*24));
-    }
 
     /**
      * Return array for saving in csv file<br />
@@ -165,22 +138,22 @@ class LoggerCSV extends NE_Logger {
                     $newValue = $message;
                     break;
                 case 'ip':
-                    $newValue = NavTools::ifsetor($_SERVER["REMOTE_ADDR"],  self::$_unknownMessage);
+                    $newValue = NavTools::ifsetor($_SERVER["REMOTE_ADDR"],  self::$_unknownDataText);
                     break;
                 case 'host':
                     $host = @gethostbyaddr($_SERVER["REMOTE_ADDR"]);
-                    $newValue =($host)?:self::$_unknownMessage;
+                    $newValue =($host)?:self::$_unknownDataText;
                     break;
                 case 'referrer':
-                    $newValue = NavTools::ifsetor($_SERVER["HTTP_REFERER"],self::$_unknownMessage);
+                    $newValue = NavTools::ifsetor($_SERVER["HTTP_REFERER"],self::$_unknownDataText);
                     break;
                 case 'line':
                     $debugBacktrace = ($debugBacktrace)?:debug_backtrace();//performance
-                    $newValue = NavTools::ifsetor($debugBacktrace[1]['line'],self::$_unknownMessage);
+                    $newValue = NavTools::ifsetor($debugBacktrace[1]['line'],self::$_unknownDataText);
                     break;
                 case 'file':
                     $debugBacktrace = ($debugBacktrace)?:debug_backtrace();//performance
-                    $newValue = NavTools::ifsetor($debugBacktrace[1]['file'],self::$_unknownMessage);
+                    $newValue = NavTools::ifsetor($debugBacktrace[1]['file'],self::$_unknownDataText);
                     break;
                 default:
                     $newValue = 'Can not parse the Format: '.$field;

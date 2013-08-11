@@ -28,6 +28,18 @@ abstract class NE_Logger extends NavEditorAbstractClass{
      */
     protected $_logFilePath;
 
+    /**
+     * Maximum older or logger entries in seconds
+     * @var int 
+     */
+    protected $_maxLogHistory;
+
+    /**
+     * maximum size of log file in bytes
+     * @var int
+     */
+    protected $_maxFileSize;
+
     //errorlevel names
     const INFO      = 'INFO';
     const WARNING   = 'WARNING';
@@ -80,6 +92,24 @@ abstract class NE_Logger extends NavEditorAbstractClass{
     public function setLogFilePath($sLogFilePath) {
         $this->_logFilePath = NavTools::ifsetor($sLogFilePath,
                 parent::getNESetting('log_file', parent::NE_DIR_ROOT . 'log/log.csv'));
+    }
+
+    /**
+     * Set $_maxFileSize
+     * @param int $iMaxFileSizeInBytes Max allowed log-filesize in bytes
+     */
+    public function setMaxFileSize($iMaxFileSizeInBytes) {
+        $this->_maxFileSize = NavTools::ifsetor($iMaxFileSizeInBytes,
+                parent::getNESetting('log_max_file_size', 1048576));
+    }
+
+    /**
+     * Set $_maxLogHistory
+     * @param int $iMaxLogHistoryInSeconds time in seconds how old can be log entries
+     */
+    public function setMaxLogHistory($iMaxLogHistoryInSeconds) {
+        $this->_maxLogHistory = NavTools::ifsetor($iMaxLogHistoryInSeconds,
+                parent::getNESetting('log_max_history', 3600*24));
     }
 
     /**
