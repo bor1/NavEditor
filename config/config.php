@@ -3,12 +3,12 @@ define ('NE_DIR_ROOT', $_SERVER['DOCUMENT_ROOT'].'/vkdaten/tools/NavEditor2/');
 define ('NE_DIR_CONFIG', NE_DIR_ROOT.'config/');
 define ('NE_DIR_CLASSES', NE_DIR_ROOT.'app/classes/');
 
-require_once(NE_DIR_CLASSES.'NavTools.php');
-require_once(NE_DIR_CLASSES.'Logger/LoggerCSV.php');
-require_once (NE_DIR_CONFIG.'config_users.php');
-require_once(NE_DIR_CONFIG.'config_areaeditor.php');
-
-require_once(NE_DIR_CLASSES.'ConfigManager.php');
+require_once(NE_DIR_CLASSES . 'NavTools.php');
+require_once(NE_DIR_CLASSES . 'Logger/LoggerCSV.php');
+require_once(NE_DIR_CLASSES . 'AreasManager.php');
+require_once(NE_DIR_CLASSES . 'ConfigManager.php');
+require_once(NE_DIR_CONFIG  . 'config_users.php');
+require_once(NE_DIR_CONFIG  . 'config_areaeditor.php');
 
 // error_reporting(E_ALL & ~E_STRICT);
 // ini_set('display_errors', 'on');
@@ -25,15 +25,15 @@ $ne_config_info['public_php_files'] = $ne_user_public_php;
 //array wih permissions for php files
 $ne_config_info['php_file_permissions'] = $ne_user_php_persmissions;
 //settings and information about areas
-$ne_config_info['data.areas'] = $g_areas_settings;
+$ne_config_info['areas_settings'] = $g_areas_settings;
 
 
 //========================USUAL SETTINGS========================================
 // the path of NavEditor2, by default: $_SERVER['DOCUMENT_ROOT'] . '/vkdaten/tools/NavEditor2/'
 // please include trailing slash!
 $ne_config_info['app_path_without_host'] = '/vkdaten/tools/NavEditor2/';
-$ne_config_info['app_path'] = NE_DIR_ROOT;
-$ne_config_info['log_path'] = NE_DIR_ROOT . "log/";
+$ne_config_info['app_path']     = NE_DIR_ROOT;
+$ne_config_info['log_path']     = NE_DIR_ROOT . "log/";
 $ne_config_info['cgi-bin_path'] = NavTools::simpleResolvePath($_SERVER['DOCUMENT_ROOT'] . "/../cgi-bin/");
 
 // the filename of user-data
@@ -43,8 +43,8 @@ $ne_config_info['user_data_file_path'] = $ne_config_info['app_path'] . 'data/' .
 
 // the filename of debug times
 $ne_config_info['debug_execution_file_name'] = 'debug-execution-time.log';
-$ne_config_info['debug_execution_file'] = $ne_config_info['log_path'].$ne_config_info['debug_execution_file_name'];
-$ne_config_info['debug_time']  = 1;
+$ne_config_info['debug_execution_file']      = $ne_config_info['log_path'].$ne_config_info['debug_execution_file_name'];
+$ne_config_info['debug_time']                = 1;
 
 // where to save uploaded data (without trailing slash!)
 $ne_config_info['upload_dir'] = $_SERVER['DOCUMENT_ROOT'] . '';
@@ -52,24 +52,24 @@ $ne_config_info['upload_dir'] = $_SERVER['DOCUMENT_ROOT'] . '';
 
 
 // current public title with html
-$ne_config_info['app_title'] = 'NavEditor 2 <sup>Delta</sup>';
+$ne_config_info['app_title']        = 'NavEditor 2 <sup>Delta</sup>';
 
 // current public title with html
-$ne_config_info['app_titleplain'] = 'NavEditor 2 Delta';
+$ne_config_info['app_titleplain']   = 'NavEditor 2 Delta';
 
 // current version
-$ne_config_info['version'] = '2.13.0812';
+$ne_config_info['version']          = '2.13.0812';
 
 // update host
-$ne_config_info['update_url'] = 'http://www.vorlagen.uni-erlangen.de/downloads/naveditor/';
+$ne_config_info['update_url']       = 'http://www.vorlagen.uni-erlangen.de/downloads/naveditor/';
 
 
 
 // path to naveditor config files
-$ne_config_info['config_path']     = $ne_config_info['app_path'] . 'data/';
+$ne_config_info['config_path']      = $ne_config_info['app_path'] . 'data/';
 
 // path for template files
-$ne_config_info['template_path']   = $ne_config_info['app_path'] . 'data/templates/';
+$ne_config_info['template_path']    = $ne_config_info['app_path'] . 'data/templates/';
 
 // template files for default  pages
 $ne_config_info['template_default'] = 'seitenvorlage.html';
@@ -78,13 +78,13 @@ $ne_config_info['template_default'] = 'seitenvorlage.html';
 $ne_config_info['js_folder_name']   = 'js';
 
 // CSS folder name in vkdaten folder
-$ne_config_info['css_folder_name']   = 'css';
+$ne_config_info['css_folder_name']  = 'css';
 
 //URL to naveditor
-$ne_config_info['ne_url']   = "http://".$_SERVER['HTTP_HOST'].$ne_config_info['app_path_without_host'];
+$ne_config_info['ne_url']           = "http://".$_SERVER['HTTP_HOST'].$ne_config_info['app_path_without_host'];
 
 //ssi folder path
-$ne_config_info['ssi_folder_path'] = $_SERVER['DOCUMENT_ROOT']. "/ssi/";
+$ne_config_info['ssi_folder_path']  = $_SERVER['DOCUMENT_ROOT']. "/ssi/";
 
 
 // new in editor editable conf-items
@@ -103,12 +103,12 @@ $ne_config_info['variables_conf_filename']  = $config_manager->get_conf_item('va
 $ne_config_info['area_conf_filepath']       = $config_manager->get_conf_item('area_conf_filepath', $ne_config_info['config_path'] . 'bereiche.conf');
 
 //maximum user lock time after wrong pw etc. (in Seconds)
-$ne_config_info['login_max_lock_time']     = $config_manager->get_conf_item('timeout_loghistory', 3600);
+$ne_config_info['login_max_lock_time']          = $config_manager->get_conf_item('timeout_loghistory', 3600);
 
 //tiny_mce theme_advanced_styles
-$ne_config_info['custom_content_css_classes']  = $config_manager->get_conf_item('custom_content_css_classes', 'clear|unsichtbar|marker|hinweis|links|rechts|marker|bildrechts|bildlinks|vollbox|klein_box_links|klein_box_rechts|box_rechts|box_links');
+$ne_config_info['custom_content_css_classes']   = $config_manager->get_conf_item('custom_content_css_classes', 'clear|unsichtbar|marker|hinweis|links|rechts|marker|bildrechts|bildlinks|vollbox|klein_box_links|klein_box_rechts|box_rechts|box_links');
 //zeigt in nav_editor neben jedem menue eigene ID
-$ne_config_info['show_navtree_numbers'] 		= $config_manager->get_conf_item('show_navtree_numbers', 0); // 1 or 0
+$ne_config_info['show_navtree_numbers']         = $config_manager->get_conf_item('show_navtree_numbers', 0); // 1 or 0
 //beim laden wird das Tree geoffnen sein
 $ne_config_info['navtree_start_open'] 			= $config_manager->get_conf_item('navtree_start_open', 0);
 
@@ -124,7 +124,7 @@ $ne_config_info['log_file']             = $config_manager->get_conf_item('log_fi
 //separator for CSV log file
 $ne_config_info['log_csv_separator']    = $config_manager->get_conf_item('log_csv_separator', ',');
 //format for CSV log file
-$ne_config_info['log_csv_format']           = $config_manager->get_conf_item('log_format', 'timestamp|date-time|errorlevel|ip|host|referrer|file|line|message');
+$ne_config_info['log_csv_format']       = $config_manager->get_conf_item('log_format', 'timestamp|date-time|errorlevel|ip|host|referrer|file|line|message');
 //mask for errorlevels of Logger
 $ne_config_info['log_errormask']        = $config_manager->get_conf_item('log_errormask', LoggerCSV::MASK_DEBUG | LoggerCSV::MASK_INFO | LoggerCSV::MASK_WARNING | LoggerCSV::MASK_ERROR);
 //==========================LOGGER END==========================================
@@ -169,7 +169,7 @@ $ne_config_info['backup_type']                  = $config_manager->get_conf_item
 $ne_config_info['navindex_backup_dir']  		= $config_manager->get_conf_item('navindex_backup_dir', $_SERVER['DOCUMENT_ROOT'] . '/vkdaten/navindex_backup/');
 
  //webauftritt configfiles ordner
-$ne_config_info['default_configs_path']           = $config_manager->get_conf_item('default_configs_path', $_SERVER['DOCUMENT_ROOT'] . "/vkdaten/");
+$ne_config_info['default_configs_path']         = $config_manager->get_conf_item('default_configs_path', $_SERVER['DOCUMENT_ROOT'] . "/vkdaten/");
 
 
 
@@ -252,21 +252,21 @@ $ne_config_info['nologoupdate_dir'] = Array('.', '..', 'css','grafiken','img','s
 // jqueryFileTree Icons Pfad
 $ne_config_info['jquery_file_tree'] = Array (
     'icons' => Array(
-        'newfolder_icon' => $ne_config_info['ne_url'] . $ne_config_info['css_folder_name'].'/images/newfolder.png',
-        'rename_icon' => $ne_config_info['ne_url'] . $ne_config_info['css_folder_name'].'/images/rename.png',
-        'delete_icon' => $ne_config_info['ne_url'] . $ne_config_info['css_folder_name'].'/images/delete.png',
-        'create_new_icon' => $ne_config_info['ne_url'] . $ne_config_info['css_folder_name'].'/images/newdocument.png',
+        'newfolder_icon'    => $ne_config_info['ne_url'] . $ne_config_info['css_folder_name'].'/images/newfolder.png',
+        'rename_icon'       => $ne_config_info['ne_url'] . $ne_config_info['css_folder_name'].'/images/rename.png',
+        'delete_icon'       => $ne_config_info['ne_url'] . $ne_config_info['css_folder_name'].'/images/delete.png',
+        'create_new_icon'   => $ne_config_info['ne_url'] . $ne_config_info['css_folder_name'].'/images/newdocument.png',
     ),
     'colors' => Array(
-        'color_notallow' => '#999',
-        'color_someallow' => '#666'
+        'color_notallow'    => '#999',
+        'color_someallow'   => '#666'
     )
 );
 
 //for word filters
-$ne_config_info['symbols_being_replaced'] = array ('ä', 'ö', 'ü', 'ß', "Ä", "Ö", "Ü","ẞ");
-$ne_config_info['symbols_replacement'] = array ('ae', 'oe', 'ue', 'ss', "AE", "OE", "UE", "SS");
-$ne_config_info['regex_removed_symbols'] = '/[^a-zA-Z0-9\-_\s]/';
+$ne_config_info['symbols_being_replaced']   = array ('ä', 'ö', 'ü', 'ß', "Ä", "Ö", "Ü","ẞ");
+$ne_config_info['symbols_replacement']      = array ('ae', 'oe', 'ue', 'ss', "AE", "OE", "UE", "SS");
+$ne_config_info['regex_removed_symbols']    = '/[^a-zA-Z0-9\-_\s]/';
 
 
 //default html includes for every file
@@ -286,7 +286,7 @@ $ne_config_info['default_includes_js_css'] = Array(
 //weil die "rollen" von der Bereich-config-datei abhaengig sind.
 $ne_menu = array(
 	1 => array(
-		'id' 	=> 1,
+		'id'        => 1,
 		'title' => 'Dashboard',
 		'link'	=> 'dashboard.php',
 		'role'	=> 'user',
@@ -408,7 +408,7 @@ $ne_menu = array(
 		'desc'  => '',
     ),
     55 => array(
-        'id' => 55,
+        'id'        => 55,
         'title' => 'Bereiche verwalten',
         'link'  => 'areas_manager.php',
         'role'  => 'admin',
@@ -507,8 +507,6 @@ $ne_menu = array(
 //          $ne_config_info[{bereich}.'_content_marker_start']
 //          $ne_config_info[{bereich}.'_content_marker_end']
 
-require_once (NE_DIR_CLASSES. 'AreasManager.php');
-
 $AreaManager = new AreasManager();
 $alleBereiche = $AreaManager->getAllAreaSettings();
 
@@ -516,13 +514,13 @@ foreach ($alleBereiche as $aBereich) {
     static $i = 21;
 
     $ne_menu[$i] = array(
-        'id' => $i,
+        'id'    => $i,
         'title' => $aBereich['title'],
-        'link' => 'default_editor.php?' . $aBereich['name'],
-        'role' => $aBereich['user_role_required'],
-        'sub' => 0,
-        'up' => 20,
-        'desc' => $aBereich['description']
+        'link'  => 'default_editor.php?' . $aBereich['name'],
+        'role'  => $aBereich['user_role_required'],
+        'sub'   => 0,
+        'up'    => 20,
+        'desc'  => $aBereich['description']
     );
 
     $i++;
@@ -530,8 +528,8 @@ foreach ($alleBereiche as $aBereich) {
 
 
 //fill $ne_menu permissions depend on $ne_config_info['php_file_permissions']
+$tmp_files_with_permissions = array_keys($ne_config_info['php_file_permissions']);//for performance
 foreach ($ne_menu as $key=>$params) {
-    $tmp_files_with_permissions = array_keys($ne_config_info['php_file_permissions']);//for performance
     if(in_array($params['link'],  $tmp_files_with_permissions)){
         $ne_menu[$key]['role'] = $ne_config_info['php_file_permissions'][$params['link']];
     }
