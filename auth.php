@@ -15,7 +15,7 @@ no_direct_call(__FILE__);
 
 require_once('config/config.php');
 
-require_once(NE_DIR_ROOT.'app/classes/UserMgmt_Class.php');
+require_once(NE_DIR_CLASSES.'UserMgmt_Class.php');
 require_once(NE_DIR_ROOT.'app/log_funcs.php');
 require_once(NE_DIR_ROOT.'app/sessions.php');
 
@@ -81,11 +81,13 @@ global $g_current_user_permission;
 global $g_current_user_name;
 global $is_admin;
 global $g_UserMgmt;
+global $g_Logger;
 
 //start or refresh session
 \sessions\setSession();
 
 $g_UserMgmt = new \UserMgmt();
+$g_Logger = new \LoggerCSV();
 
 $is_admin = FALSE;
 
