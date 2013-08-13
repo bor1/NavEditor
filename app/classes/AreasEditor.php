@@ -1,6 +1,4 @@
 <?php
-require_once 'ConfigFileManagerJSON.php';
-require_once 'NavTools.php';
 
 /**
  * Default editor fuer Bereiche.

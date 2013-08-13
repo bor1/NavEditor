@@ -1,5 +1,4 @@
 <?php
-require_once 'NavTools.php';
 /**
  * Abstract manager for config files
  * To Implement: decode/encode functons of data in file
@@ -8,7 +7,7 @@ require_once 'NavTools.php';
  * @author Dmitry Gorelenkov
  * @internal Purpose: learning PHP -> probably low quality code, sorry :/
  */
-abstract class ConfigFileManager{
+abstract class ConfigFileManagerAbstract{
     /**
      * Config filepath
      * @var string

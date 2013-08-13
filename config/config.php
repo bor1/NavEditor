@@ -3,10 +3,8 @@ define ('NE_DIR_ROOT', $_SERVER['DOCUMENT_ROOT'].'/vkdaten/tools/NavEditor2/');
 define ('NE_DIR_CONFIG', NE_DIR_ROOT.'config/');
 define ('NE_DIR_CLASSES', NE_DIR_ROOT.'app/classes/');
 
-require_once(NE_DIR_CLASSES . 'NavTools.php');
-require_once(NE_DIR_CLASSES . 'Logger/LoggerCSV.php');
-require_once(NE_DIR_CLASSES . 'AreasManager.php');
-require_once(NE_DIR_CLASSES . 'ConfigManager.php');
+require_once(NE_DIR_ROOT . 'autoload.php');
+
 require_once(NE_DIR_CONFIG  . 'config_users.php');
 require_once(NE_DIR_CONFIG  . 'config_areaeditor.php');
 
@@ -126,7 +124,8 @@ $ne_config_info['log_csv_separator']    = $config_manager->get_conf_item('log_cs
 //format for CSV log file
 $ne_config_info['log_csv_format']       = $config_manager->get_conf_item('log_format', 'timestamp|date-time|errorlevel|ip|host|referrer|file|line|message');
 //mask for errorlevels of Logger
-$ne_config_info['log_errormask']        = $config_manager->get_conf_item('log_errormask', LoggerCSV::MASK_DEBUG | LoggerCSV::MASK_INFO | LoggerCSV::MASK_WARNING | LoggerCSV::MASK_ERROR);
+use Logger\LoggerCSV as L;
+$ne_config_info['log_errormask']        = $config_manager->get_conf_item('log_errormask', L::MASK_DEBUG | L::MASK_INFO | L::MASK_WARNING | L::MASK_ERROR);
 //==========================LOGGER END==========================================
 
 
@@ -183,6 +182,7 @@ $ne_config_info['page_content_marker_preinhaltsinfo']  = $config_manager->get_co
 $ne_config_info['content_marker_start_setting']        = 'content_marker_start';
 $ne_config_info['content_marker_end_setting']          = 'content_marker_end';
 
+$ne_config_info['current_site_title_file'] = $config_manager->get_conf_item('current_site_title_file',  '');
 
 //========================= LOESCHEN SPAETER BEGIN =============================
 // activate_univis_mitarbeitereditor:  Wird der Editor fuer UnivIS-Extra Personendaten angezeigt? (Alter Editor war er default an, ab 2012 besser default aus)

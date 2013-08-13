@@ -17,8 +17,8 @@
 //
 
 require_once('../auth.php');
-require_once('classes/FileManager.php');
 
+global $ne_config_info;
 $root = $ne_config_info['upload_dir'];
 
 $dir = urldecode($_POST['dir']);

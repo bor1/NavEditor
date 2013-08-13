@@ -1,6 +1,5 @@
 <?php
 require_once('../auth.php');
-require_once('classes/FileHandler_Class.php');
 
 $internal_tree_file = $_SERVER['DOCUMENT_ROOT'] . '/vkdaten/navigationsindex_buffer.txt';
 $public_tree_file = $_SERVER['DOCUMENT_ROOT'] . '/vkdaten/navigationsindex.txt';

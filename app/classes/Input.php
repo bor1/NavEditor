@@ -1,5 +1,4 @@
-<?php //if ( !defined('COREPATH') ) exit;
-require_once 'Singleton.php';
+<?php
  
 class Input extends pattern\Singleton {
 

@@ -15,7 +15,6 @@ no_direct_call(__FILE__);
 
 require_once('config/config.php');
 
-require_once(NE_DIR_CLASSES.'UserMgmt_Class.php');
 require_once(NE_DIR_ROOT.'app/log_funcs.php');
 require_once(NE_DIR_ROOT.'app/sessions.php');
 
@@ -87,7 +86,7 @@ global $g_Logger;
 \sessions\setSession();
 
 $g_UserMgmt = new \UserMgmt();
-$g_Logger = new \LoggerCSV();
+$g_Logger = new \Logger\LoggerCSV();
 
 $is_admin = FALSE;
 

@@ -189,20 +189,24 @@ $ne_user_php_persmissions = array(
     'app/classes/AreasManager.php'       => 'admin',//for ajax_handler
 
     //no need yet, but listed..
-    'app/classes/BackupManager.php'         => 'admin',
+    'app/classes/AreasEditor.php'       => 'admin',
+    'app/classes/BackupManager.php'     => 'admin',
     'app/classes/ConfigFileManagerAbstract.php' => 'admin',
     'app/classes/ConfigFileManagerJSON.php' => 'admin',
     'app/classes/ConfigManager.php'         => 'admin',
-    'app/classes/ContentHandler_Class.php'  => 'admin',
-    'app/classes/FileHandler_Class.php'     => 'admin',
-    'app/classes/FileManager.php'           => 'admin',
-    'app/classes/Input.php'                 => 'admin',
-    'app/classes/NavTools.php'              => 'admin',
-    'app/classes/SimpleLogger_Class.php'    => 'admin',
-    'app/classes/SimplePie.php'             => 'admin',
-    'app/classes/Singleton.php'             => 'admin',
-    'app/classes/Snoopy.class.php'          => 'admin',
-    'app/classes/UserMgmt_Class.php'        => 'admin',
+    'app/classes/ContentHandler.php'        => 'admin',
+    'app/classes/FileHandler.php'       => 'admin',
+    'app/classes/FileManager.php'       => 'admin',
+    'app/classes/Input.php'             => 'admin',
+    'app/classes/NavEditorAbstractClass.php' => 'admin',
+    'app/classes/NavTools.php'          => 'admin',
+    'app/classes/SimpleLogger.php'      => 'admin',
+    'app/classes/SimplePie.php'         => 'admin',
+    'app/classes/Snoopy.php'            => 'admin',
+    'app/classes/UserMgmt.php'          => 'admin',
+    'app/classes/Logger/LoggerCSV.php'  => 'admin',
+    'app/classes/Logger/NE_Logger.php'  => 'admin',
+    'app/classes/pattern/Singleton.php' => 'admin',
 
     //include only => need to be admin if called directly
     'auth.php'                  => 'admin',//include only

@@ -1,6 +1,5 @@
 <?php
 require_once('../auth.php');
-require_once('classes/FileHandler_Class.php');
 
 ini_set("pcre.backtrack_limit", "200000"); // workaround for preg_replace error by large content
 
@@ -10,7 +9,7 @@ $fh = new FileHandler();
 
 $site_title_text = '';
 $titleFilePath = $ne_config_info['app_path'] . $ne_config_info['current_site_title_file'];
-if(file_exists($titleFilePath)) {
+if(is_file($titleFilePath)) {
     $site_title_text = file_get_contents($titleFilePath);
 }
 

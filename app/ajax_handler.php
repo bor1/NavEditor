@@ -7,7 +7,6 @@
  */
 try {
     require_once '../auth.php';
-    require_once NE_DIR_ROOT.'app/classes/Input.php';
 
     global $g_UserMgmt, $ne_config_info;
 

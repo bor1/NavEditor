@@ -1,12 +1,11 @@
 <?php
-require_once 'ConfigFileManagerAbstract.php';
 /**
  * Manager for config files with JSON file data structure
  *
  * @author Dmitry Gorelenkov
  * @internal Purpose: learning PHP -> probably low quality code, sorry :/
  */
-class ConfigFileManagerJSON extends ConfigFileManager{
+class ConfigFileManagerJSON extends ConfigFileManagerAbstract{
 
     /**
      * Decodes $data string to array

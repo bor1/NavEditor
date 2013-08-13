@@ -1,6 +1,5 @@
 <?php
 require_once('auth.php');
-require_once('app/classes/SimplePie.php');
 
 
 $feedUrl = $ne_config_info['dashboard_feed'];

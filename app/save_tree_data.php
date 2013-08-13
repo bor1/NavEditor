@@ -1,7 +1,5 @@
 <?php
 require_once('../auth.php');
-require_once('classes/SimpleLogger_Class.php');
-require_once('classes/FileHandler_Class.php');
 
 $publish_tree = $_POST['publishTree'];
 

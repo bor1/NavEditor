@@ -1,6 +1,5 @@
 <?php
-if(defined('NE_DIR_CLASSES'))
-require_once(NE_DIR_CLASSES.'/NavEditorAbstractClass.php');
+namespace Logger;
 
 /**
  * Abstract Logger Class for NavEditor Loggers
@@ -8,7 +7,7 @@ require_once(NE_DIR_CLASSES.'/NavEditorAbstractClass.php');
  * @author Dmitry Gorelenkov
  * @internal note: learning PHP -> probably low quality code, sorry :/
  */
-abstract class NE_Logger extends NavEditorAbstractClass{
+abstract class NE_Logger extends \NavEditorAbstractClass{
 
     /**
      * activate or deactivate the logger
@@ -30,7 +29,7 @@ abstract class NE_Logger extends NavEditorAbstractClass{
 
     /**
      * Maximum older or logger entries in seconds
-     * @var int 
+     * @var int
      */
     protected $_maxLogHistory;
 
@@ -81,7 +80,7 @@ abstract class NE_Logger extends NavEditorAbstractClass{
      * @param bool $bActivated TRUE for activation, FALSE for deactivation
      */
     public function setActivated($bActivated) {
-        $this->_activated = NavTools::ifsetor($bActivated,
+        $this->_activated = \NavTools::ifsetor($bActivated,
                 parent::getNESetting('log_activated', TRUE));
     }
 
@@ -90,7 +89,7 @@ abstract class NE_Logger extends NavEditorAbstractClass{
      * @param string $sLogFilePath
      */
     public function setLogFilePath($sLogFilePath) {
-        $this->_logFilePath = NavTools::ifsetor($sLogFilePath,
+        $this->_logFilePath = \NavTools::ifsetor($sLogFilePath,
                 parent::getNESetting('log_file', parent::NE_DIR_ROOT . 'log/log.csv'));
     }
 
@@ -99,7 +98,7 @@ abstract class NE_Logger extends NavEditorAbstractClass{
      * @param int $iMaxFileSizeInBytes Max allowed log-filesize in bytes
      */
     public function setMaxFileSize($iMaxFileSizeInBytes) {
-        $this->_maxFileSize = NavTools::ifsetor($iMaxFileSizeInBytes,
+        $this->_maxFileSize = \NavTools::ifsetor($iMaxFileSizeInBytes,
                 parent::getNESetting('log_max_file_size', 1048576));
     }
 
@@ -108,7 +107,7 @@ abstract class NE_Logger extends NavEditorAbstractClass{
      * @param int $iMaxLogHistoryInSeconds time in seconds how old can be log entries
      */
     public function setMaxLogHistory($iMaxLogHistoryInSeconds) {
-        $this->_maxLogHistory = NavTools::ifsetor($iMaxLogHistoryInSeconds,
+        $this->_maxLogHistory = \NavTools::ifsetor($iMaxLogHistoryInSeconds,
                 parent::getNESetting('log_max_history', 3600*24));
     }
 
@@ -117,7 +116,7 @@ abstract class NE_Logger extends NavEditorAbstractClass{
      * @param int(bitmask) $bitErrorsFlags
      */
     public function setErrorFlags($bitErrorsFlags) {
-        $this->_errors_mask = NavTools::ifsetor($bitErrorsFlags,
+        $this->_errors_mask = \NavTools::ifsetor($bitErrorsFlags,
                 parent::getNESetting('log_errormask', self::getAllErrorsMask()));
     }
 

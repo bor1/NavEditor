@@ -1,6 +1,4 @@
 <?php
-require_once 'ConfigFileManagerJSON.php';
-require_once 'NavTools.php';
 /**
  * Verwaltung fuer Bereiche.
  * requires config.php!
@@ -13,7 +11,7 @@ require_once 'NavTools.php';
 class AreasManager {
     /**
      * Manager for config file
-     * @var ConfigFileManager
+     * @var ConfigFileManagerAbstract
      */
     private $_ConfigManager;
 

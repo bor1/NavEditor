@@ -552,7 +552,9 @@ class FileHandler {
 	public function UpdateTitleFile($titile_text) {
 		global $ne_config_info;
 		$titleFilePath = $ne_config_info['app_path'] . $ne_config_info['current_site_title_file'];
-		file_put_contents($titleFilePath, htmlentities($titile_text, ENT_COMPAT, 'UTF-8'));
+        if(is_file($titleFilePath)){
+            file_put_contents($titleFilePath, htmlentities($titile_text, ENT_COMPAT, 'UTF-8'));
+        }
 	}
 }
 ?>

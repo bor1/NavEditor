@@ -1,7 +1,5 @@
 <?php
 require_once('../auth.php');
-require('classes/Snoopy.class.php');
-require_once('classes/FileManager.php');
 
 $fm = new FileManager();
 

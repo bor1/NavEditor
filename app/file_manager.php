@@ -4,8 +4,6 @@
  */
 
 require_once('../auth.php');
-require_once('classes/FileManager.php');
-require_once ('classes/Input.php');
 
 $htusers_file = $_SERVER['DOCUMENT_ROOT'] . '/vkdaten/.htusers';
 $hthosts_file = $_SERVER['DOCUMENT_ROOT'] . '/vkdaten/hthosts';

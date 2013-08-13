@@ -6,7 +6,6 @@
 
 
 require_once('../auth.php');
-require_once ('classes/Input.php');
 
 
 

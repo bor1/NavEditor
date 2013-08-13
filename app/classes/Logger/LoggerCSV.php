@@ -1,6 +1,5 @@
 <?php
-
-require_once 'NE_Logger.php';
+namespace Logger;
 
 /**
  * CSV Logger, to log something in csv format
@@ -85,7 +84,7 @@ class LoggerCSV extends NE_Logger {
      * @return array
      */
     public function getLogArray() {
-        return NavTools::csv_to_array($this->_logFilePath, $this->_separator);
+        return \NavTools::csv_to_array($this->_logFilePath, $this->_separator);
     }
 
 
@@ -94,7 +93,7 @@ class LoggerCSV extends NE_Logger {
      * @param string $sSeparator
      */
     public function setSeparator($sSeparator) {
-        $this->_separator = NavTools::ifsetor($sSeparator,
+        $this->_separator = \NavTools::ifsetor($sSeparator,
                 parent::getNESetting('log_csv_separator', ','));
     }
 
@@ -103,7 +102,7 @@ class LoggerCSV extends NE_Logger {
      * @param string $sFormat
      */
     public function setFormat($sFormat) {
-        $this->_format = NavTools::ifsetor($sFormat,
+        $this->_format = \NavTools::ifsetor($sFormat,
                 parent::getNESetting('log_csv_format', 'timestamp|date-time|errorlevel|ip|host|referrer|file|line|message'));
     }
 
@@ -138,22 +137,22 @@ class LoggerCSV extends NE_Logger {
                     $newValue = $message;
                     break;
                 case 'ip':
-                    $newValue = NavTools::ifsetor($_SERVER["REMOTE_ADDR"],  self::$_unknownDataText);
+                    $newValue = \NavTools::ifsetor($_SERVER["REMOTE_ADDR"],  self::$_unknownDataText);
                     break;
                 case 'host':
                     $host = @gethostbyaddr($_SERVER["REMOTE_ADDR"]);
                     $newValue =($host)?:self::$_unknownDataText;
                     break;
                 case 'referrer':
-                    $newValue = NavTools::ifsetor($_SERVER["HTTP_REFERER"],self::$_unknownDataText);
+                    $newValue = \NavTools::ifsetor($_SERVER["HTTP_REFERER"],self::$_unknownDataText);
                     break;
                 case 'line':
                     $debugBacktrace = ($debugBacktrace)?:debug_backtrace();//performance
-                    $newValue = NavTools::ifsetor($debugBacktrace[1]['line'],self::$_unknownDataText);
+                    $newValue = \NavTools::ifsetor($debugBacktrace[1]['line'],self::$_unknownDataText);
                     break;
                 case 'file':
                     $debugBacktrace = ($debugBacktrace)?:debug_backtrace();//performance
-                    $newValue = NavTools::ifsetor($debugBacktrace[1]['file'],self::$_unknownDataText);
+                    $newValue = \NavTools::ifsetor($debugBacktrace[1]['file'],self::$_unknownDataText);
                     break;
                 default:
                     $newValue = 'Can not parse the Format: '.$field;
