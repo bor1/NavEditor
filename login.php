@@ -1,46 +1,45 @@
 <?php
 require_once('auth.php');
 
+global $ne_config_info, $g_Logger, $g_UserMgmt, $g_current_user_permission, $g_current_user_name;
+
 if (is_null($g_UserMgmt->GetUsers())) {
     header("Location: aktivierung.php");
 }
 
-$toWait = 0;
-if (isset($_POST['btnLogin'])) {
-    $toWait = waitTimeForLogin();
-    if ($toWait <= 0) {
+$toWait = waitTimeForLogin();
+if (isset($_POST['btnLogin']) && $toWait <= 0) {
 
-        $username = $_POST['txtUserName'];
-        $password = md5($_POST['txtPassword']);
-        $login_result = $g_UserMgmt->Login($username, $password);
+    $username = $_POST['txtUserName'];
+    $password = md5($_POST['txtPassword']);
+    $login_result = $g_UserMgmt->Login($username, $password);
 
-        if ($login_result == 1) {
+    if ($login_result == 1) {
 
-            $_SESSION['ne_username'] = $username;
-            $_SESSION['ne_password'] = $password;
-            $g_UserMgmt->saveLoginTime($username);
-            logadd('loginOk');
+        $_SESSION['ne_username'] = $username;
+        $_SESSION['ne_password'] = $password;
+        \auth\setGlobals();
+        logadd('loginOk');
 
-            //TODO NavTools::testFallBack?
-            if (!file_exists($ne_config_info['default_configs_path'] . $ne_config_info['website_conf_filename'])
-                    || !file_exists($ne_config_info['default_configs_path'] . $ne_config_info['variables_conf_filename'])) {
-                header('Location: website_editor.php');
-            } else {
-                header('Location: dashboard.php');
-            }
+        //TODO NavTools::testFallBack?
+        if (!file_exists($ne_config_info['default_configs_path'] . $ne_config_info['website_conf_filename'])
+                || !file_exists($ne_config_info['default_configs_path'] . $ne_config_info['variables_conf_filename'])) {
+            header('Location: website_editor.php');
         } else {
+            header('Location: dashboard.php');
+        }
+    } else {
 
-            logadd('loginFail');
-            NavTools::unsetAllCookies();
-            \sessions\unsetSession();
-            //falls der account abgelaufen ist, extra Fehlermeldung anzeigen
-            if ($login_result == -1) {
-                echo '<script type="text/javascript">';
-                echo 'alert("Account is abgelaufen!")';
-                echo '</script>';
-            } else {
-                header('Location: login.php');
-            }
+        logadd('loginFail');
+        NavTools::unsetAllCookies();
+        \sessions\unsetSession();
+        //falls der account abgelaufen ist, extra Fehlermeldung anzeigen
+        if ($login_result == -1) {
+            echo '<script type="text/javascript">';
+            echo 'alert("Account is abgelaufen!")';
+            echo '</script>';
+        } else {
+            header('Location: login.php');
         }
     }
 }
@@ -106,7 +105,7 @@ if ($toWait <= 0) {
 
 
                                             $(document).ready(function() {
-                                                if(toWaitJs > 5 ){
+                                                if(toWaitJs > 0 ){
                                                     startTime();
                                                 }
                                             });
