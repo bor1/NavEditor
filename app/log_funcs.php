@@ -4,12 +4,6 @@
  * @TODO neu als Klasse schreiben. +param max file size. +Klasse fuer sperrzeit extra
  */
 
-$logfile = $ne_config_info['log_file'];
-//Zeitperiode in Sekunden, die log beruecksichtigen muss.
-$logHistory = $ne_config_info['log_max_history'];
-//maximale user lock zeit
-$logMaxLock = $ne_config_info['login_max_lock_time'];
-
 function getOpName($operation) {
     switch ($operation) {
         case "mailSent":
@@ -49,110 +43,63 @@ function getOpName($operation) {
 }
 
 //log hinzufügen
-function logadd($operation, $msg = null) {
-    global $logfile;
+function logadd($operation) {
+    global $g_Logger;
     $op = getOpName($operation);
-    if (isset($msg)) {
-        $op .= ";  " . $msg;
-    }
-    $logentry = time() . "\t" . date("d.m.Y - H:i:s ") . "\tIP/Hostname:\t" . NavTools::ifsetor($_SERVER["REMOTE_ADDR"],'unknown') . "\t" . gethostbyaddr($_SERVER["REMOTE_ADDR"]) . "\tReferrer: " . NavTools::ifsetor($_SERVER["HTTP_REFERER"],'unknown') . "\t" . $op . "\n";
-    //falls erfolgreich eingeloggt, alte gescheiterte versuche loeschen
-    if ($operation == "loginOk" || $operation == "pwChanged") {
-        delete_old_content($_SERVER["REMOTE_ADDR"]);
-    }
-
-    $save = fopen($logfile, 'a');
-    fputs($save, $logentry);
-    fclose($save);
+    $g_Logger->log($op);
 }
 
 //anzahl von bestimmten Erreignissen/operation
-function countLog($operation, $newcontent = null) {
-    global $logfile;
-    if (file_exists($logfile)) {
-        //falls keine newcontent variable..
-        if (!isset($newcontent)) {
-            delete_old_content();
-            $newcontent = file_get_contents($logfile);
-        }
-        $op = getOpName($operation);
-        //nun nur die benoetige log eintraege ($op) auslesen
-        $ipAdresse = str_replace('.', '\.', $_SERVER["REMOTE_ADDR"]);
-        $result = array();
-        preg_match_all('/^([0-9]+).*\t' . $ipAdresse . '.*\t' . $op . '/m', $newcontent, $result, PREG_PATTERN_ORDER);
-        $counter = count($result[0]);
+function countLog($operation, $minTimestamp = 0) {
+    global $g_Logger;
 
-        $arr = array('counter' => $counter, 'lasttry' => end($result[1]));
-        return $arr;
-    } else {
-        return array('counter' => 0, 'lasttry' => 0);
-    }
+    $op = getOpName($operation);
+    //nun nur die benoetige log eintraege ($op) auslesen
+    $ipAdresse = NavTools::ifsetor($_SERVER["REMOTE_ADDR"]);
+    $dataArray = $g_Logger->getLogArray();
+
+    $usefulDataArray = array_filter($dataArray, function($row) use($ipAdresse,$op, $minTimestamp) {
+        if(!isset($row['ip']) || !isset($row['message']) || !isset($row['timestamp'])){
+            return FALSE;
+        }
+
+        return $row['ip'] == $ipAdresse
+            && $row['message'] == $op
+            && $row['timestamp'] >= $minTimestamp;
+    });
+
+    $counter = count($usefulDataArray);
+    $lastEntry = end($usefulDataArray);
+    $arr = array('counter' => $counter, 'lasttry' =>  NavTools::ifsetor($lastEntry['timestamp'],0));
+    return $arr;
 }
 
 function calcRestZeit($anzahlVersuche, $lastTry) {
-    global $logMaxLock;
+    global $ne_config_info;
     $toWaitFunc = ($anzahlVersuche * pow(1.5, $anzahlVersuche)) + $lastTry - time();
-    $maxTime = $logMaxLock;
+    $maxTime = $ne_config_info['login_max_lock_time'];
+
     if ($toWaitFunc >= ($maxTime)) {
         $toWaitFunc = $maxTime + $lastTry - time();
     } elseif ($toWaitFunc < 0) {
         $toWaitFunc = 0;
     }
+    
     return $toWaitFunc;
 }
 
 //wartezeit fuer login, nach x fehlvesuche.
 function waitTimeForLogin() {
-    global $logfile, $ne_config_info;
-    delete_old_content();
-    $newcontent = file_get_contents($logfile);
-    $logFail = countLog('loginFail', $newcontent);
-    $pwChanged = countLog('pwChanged', $newcontent);
-    $loginOk = countLog('loginOk', $newcontent);
+    $pwChanged = countLog('pwChanged');
+    $loginOk = countLog('loginOk');
+    $lastLoginOk = max(Array($loginOk['lasttry'],$pwChanged['lasttry']));
+    $logFail = countLog('loginFail',  $lastLoginOk);
     if (($pwChanged['lasttry'] > $logFail['lasttry']) || ($loginOk['lasttry'] > $logFail['lasttry'])) {
         $toWait = 0;
     } else {
         $toWait = calcRestZeit($logFail['counter'] - 3, $logFail['lasttry']);
     }
     return $toWait;
-}
-
-//veraltete log daten loeschen, optional nur von ipAdresse
-
-function delete_old_content($ipAdresse = null) {
-    global $logfile, $logHistory;
-    if(!file_exists($logfile)){
-        file_put_contents($logfile, '');
-    }
-
-    $subject = file_get_contents($logfile);
-
-    $newcontent = "";
-    preg_match_all('/^([0-9]+).*/m', $subject, $result, PREG_PATTERN_ORDER);
-
-    //alles was aelter einer bestimmter zeit ist, loeschen
-    $timeLimit = time() - $logHistory;
-    for ($i = 0, $count = count($result[0]); $i < $count; $i++) {
-        if ($timeLimit < $result[1][$i]) {
-            //zeilen mit angegebener ipAdresse filtern
-            if (!(isset($ipAdresse) && strpos($result[0][$i], $ipAdresse))) {
-                $newcontent .= $result[0][$i] . "\n";
-            }
-        }
-    }
-
-    file_put_contents($logfile, $newcontent);
-//    $save = fopen($logfile, 'w');
-//    fputs($save, $newcontent);
-//    fclose($save);
-}
-
-function get_content_local($logfile){
-
-}
-
-function save_content_local($logfile, $newcontent){
-
 }
 
 ?>
