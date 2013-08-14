@@ -18,6 +18,69 @@ require_once('config/config.php');
 require_once(NE_DIR_ROOT.'app/log_funcs.php');
 require_once(NE_DIR_ROOT.'app/sessions.php');
 
+//global variables
+global $ne_config_info;
+global $g_current_user_permission;
+global $g_current_user_name;
+global $is_admin;
+global $g_UserMgmt;
+global $g_Logger;
+
+//start or refresh session
+\sessions\setSession();
+
+$g_UserMgmt = new \UserMgmt();
+$g_Logger = new \Logger\LoggerCSV();
+
+$is_admin = FALSE;
+
+$loginResult = 'FAIL'; //values: FAIL, OK
+//get username and password
+$current_user_name = \NavTools::ifsetor($_SESSION['ne_username'], '');
+$current_user_pwd = \NavTools::ifsetor($_SESSION['ne_password'], '');
+
+
+//try to login
+if (empty($current_user_name)
+        || $g_UserMgmt->Login($current_user_name, $current_user_pwd) != 1) {
+    // login failed or no user logged in
+    $loginResult = 'FAIL';
+} else { // login ok
+    $loginResult = 'OK';
+    setGlobals();
+}
+
+//log current called page
+$g_Logger->log('Called page:'.($_SERVER['HTTP_REFERER'])?:'unknown');
+
+//test file access
+//if not public... otherwise OK, nothing to do
+if (!checkPublic()) {
+
+    //switch loginResult
+    switch (strtoupper($loginResult)) {
+        case 'OK'://if logged in
+            //test access for the requested file
+            $requested_file_path = str_replace($ne_config_info['app_path_without_host'], '', $_SERVER['SCRIPT_NAME']);
+            if (!$g_UserMgmt->isAllowAccesPHP($requested_file_path, $current_user_name)) {
+                access_denied('You dont have permission for this file');
+            }
+            break;
+        case 'FAIL': //if failed to login
+            login_failed();
+            break;
+        default:
+            throw new \Exception('Cannot login...');
+            break;
+    }
+}
+
+
+
+// no cache!
+header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
+header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
+
 
 
 /**
@@ -74,74 +137,23 @@ function access_denied($msg = 'Contact SERVER_ADMIN for your account information
     exit();
 }
 
-//global variables
-global $ne_config_info;
-global $g_current_user_permission;
-global $g_current_user_name;
-global $is_admin;
-global $g_UserMgmt;
-global $g_Logger;
+/**
+ * sets global variables from set $_SESSION
+ */
+function setGlobals() {
+    global $g_current_user_permission, $g_current_user_name, $g_Logger, $is_admin, $g_UserMgmt;
 
-//start or refresh session
-\sessions\setSession();
+    if(!isset($_SESSION['ne_username'])){
+        return FALSE;
+    }
 
-$g_UserMgmt = new \UserMgmt();
-$g_Logger = new \Logger\LoggerCSV();
-
-$is_admin = FALSE;
-
-$loginResult = 'FAIL'; //values: FAIL, OK
-//get username and password
-$current_user_name = \NavTools::ifsetor($_SESSION['ne_username'], '');
-$current_user_pwd = \NavTools::ifsetor($_SESSION['ne_password'], '');
-
-
-//try to login
-if (empty($current_user_name)
-        || $g_UserMgmt->Login($current_user_name, $current_user_pwd) != 1) {
-    // login failed or no user logged in
-    $loginResult = 'FAIL';
-} else { // login ok
-    $loginResult = 'OK';
-
-    //routine for logged-in user
-
+    $current_user_name = $_SESSION['ne_username'];
     $g_current_user_permission = $g_UserMgmt->GetPermission($current_user_name);
     $g_current_user_name = $current_user_name;
-
+    $g_Logger->setCurrentUserName($current_user_name); //set username for logger
     //set $is_admin, fallback. TODO remove. replace with permissions check
     if (strcmp($current_user_name, \NavTools::getServerAdmin()) == 0) {
         $is_admin = TRUE;
     }
 }
-
-
-
-//test file access
-//if not public... otherwise OK, nothing to do
-if (!checkPublic()) {
-
-    //switch loginResult
-    switch (strtoupper($loginResult)) {
-        case 'OK'://if logged in
-            //test access for the requested file
-            $requested_file_path = str_replace($ne_config_info['app_path_without_host'], '', $_SERVER['SCRIPT_NAME']);
-            if (!$g_UserMgmt->isAllowAccesPHP($requested_file_path, $current_user_name)) {
-                access_denied('You dont have permission for this file');
-            }
-            break;
-        case 'FAIL': //if failed to login
-            login_failed();
-            break;
-        default:
-            throw new \Exception('Cannot login...');
-            break;
-    }
-}
-
-
-
-// no cache!
-header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
-header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 ?>
