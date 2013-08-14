@@ -51,7 +51,7 @@ if (empty($current_user_name)
 }
 
 //log current called page
-$g_Logger->log('Called page:'.($_SERVER['HTTP_REFERER'])?:'unknown');
+$g_Logger->log('Called page:'.\NavTools::ifsetor($_SERVER['HTTP_REFERER'],'unknown'));
 
 //test file access
 //if not public... otherwise OK, nothing to do
