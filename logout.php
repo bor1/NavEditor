@@ -1,5 +1,6 @@
 <?php
 require_once('auth.php');
+global $g_Logger;
 
 function removeLockFiles($dir, $cur_user) {
     global $ne_config_info;
@@ -44,6 +45,8 @@ NavTools::unsetAllCookies();
 
 
 \sessions\unsetSession();
+
+$g_Logger->log('Logged out');
 
 header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past

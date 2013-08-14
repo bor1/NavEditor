@@ -189,7 +189,6 @@ $ne_user_php_persmissions = array(
     'app/classes/AreasManager.php'       => 'admin',//for ajax_handler
 
     //no need yet, but listed..
-    'app/classes/AreasEditor.php'       => 'admin',
     'app/classes/BackupManager.php'     => 'admin',
     'app/classes/ConfigFileManagerAbstract.php' => 'admin',
     'app/classes/ConfigFileManagerJSON.php' => 'admin',
@@ -200,7 +199,6 @@ $ne_user_php_persmissions = array(
     'app/classes/Input.php'             => 'admin',
     'app/classes/NavEditorAbstractClass.php' => 'admin',
     'app/classes/NavTools.php'          => 'admin',
-    'app/classes/SimpleLogger.php'      => 'admin',
     'app/classes/SimplePie.php'         => 'admin',
     'app/classes/Snoopy.php'            => 'admin',
     'app/classes/UserMgmt.php'          => 'admin',

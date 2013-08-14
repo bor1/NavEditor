@@ -56,7 +56,7 @@ $ne_config_info['app_title']        = 'NavEditor 2 <sup>Delta</sup>';
 $ne_config_info['app_titleplain']   = 'NavEditor 2 Delta';
 
 // current version
-$ne_config_info['version']          = '2.13.0812';
+$ne_config_info['version']          = '2.13.0814';
 
 // update host
 $ne_config_info['update_url']       = 'http://www.vorlagen.uni-erlangen.de/downloads/naveditor/';
@@ -118,11 +118,11 @@ $ne_config_info['log_max_file_size']    = $config_manager->get_conf_item('log_ma
 //maximum log history time (in Seconds)
 $ne_config_info['log_max_history']      = $config_manager->get_conf_item('log_max_history', 4*24*3600);//4 days
 //default log file path
-$ne_config_info['log_file']             = $config_manager->get_conf_item('log_file', $ne_config_info['log_path'].'ne.log');
+$ne_config_info['log_file']             = $config_manager->get_conf_item('log_file', $ne_config_info['log_path'].'log.csv');
 //separator for CSV log file
-$ne_config_info['log_csv_separator']    = $config_manager->get_conf_item('log_csv_separator', ',');
+$ne_config_info['log_csv_separator']    = $config_manager->get_conf_item('log_csv_separator', ';');
 //format for CSV log file
-$ne_config_info['log_csv_format']       = $config_manager->get_conf_item('log_format', 'timestamp|date-time|errorlevel|ip|host|referrer|file|line|message');
+$ne_config_info['log_csv_format']       = $config_manager->get_conf_item('log_format', 'timestamp|date-time|errorlevel|username|ip|host|referrer|file|line|message');
 //mask for errorlevels of Logger
 use Logger\LoggerCSV as L;
 $ne_config_info['log_errormask']        = $config_manager->get_conf_item('log_errormask', L::MASK_DEBUG | L::MASK_INFO | L::MASK_WARNING | L::MASK_ERROR);
