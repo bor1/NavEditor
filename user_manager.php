@@ -644,22 +644,27 @@ $(document).ready(function() {
     });
 
     // help
-    $(".help-container .fetch").click(function() {
+    $("#show-help").click(function() {
         var $this = $(this),
             content = $this.siblings(".hover-popover").find("content").html(),
             showContent = function(content) {
                 $this.siblings(".hover-popover").show().find(".content").html(content);
             };
 
-        console.log(content);
-
         if(content === undefined || content == "") {
             $.get("app/get_help.php?r=" + Math.random(), {
-                "page_name": "design_editor"
+                "page_name": "user_manager"
             }, showContent);
         } else {
             showContent(content);
         }
+    });
+
+    $(".popover-container > a").click(function() {
+        var $this = $(this);
+
+        $this.siblings(".hover-popover").show();
+
     });
 
     $(".hover-popover .dismiss").click(function() {
@@ -686,7 +691,7 @@ $(document).ready(function() {
                     // help
                     if (has_help_file()) {
                 ?>
-                    <div class="help-container">
+                    <div class="popover-container">
                         <a class="fetch btn btn btn-primary btn-light" href="javascript:void(0);"><i class="icon-white">?</i> Hilfe</a>
                         <div class="hover-popover">
                             <div class="header clearfix">

@@ -53,7 +53,7 @@ tinyMCE.init({
 	forced_root_block : '',
 	mode: "textareas",
 	language: "de",
-	plugins: "image link code table preview mitarbeiter feedimport ssiInclude",
+	plugins: "image link code table preview mitarbeiter feedimport ssiInclude image_choose",
 	menubar: false,
 	toolbar1: "undo redo | cut copy paste | link image table | outdent indent | code | preview | mitarbeiter | feedimport",
 	toolbar2: "fontselect fontsizeselect | styleselect | alignleft aligncenter alignright alignjustify | bold italic underline strikethrough | bullist numlist",

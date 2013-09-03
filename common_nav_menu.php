@@ -29,13 +29,18 @@ function createSubMenu($num)   {
 				}
 				if (isset($v['addclass'])) {
 					$class .= ' '.$v['addclass'];
+				
+					if($v['addclass'] == "logout")
+						break;
 				}
+
+
 				
 				if (isset($v['attribut'])) {
 					$attribute = $v['attribut'];
 				}
 				if (isset($v['desc']) && ($v['desc'])) {
-						$desc = 'title="'.$v['desc'].'"';
+					$desc = 'title="'.$v['desc'].'"';
 				}
 
 				$link .= '<li';
@@ -82,11 +87,10 @@ function createSubMenu($num)   {
 			<ul class="nav">
 				<?php echo createSubMenu(0);    ?>
 			</ul>
+
+			<ul class="nav pull-right">
+				<li><a href="logout.php">Abmelden</a></li>
+			</ul>
 		</div>
 	</div>
 </nav>
-
-
-<div class="sitelink">
-	<a id="returnToSite" href="/" target="_blank">Zur&uuml;ck zur Website</a>
-</div>
