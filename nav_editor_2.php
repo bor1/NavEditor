@@ -163,7 +163,6 @@
 				$.get("app/load_tree_data.php?r=" + Math.random(), {},
 				function(content) {
 					var data = JSON.parse(content);
-					console.log(data);
 					
 					navTreeOper.refreshNavTree(data);
 
@@ -274,9 +273,9 @@
 					language: "de",
 					theme: "modern",
 					skin: "light",
-					plugins: "image link code table preview mitarbeiter feedimport ssiInclude image_choose",
+					plugins: "image link code table preview mitarbeiter feedimport ssiInclude image_choose osm",
 					menubar: false,
-					toolbar1: "undo redo | cut copy paste | link image table | mitarbeiter | feedimport | code | preview",
+					toolbar1: "undo redo | cut copy paste | link image table | mitarbeiter | feedimport | osm | code | preview",
 					toolbar2: "fontselect fontsizeselect | styleselect | alignleft aligncenter alignright alignjustify | outdent indent | bold italic underline strikethrough | bullist numlist",
 					//theme: "advanced",
 					//language: "de",

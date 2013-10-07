@@ -355,6 +355,7 @@ function has_help_file() {
 						current_file = folder;
 			       	}
 					
+					$("#file-title").html(current_file);
 
 
 					$("#file-details").html(html);
@@ -528,7 +529,7 @@ function has_help_file() {
         <!-- Add your site or application content here -->
         <?php require('common_nav_menu.php'); ?>
 
-	    <div class="container page" id="wrapper">
+	    <div class="container" id="wrapper">
 
         	<div class="page-header">
                 <h3 class="page-header">Bilder und Dateien verwalten</h3>
@@ -629,9 +630,11 @@ function has_help_file() {
             			<div id="file-tree"></div>
             		</div>
 
-            		<div id="file-details-container" class="span9">
+            		<div id="file-details-container" class="span9 page">
 
-            			<h4 class="page-header">Details</h4>
+            			 <div class="page-header">
+		                    <h4 id="file-title" class="page-header"></h4>
+		                </div>
 
             			<div class="tabbable"> <!-- Only required for left/right tabs -->
 							<ul class="nav nav-tabs nav-tabs-custom">

@@ -20,7 +20,7 @@ body {
   color: #333;
   padding-top: 30px; }
 
-.row.padding-top {
+.container.padding-top, .row.padding-top {
   padding-top: 26px; }
 
 .btn i {
