@@ -37,7 +37,8 @@ add <html xmlns="http://www.w3.org/1999/xhtml" debug="true">
             "upload/jquery.image-gallery.js",
             "upload/jquery.xdr-transport.js",
             "jquery.ui.accordion.min.js",
-            "queryFolderImgPreview.js"
+            "queryFolderImgPreview.js",
+            "tinymce/tinymce.min.js"
             );
 ?>
 
@@ -57,6 +58,7 @@ var curRelation = ""; //aktuellste "rel" wert von ausgewaehltem element
 var folderImgPreviewObj = null; //instance for img preview
 //
 //global  var fileInfoArray from jqueryFileTree.js
+
 
 function getFileInfoCallback(resp) {
 	var fi = JSON.parse(resp);

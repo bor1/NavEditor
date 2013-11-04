@@ -46,30 +46,44 @@ if (isset($_POST['btnLogin']) && $toWait <= 0) {
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>Einloggen - <?php echo($ne_config_info['app_titleplain']); ?></title>
-        <link rel="stylesheet" type="text/css" href="css/styles.css?<?php echo date('Ymdis'); ?>" />
-    </head>
-
-    <body>
-        <div id="wrapper">
-            <h1 id="header">Bitte melden Sie sich an!</h1>
-
-            <div id="contentPanel1">
-                <form id="frmLogin" name="frmLogin" action="login.php" method="post" style="width:100%;text-align:center;"><br>
-
-<?php
-if ($toWait <= 0) {
-    ?>
-                            <label for="txtUserName" style="width:8em;display:inline-block;">Username:</label>
-                            <input type="text" id="txtUserName" name="txtUserName" size="16" class="textBox" /><br>
-                                <label for="txtPassword" style="width:8em;display:inline-block;">Passwort:</label>
-                                <input type="password" id="txtPassword" name="txtPassword" size="16" class="textBox" /><br><br>
-                                        <input type="submit" id="btnLogin" name="btnLogin" class="button" value="Einloggen" />
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Einloggen - <?php echo($ne_config_info['app_titleplain']); ?></title>
+    
     <?php
-} else {
+        echo NavTools::includeHtml("default", "json2.js");
     ?>
+
+</head>
+
+<body>
+
+<div id="wrapper">
+
+	<div class="container">
+
+		<div class="row">
+
+			<div class="span6 offset3">
+
+				<div class="page">
+
+					<h3 class="page-header clearfix"><span class="offset1 span4">Bitte melden Sie sich an!</span></h3>
+
+					<div id="contentPanel1">
+						<form id="frmLogin" name="frmLogin" action="login.php" method="post" style="width:100%;text-align:center;"><br>
+
+						<?php
+						if ($toWait <= 0) {
+						?>
+								<label for="txtUserName" style="width:8em;display:inline-block;">Username:</label>
+								<input type="text" id="txtUserName" name="txtUserName" size="16" class="textBox" /><br>
+								<label for="txtPassword" style="width:8em;display:inline-block;">Passwort:</label>
+								<input type="password" id="txtPassword" name="txtPassword" size="16" class="textBox" /><br><br>
+								<input type="submit" id="btnLogin" name="btnLogin" class="btn" value="Einloggen" />
+						<?php
+						}else{
+						?>
                                         <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
                                         <script type="text/javascript">
                                             var toWaitJs = <?php echo $toWait ?>;
@@ -111,16 +125,21 @@ if ($toWait <= 0) {
                                             });
 
                                         </script>
-                                        <p style='text-align:center;font-size:large;'>Zu viele Versuche, bitte warten Sie noch <div id='timeBlock' name='timeBlock' style='color: red;text-align:center;font-size:x-large;'></div><p><br>
-    <?php
-}
-?>
-                                                <br><br><a href="pwrecovery.php">Passwort vergessen</a>
-                                                        </form>
-                                                        </div>
+						<p style='text-align:center;font-size:large;'>Zu viele Versuche, bitte warten Sie noch <div id='timeBlock' name='timeBlock' style='color: red;text-align:center;font-size:x-large;'></div><p><br>
+						<?php
+						}
+						?>
+						<br><br><a href="pwrecovery.php">Passwort vergessen</a>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
 
-<?php require('common_footer.php'); ?>
-                                                        </div>
-                                                        </body>
+</div>
 
-                                                        </html>
+
+	<?php require('common_footer.php'); ?>
+</body>
+
+</html>

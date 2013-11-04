@@ -13,10 +13,10 @@ function has_help_file() {
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Logo bearbeiten - <?php echo($ne_config_info['app_titleplain']); ?></title>
-<link rel="stylesheet" type="text/css" href="css/styles.css?<?php echo date('Ymdis'); ?>" />
+<?php
+    echo NavTools::includeHtml("default", "json2.js");
+?>
 
-<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
-<script type="text/javascript" src="js/json2.js"></script>
 <script type="text/javascript">
 var imgObj, imgW, imgH, jsonArray;
 
@@ -125,9 +125,9 @@ function loading(yesNo){
 $(document).ready(function() {
 	loadConf(thisConf);
 	//on change any param of logo, reload it (preview)
-	$("#bildBlock :input").bind($.browser.msie ? 'change':'input', function() {
-	setTimeout(imgPreLoad, 500);
-	});
+//	$("#bildBlock :input").bind($.browser.msie ? 'change':'input', function() {
+//	setTimeout(imgPreLoad, 500);
+//	});
 	//all inputs add class 'textBox'
 	$('input[type="text"]').attr('class', 'textBox');
 
@@ -252,18 +252,24 @@ $(document).ready(function() {
 	// }, loadContentCallback);
 
 	// help
-	$("#helpHand a").click(function() {
-		if(helpText == "") {
+	$(".help-container .fetch").click(function() {
+		var $this = $(this),
+			content = $this.siblings(".hover-popover").find("content").html(),
+			showContent = function(content) {
+				$this.siblings(".hover-popover").show().find(".content").html(content);
+			};
+
+		if(content === undefined || content == "") {
 			$.get("app/get_help.php?r=" + Math.random(), {
 				"page_name": "website_editor"
-			}, function(rdata){
-				helpText = rdata;
-				$("#helpCont").html(helpText);
-				$("#helpCont").slideToggle("fast");
-			});
+			}, showContent);
 		} else {
-			$("#helpCont").slideToggle("fast");
+			showContent(content);
 		}
+	});
+
+    $(".hover-popover .dismiss").click(function() {
+		$(this).closest(".hover-popover").hide();
 	});
 
 
@@ -341,159 +347,210 @@ $(document).ready(function() {
 </script>
 </head>
 
-<body id="bd_Logo">
-<div id="wrapper">
-	<h1 id="header"><?php echo($ne_config_info['app_title']); ?></h1>
-	<div id="navBar">
-		<?php require('common_nav_menu.php'); ?>
-	</div>
+    <body id="bd_Logo">
 
-	<div id="contentPanel1">
-	<?php
-	// help
-	if(has_help_file()) {
-	?>
-		<div id="helpCont">Derzeit keine Hilfstexte verf&uuml;gbar.</div>
-		<div id="helpHand"><a href="javascript:;">Hilfe</a></div>
-	<?php
-	}
-	?>
-		<form action="" method="post" name="frmEdit" id="frmEdit">
-			<fieldset>
-				<legend>Logo bearbeiten</legend>
+        <?php require('common_nav_menu.php'); ?>
 
-				<input type="hidden" id="selTempl" name="selTempl" value="seitenvorlage.html">
-				<p>
-					<label for="name-des-Webauftritts">Name des Webauftritts:</label><br />
-					<input type="text" id="name-des-Webauftritts" name="name-des-Webauftritts" size="40" />
-					<input type="checkbox" id="chkAllowHtml" name="chkAllowHtml" value="ja" />
-					<label for="chkAllowHtml">Eigene HTML-Anweisungen zulassen</label>
-				</p>
-				<p>
-					<label for="titel-des-Webauftritts">Titel des Webauftritts (auf dem Browser-Titelbar gezeigt wird):</label><br />
-					<input type="text" id="titel-des-Webauftritts" name="titel-des-Webauftritts" size="40" />
-					<input type="button" id="btnCopySiteName" class="button" value="aus Name kopieren" />
-				</p>
-				<p>
-					<label for="kurzbeschreibung-zum-Webauftritt">Kurzbeschreibung zum Webauftritt:</label><br />
-					<input type="text" id="kurzbeschreibung-zum-Webauftritt" name="kurzbeschreibung-zum-Webauftritt" size="60" />
-				</p>
-				<p><div id="bildBlock">
-					<label>Bild f&uuml;r das Logo (Optional):</label><br />
-					<input type="text" id="logo-URL" name="logo-URL" size="40" />
-					<a href="file_editor.php" target="_blank">Bild hochladen...</a>
-					<br />
-					<div id="imgPrev"></div>
-					<label>Alternativer Text f&uuml;r das Bildlogo (falls die Grafik nicht angezeigt oder angesehen werden kann):</label><br />
-					<input type="text" id="logo-Alt" name="logo-Alt" size="40" /><br />
-					<label>Bild H&ouml;he (optional):</label><br />
-					<input type="text" id="logo-Height" name="logo-Height" size="40" /><br />
-					<label>Bild Breite (optional):</label><br />
-					<input type="text" id="logo-Width" name="logo-Width" size="40" />
-				</div></p>
-				<hr size="1" noshade="noshade" />
-				<input type="button" id="btnUpdate" name="btnUpdate" value="Seitenvorlage aktualisieren" class="button" />
-				<input type="button" id="btnUpdateExisted" name="btnUpdateExisted" value="Existierende Seiten aktualisieren" class="button" />
-				<img id="ajaxLoader" alt="please wait..." src="ajax-loader.gif" border="0" width="16" height="16" style="display:none;" />
-			</fieldset>
-		</form>
+        <div class="container page" id="wrapper">
 
-		<!-- Kontakt Block ab hier -->
-		<script type="text/javascript">
-		<!--
-		var helpText = "";
+            <div class="page-header">
+                <h2 class="page-header">Webseitendaten bearbeiten</h2>
+                <div class="pull-right">
 
-		$(document).ready(function() {
-			// $("#btnLoadConf").click(function() {
-				// $.get("app/load_osm.php", function(data) {
-					// var arrValues = data.split('\\:\\');
-					// var n = 1;
-					// $.each(
-						// arrValues, function( intIndex, objValue){
-							// $("#" + n).attr("value", objValue);
-							// n++;
-						// }
-					// );
-					// var lat = arrValues[9];
-					// var lon = arrValues[10];
-					// setCenter(lat, lon);
-				// });
-			// });
+                    <?php
+                    // help
+                    if (has_help_file()) {
+                        ?>
+                        <div class="help-container">
+                            <a class="fetch btn btn btn-primary btn-light" href="javascript:void(0);"><i class="icon-white">?</i> Hilfe</a>
+                            <div class="hover-popover">
+                                <div class="header clearfix">
+                                    <h4>Hilfe</h4>
+                                    <div class="pull-right">
+                                        <a class="dismiss btn btn-black-white" href="javascript:void(0);">Ok</a>
 
-			$("#save_osm").click(function() {
-				loading(true);
-				var inst = $("#name").attr("value");
-				var street = $("#strasse").attr("value");
-				var plz = $("#plz").attr("value");
-				var city = $("#ort").attr("value");
-				var personname = $("#kontakt1-name").attr("value");
-				var personvorname = $("#kontakt1-vorname").attr("value");
-				var telefon = $("#telefon").attr("value");
-				var fax = $("#fax").attr("value");
-				var email = $("#email").attr("value");
+                                    </div>
+                                </div>
 
-				$.post("app/save_osm.php", { inst: inst, street: street, plz: plz, city: city, personname: personname, personvorname: personvorname, telefon: telefon, fax: fax, email: email}, function(resp) {
-					saveVars("kontakt.shtml wurde erstellt");
-				});
-			});
-		});
-		-->
-		</script>
-		<form action="" method="post" name="frmEdit" id="frmEdit">
-			<fieldset>
-				<legend>OpenStreetMap-Kontaktseite erstellen</legend>
-			</fieldset>
-		</form>
-		<form action="" method="" id="suche">
-			<fieldset style="min-width:880px;">
-				<legend>Kontaktdaten</legend>
-				<div style="float:left;clear:none;">
-					<p>
-						<label>Institut</label><br />
-						<input type="text" id="name" name="inst" />
-					</p>
-					<p>
-						<label>Stra&szlig;e</label><br />
-						<input type="text" id="strasse" name="street" />
-					</p>
-					<p>
-						<label>PLZ, Stadt</label><br />
-						<input type="text" id="plz" name="plz" />
-						<input type="text" id="ort" name="city" />
-					</p>
-					<p>
-						<label>Kontaktperson (Name, Vorname)</label><br />
-						<input type="text" id="kontakt1-name" name="person-name" />
-						<input type="text" id="kontakt1-vorname" name="person-vorname" />
-					</p>
-					<p>
-						<label>Telefon</label><br />
-						<input type="text" id="telefon" name="telefon" />
-					</p>
-					<p>
-						<label>Fax</label><br />
-						<input type="text" id="fax" name="fax" />
-					</p>
-					<p>
-						<label>Email</label><br />
-						<input type="text" id="email" name="email" />
-					</p>
-					<p>
-						<input id="save_osm" type="button" class="submit" name="submit" value="Kontaktseite erstellen" />
-					</p>
-					<br>
-					<p>
-						<input id="btnSaveall" type="button" class="submit" name="submit" value="Nur Variablen speichern" />
-					</p>
-				</div>
-				<hr size="1" noshade="noshade" id="hr" style="clear:both" />
-			</fieldset>
-		</form>
+                                <div class="content"></div>
+                            </div>
+                        </div>
+                        <?php
+                    }
+                    ?>
+                </div>
+            </div>
 
-	</div>
+
+            <div class="tabbable"> <!-- Only required for left/right tabs -->
+                <ul class="nav nav-tabs nav-tabs-custom">
+                    <li class="active"><a href="#logo" data-toggle="tab">Logo bearbeiten</a></li>
+                    <li><a href="#osm" data-toggle="tab">OpenStreetMap-Kontaktseite erstellen</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="logo">
+                        <form action="" method="post" name="frmEdit" id="frmEdit">
+                            <div class="row">
+                                <fieldset>
+                                    <div class="span6">
+                                        <div class="content">
+                                            <input type="hidden" id="selTempl" name="selTempl" value="seitenvorlage.html">
+                                                <div class="control-group">
+                                                    <label for="name-des-Webauftritts">Name des Webauftritts:</label>
+                                                    <input type="text" id="name-des-Webauftritts" name="name-des-Webauftritts" size="40" />
+                                                    <label class="checkbox">
+                                                        <input type="checkbox" id="chkAllowHtml" name="chkAllowHtml" value="ja"> Eigene HTML-Anweisungen zulassen
+                                                    </label>
+                                                </div>
+                                                <div class="control-group">
+                                                    <label for="titel-des-Webauftritts">Titel des Webauftritts (auf dem Browser-Titelbar gezeigt wird):</label>
+
+                                                    <div class="input-append">
+                                                        <input type="text" id="titel-des-Webauftritts" name="titel-des-Webauftritts" size="40" />
+                                                        <input type="button" id="btnCopySiteName" class="btn" value="Aus Name Kopieren" />
+                                                    </div>
+                                                </div>
+                                                <div class="control-group">
+                                                    <label for="kurzbeschreibung-zum-Webauftritt">Kurzbeschreibung zum Webauftritt:</label>
+                                                    <input type="text" id="kurzbeschreibung-zum-Webauftritt" name="kurzbeschreibung-zum-Webauftritt" size="60" />
+                                                </div>
+                                        </div>
+                                    </div>
+                                    <div class="span6">
+                                        <div class="content">
+                                            <div class="control-group">
+                                                <label>Bild f&uuml;r das Logo (Optional):</label>
+                                                <div class="input-append">
+                                                    <input type="text" id="logo-URL" name="logo-URL" size="40" />
+                                                    <a class="btn" href="file_editor.php" target="_blank">Bild hochladen</a>
+                                                </div>
+                                                <div id="imgPrev"></div>
+                                            </div>
+                                            <div class="control-group">
+                                                <label>Alternativer Text f&uuml;r das Bildlogo (falls die Grafik nicht angezeigt oder angesehen werden kann):</label>
+                                                <input type="text" id="logo-Alt" name="logo-Alt" size="40" />
+                                            </div>
+
+                                            <div class="control-group">
+                                                <label>Bild H&ouml;he (optional):</label>
+                                                <input type="text" id="logo-Height" name="logo-Height" size="40" />
+                                                <label>Bild Breite (optional):</label>
+                                                <input type="text" id="logo-Width" name="logo-Width" size="40" />
+                                            </div>
+
+
+
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <div class="span12 form-footer">
+                                    <input type="button" id="btnUpdate" name="btnUpdate" value="Seitenvorlage aktualisieren" class="btn btn-light btn-large btn-success" />
+                                    <input type="button" id="btnUpdateExisted" name="btnUpdateExisted" value="Existierende Seiten aktualisieren" class="btn btn-light btn-large btn-success" />
+                                    <img id="ajaxLoader" alt="please wait..." src="ajax-loader.gif" border="0" width="16" height="16" style="display:none;" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="tab-pane" id="osm">
+                        <!-- Kontakt Block ab hier -->
+                        <script type="text/javascript">
+                            <!--
+                            var helpText = "";
+
+                            $(document).ready(function() {
+                                // $("#btnLoadConf").click(function() {
+                                // $.get("app/load_osm.php", function(data) {
+                                // var arrValues = data.split('\\:\\');
+                                // var n = 1;
+                                // $.each(
+                                // arrValues, function( intIndex, objValue){
+                                // $("#" + n).attr("value", objValue);
+                                // n++;
+                                // }
+                                // );
+                                // var lat = arrValues[9];
+                                // var lon = arrValues[10];
+                                // setCenter(lat, lon);
+                                // });
+                                // });
+
+                                $("#save_osm").click(function() {
+                                    loading(true);
+                                    var inst = $("#name").attr("value");
+                                    var street = $("#strasse").attr("value");
+                                    var plz = $("#plz").attr("value");
+                                    var city = $("#ort").attr("value");
+                                    var personname = $("#kontakt1-name").attr("value");
+                                    var personvorname = $("#kontakt1-vorname").attr("value");
+                                    var telefon = $("#telefon").attr("value");
+                                    var fax = $("#fax").attr("value");
+                                    var email = $("#email").attr("value");
+
+                                    $.post("app/save_osm.php", { inst: inst, street: street, plz: plz, city: city, personname: personname, personvorname: personvorname, telefon: telefon, fax: fax, email: email}, function(resp) {
+                                        saveVars("kontakt.shtml wurde erstellt");
+                                    });
+                                });
+                            });
+                            -->
+                        </script>
+                        <form action="" method="post" name="frmEdit" id="frmEdit">
+                            <fieldset>
+                                <!--<legend>OpenStreetMap-Kontaktseite erstellen</legend>-->
+                            </fieldset>
+                        </form>
+                        <form action="" method="" id="suche">
+                            <fieldset style="min-width:880px;">
+                                <legend>Kontaktdaten</legend>
+                                <div style="float:left;clear:none;">
+                                    <p>
+                                        <label>Institut</label><br />
+                                        <input type="text" id="name" name="inst" />
+                                    </p>
+                                    <p>
+                                        <label>Stra&szlig;e</label><br />
+                                        <input type="text" id="strasse" name="street" />
+                                    </p>
+                                    <p>
+                                        <label>PLZ, Stadt</label><br />
+                                        <input type="text" id="plz" name="plz" />
+                                        <input type="text" id="ort" name="city" />
+                                    </p>
+                                    <p>
+                                        <label>Kontaktperson (Name, Vorname)</label><br />
+                                        <input type="text" id="kontakt1-name" name="person-name" />
+                                        <input type="text" id="kontakt1-vorname" name="person-vorname" />
+                                    </p>
+                                    <p>
+                                        <label>Telefon</label><br />
+                                        <input type="text" id="telefon" name="telefon" />
+                                    </p>
+                                    <p>
+                                        <label>Fax</label><br />
+                                        <input type="text" id="fax" name="fax" />
+                                    </p>
+                                    <p>
+                                        <label>Email</label><br />
+                                        <input type="text" id="email" name="email" />
+                                    </p>
+                                    <p>
+                                        <input id="save_osm" type="button" class="submit" name="submit" value="Kontaktseite erstellen" />
+                                    </p>
+                                    <br>
+                                        <p>
+                                            <input id="btnSaveall" type="button" class="submit" name="submit" value="Nur Variablen speichern" />
+                                        </p>
+                                </div>
+
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 <?php require('common_footer.php'); ?>
-</div>
+
 </body>
 
 </html>

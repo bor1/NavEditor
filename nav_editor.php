@@ -82,20 +82,19 @@ if($ne_config_info['navtree_start_open'] == '0') {
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Seiten bearbeiten - <?php echo($ne_config_info['app_titleplain']); ?></title>
-<link rel="stylesheet" type="text/css" href="css/styles.css?<?php echo date('Ymdis'); ?>" />
-<?php if(intval($ne_config_info['show_navtree_numbers']) == 0) { ?>
+
+<?php
+    echo NavTools::includeHtml("default", "json2.js", "naveditor2.js", "tinymce/tinymce.min.js");
+?>
+
+<?php if($ne_config_info['show_navtree_numbers'] == '0') { ?>
 <style type="text/css">
 #dirTreePanel li em.treeKey {
 	display: none;
 }
 </style>
 <?php } ?>
-<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
-<!--
-<script type="text/javascript" src="js/jquery.rightClick.js"></script>-->
-<script type="text/javascript" src="js/json2.js"></script>
-<script type="text/javascript" src="js/naveditor2.js"></script>
-<script type="text/javascript" src="tiny_mce/tiny_mce.js"></script>
+
 <script type="text/javascript">
 var g_tiny_isDirty = false;
 
@@ -134,44 +133,66 @@ tinymce.create('tinymce.plugins.VarsPlugin', {
     }
 });
 // Register plugin with a short name
-tinymce.PluginManager.add('variables', tinymce.plugins.VarsPlugin);
-
+//tinymce.PluginManager.add('variables', tinymce.plugins.VarsPlugin);
 
 tinyMCE.init({
-	mode: "textareas",
-	theme: "advanced",
-	skin: "o2k7",
-	language: "de",
 	forced_root_block : '',
-	plugins: "safari,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template, mitarbeiter, feedimport, -variables",
+	mode: "textareas",
+	language: "de",
+	plugins: "image link code table preview ",
+	menubar: false,
+	toolbar1: "undo redo | cut copy paste | link image table | outdent indent | code | preview",
+	toolbar2: "fontselect fontsizeselect | styleselect | alignleft aligncenter alignright alignjustify | bold italic underline strikethrough | bullist numlist",
+	//theme: "advanced",
+	//language: "de",
+	//skin: "o2k7",
 	relative_urls: false,
 	convert_urls: false,
-
-	theme_advanced_buttons1: "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,formatselect,styleselect,|,bullist,numlist,outdent,indent,blockquote,sub,sup,|,cut,copy,paste,pastetext,pasteword,|,search,replace,|,undo,redo",
-	theme_advanced_buttons2: "tablecontrols,|,link,unlink,anchor,image,cleanup,|,hr,removeformat,visualaid,|,charmap,emotions,media,iespell,|,ltr,rtl,|,fullscreen,help,code,|,nachOben, | ,varslb",
-	theme_advanced_buttons3: "",
-
+	//plugins: "safari,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template",
+	theme_advanced_styles: "infologo",
 	theme_advanced_toolbar_location: "top",
 	theme_advanced_toolbar_align: "left",
 	theme_advanced_statusbar_location: "bottom",
-	theme_advanced_blockformats: "p,address,pre,h2,h3,h4,h5,h6,blockquote,code", // p,address,pre,h1,h2,h3,h4,h5,h6
-	theme_advanced_styles: "<?php echo($custom_css_classes); ?>",
-	entity_encoding: "raw",
-	setup: function(ed) {
-		ed.onKeyDown.add(function(ed, e) {
-			g_tiny_isDirty = true;
-		});
-		// add a custom button
-		ed.addButton("nachOben", {
-			title: "Nach oben Link einfuegen",
-			image: "/vkdaten/tools/NavEditor2/css/example.gif",
-			onclick: function() {
-				ed.focus();
-				ed.selection.setContent("<p class='noprint'><a href='#seitenmarke'>Nach oben</a></p>");
-			}
-		});
+	oninit: function() {
+		tinymceReady = true;
 	}
 });
+
+// tinyMCE.init({
+// 	mode: "textareas",
+// 	theme: "modern",
+// 	skin: "lightgray",
+// 	//language: "de",
+// 	forced_root_block : '',
+// 	//plugins: "safari,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template, mitarbeiter, feedimport, -variables",
+// 	relative_urls: false,
+// 	convert_urls: false,
+
+// 	theme_advanced_buttons1: "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,formatselect,styleselect,|,bullist,numlist,outdent,indent,blockquote,sub,sup,|,cut,copy,paste,pastetext,pasteword,|,search,replace,|,undo,redo",
+// 	theme_advanced_buttons2: "tablecontrols,|,link,unlink,anchor,image,cleanup,|,hr,removeformat,visualaid,|,charmap,emotions,media,iespell,|,ltr,rtl,|,fullscreen,help,code,|,nachOben, | ,mitarbeiter, feedimport, varslb",
+// 	theme_advanced_buttons3: "",
+
+// 	theme_advanced_toolbar_location: "top",
+// 	theme_advanced_toolbar_align: "left",
+// 	theme_advanced_statusbar_location: "bottom",
+// 	theme_advanced_blockformats: "p,address,pre,h2,h3,h4,h5,h6,blockquote,code", // p,address,pre,h1,h2,h3,h4,h5,h6
+// 	theme_advanced_styles: "<?php echo($custom_css_classes); ?>",
+// 	entity_encoding: "raw",
+// 	setup: function(ed) {
+// 		// ed.onKeyDown.add(function(ed, e) {
+// 		// 	g_tiny_isDirty = true;
+// 		// });
+// 		// add a custom button
+// 		ed.addButton("nachOben", {
+// 			title: "Nach oben Link einfuegen",
+// 			image: "/vkdaten/tools/NavEditor2/css/example.gif",
+// 			onclick: function() {
+// 				ed.focus();
+// 				ed.selection.setContent("<p class='noprint'><a href='#seitenmarke'>Nach oben</a></p>");
+// 			}
+// 		});
+// 	}
+// });
 </script>
 
 <script type="text/javascript">
@@ -585,12 +606,6 @@ function addNodeCallback(data) {
 		return;
 	}
 
-    if(data == 'ERR_WRONG_PATH'){
-        alert("Bad Path! :(");
-		return;
-    }
-
-
 	alert(data);
 	resetTextBox();
 
@@ -616,11 +631,6 @@ function removeCallback(data) {
 		return;
 	}
 
-    if(data == 'ERR_WRONG_PATH'){
-        alert("Bad Path! :(");
-		return;
-    }
-
 	alert(data);
 	resetTextBox();
 
@@ -642,11 +652,6 @@ function updateContentsCallback(data) {
 		alert("Permission denied!");
 		return;
 	}
-
-    if(data == 'ERR_WRONG_PATH'){
-        alert("Bad Path! :(");
-		return;
-    }
 
 	alert(data);
 
@@ -1200,18 +1205,24 @@ $(document).ready(function() {
 	});
 
 	// help
-	$("#helpHand a").click(function() {
-		if(helpText == "") {
+	$(".help-container .fetch").click(function() {
+		var $this = $(this),
+			content = $this.siblings(".hover-popover").find("content").html(),
+			showContent = function(content) {
+				$this.siblings(".hover-popover").show().find(".content").html(content);
+			};
+
+		if(content === undefined || content == "") {
 			$.get("app/get_help.php?r=" + Math.random(), {
-				"page_name": "nav_editor"
-			}, function(rdata){
-				helpText = rdata;
-				$("#helpCont").html(helpText);
-				$("#helpCont").slideToggle("fast");
-			});
+				"page_name": "website_editor"
+			}, showContent);
 		} else {
-			$("#helpCont").slideToggle("fast");
+			showContent(content);
 		}
+	});
+
+	$(".hover-popover .dismiss").click(function() {
+		$(this).closest(".hover-popover").hide();
 	});
 
 	loadHeads();
@@ -1234,16 +1245,44 @@ function trythis(){
 </script>
 </head>
 
-<body id="bd_Nav" onload="btnStartClick();">
-<div id="wrapper">
-	<h1 id="header"><?php echo($ne_config_info['app_title']); ?></h1>
-	<div id="navBar">
-		<?php require('common_nav_menu.php'); ?>
-	</div>
+<body onload="btnStartClick();">
 
-	<div id="dirTreePanel">
+	<?php require('common_nav_menu.php'); ?>
+
+	<div class="nav-editor container">
+		<div class="page-header">
+            <h2 class="page-header">Navigationsbaum bearbeiten</h2>
+            <div class="pull-right">
+
+				 <?php
+	            	// help
+	            	if (has_help_file()) {
+	            ?>
+	            	<div class="help-container">
+						<a class="fetch btn btn btn-primary btn-rounded" href="javascript:void(0);">Hilfe</a>
+						<div class="hover-popover">
+							<div class="header clearfix">
+								<h4>Hilfe</h4>
+								<div class="pull-right">
+									<a class="dismiss btn btn-black-white" href="javascript:void(0);">Ok</a>
+
+								</div>
+							</div>
+
+							<div class="content"></div>
+						</div>
+					</div>
+				<?php
+	            	}
+	            ?>
+	        </div>
+        </div>
+
+		<div class="row">
+
+			<div class="span3" id="dirTreePanel">
 		<fieldset>
-			<legend>Navigationsbaum bearbeiten</legend>
+
 			<input type="button" id="btnPublishTree" class="button" value="Publizieren" disabled="true" style="font-weight:bold;" />
 			<input type="button" id="btnReloadTree" value="Refresh" title="Navigationsbaum neu einlesen" class="button" />
 
@@ -1283,15 +1322,9 @@ function trythis(){
 			<a href="javascript:;" title="Korrigiert Unicode-Zeichen (&quot;u00...&quot;) der &auml;lteren Versionen. Bitte nur dann benutzen, wenn Sie diese Fehler in der Navigation haben: z.B.: \u00fc statt &quot;&uuml;&quot;, \u00f6 statt &quot&ouml;&quot; usw.">[?]</a>
 		</div>
 	</div>
-	<div id="contentPanel">
-	<?php
-	if(has_help_file()) {
-	?>
-		<div id="helpCont"> .</div>
-		<div id="helpHand"><a href="javascript:;">Hilfe</a></div>
-	<?php
-	}
-	?>
+
+   <div class="span8 page" id="contentPanel">
+
 
 		<form action="" method="post" name="frmEdit" id="frmEdit">
 			<fieldset>
@@ -1376,8 +1409,9 @@ function trythis(){
 		</form>
 		<div id="debug">:-)</div>
 	</div>
-<?php require('common_footer.php'); ?>
+  </div>
 </div>
+<?php require('common_footer.php'); ?>
 </body>
 
 </html>

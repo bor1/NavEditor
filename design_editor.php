@@ -13,11 +13,9 @@ function has_help_file() {
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Design wechseln - <?php echo($ne_config_info['app_titleplain']); ?></title>
-<link rel="stylesheet" type="text/css" href="css/styles.css?<?php echo date('Ymdis'); ?>" />
 
-<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
-<script type="text/javascript" src="js/json2.js"></script>
-<script type="text/javascript" src="js/loading.js"></script>
+<?php echo NavTools::includeHtml("default"); ?>
+
 <script type="text/javascript">
 var loadFileListDone = false;
 
@@ -25,8 +23,25 @@ var helpText = "";
 
 function loadContentCallback(data) {
         if(!data){alert('no designs found');return;}
-	var curr = data.current_design;
-	var optHtml = "";
+	var current = data.current_design,
+		current_design_img_url = "/css/" + current.replace(/head-/gi, '').replace(/.shtml/gi, '') + "/thumb.png",
+		current_design_img = $('<img src="'+current_design_img_url+'">'),
+
+		rendered_designs = new Array();
+
+	for (var i = 0; i < data.designs.length; i++) {
+		if(data.designs[i].value === current) continue;
+		var img_url = "/css/" + data.designs[i].value.replace(/head-/gi, '').replace(/.shtml/gi, '') + "/thumb.png",
+			img = $('<img src="'+img_url+'">'),
+			caption_content = "<h4>"+data.designs[i].text+'</h4><a data-design="'+data.designs[i].value+'" href="javascript:void(0);" class="btn btn-success btn-light pull-right">Ausw&auml;hlen</a>',
+			caption = $('<div class="caption clearfix">').html(caption_content),
+			thumbnail = $('<div class="thumbnail">').html(new Array(img, caption)),
+			html = $('<div class="span6">').html(thumbnail).css("height", "400px").css("margin-bottom", "60px");
+		rendered_designs.push(html);
+	};
+
+
+	/*
 	for(var i = 0; i < data.designs.length; i++) {
 		if(data.designs[i].value == curr) {
 			optHtml += "<option value=\"" + data.designs[i].value + "\" selected=\"selected\">" + data.designs[i].text + "</option>";
@@ -35,10 +50,17 @@ function loadContentCallback(data) {
 			optHtml += "<option value=\"" + data.designs[i].value + "\">" + data.designs[i].text + "</option>";
 		}
 	}
-	$("#selDesigns").html(optHtml);
+	$("#selDesigns").html(optHtml);*/
+
+
+	$("#designs").html(rendered_designs);
+	$("#current-design-img").html(current_design_img);
+
+	loadChkboxes(current);
+
 	loadFileListDone = true;
 	showScreenShot($("#selDesigns").val());
-	$('#confDesignLegend').html('Design '+ curr +" konfigurieren");
+	$('#confDesignLegend').html('Design '+ current +" konfigurieren");
 }
 
 function saveContentCallback(data) {
@@ -68,10 +90,18 @@ function loadChkboxes(design){
                             din_chkboxes_html = "no setting found";
                         }else{
                             for(var i = 0; i < rdata.length; i++){
-                                    din_chkboxes_html += "<input type='checkbox' id='"+ rdata[i].setting +"' value='" + rdata[i].setting +"' "+ (rdata[i].checked ? "checked='checked'" : "") +" /><label for='"+ rdata[i].setting +"'>  "+ decode_utf8(rdata[i].setting_descr) +"</label><br>";
+					// <label class="checkbox">
+					//   <input type="checkbox" value="">
+					//   Option one is this and that—be sure to include why it's great
+					// </label>
+					din_chkboxes_html += '<label class="checkbox">';
+					din_chkboxes_html +=	'<input type="checkbox" id="' + rdata[i].setting + '" value="' + rdata[i].setting +'" '+ (rdata[i].checked ? 'checked="checked"': '') + ' />';
+					din_chkboxes_html += 	decode_utf8(rdata[i].setting_descr);
+					din_chkboxes_html += '</label>';
+                    // din_chkboxes_html += "<input type='checkbox' id='"+ rdata[i].setting +"' value='" + rdata[i].setting +"' "+ (rdata[i].checked ? "checked='checked'" : "") +" /><label for='"+ rdata[i].setting +"'>  "+ decode_utf8(rdata[i].setting_descr) +"</label><br>";
                             }
                         }
-			$('#settingsBlock').html(din_chkboxes_html);
+			$('#design-settings').html(din_chkboxes_html);
 		});
 }
 
@@ -112,6 +142,7 @@ $(document).ready(function() {
 					settings[$(checks[i]).val()] = false;
 				}
 			}
+			console.log(settings);
                         $.post("app/edit_design.php", {
                                 "oper": "set_settings",
                                 "head_file_name": $("#selDesigns").val(),
@@ -123,64 +154,95 @@ $(document).ready(function() {
 	});
 
 	// help
-	$("#helpHand a").click(function() {
-		if(helpText == "") {
+	$(".help-container .fetch").click(function() {
+		var $this = $(this),
+			content = $this.siblings(".hover-popover").find("content").html(),
+			showContent = function(content) {
+				$this.siblings(".hover-popover").show().find(".content").html(content);
+			};
+
+		console.log(content);
+
+		if(content === undefined || content == "") {
 			$.get("app/get_help.php?r=" + Math.random(), {
 				"page_name": "design_editor"
-			}, function(rdata){
-				helpText = rdata;
-				$("#helpCont").html(helpText);
-				$("#helpCont").slideToggle("fast");
-			});
+			}, showContent);
 		} else {
-			$("#helpCont").slideToggle("fast");
+			showContent(content);
 		}
 	});
+
+	$(".hover-popover .dismiss").click(function() {
+		$(this).closest(".hover-popover").hide();
+    });
 });
 </script>
 </head>
 
 <body id="bd_Design">
-<div id="wrapper">
-	<h1 id="header"><?php echo($ne_config_info['app_title']); ?></h1>
-	<div id="navBar">
-		<?php require('common_nav_menu.php'); ?>
-	</div>
 
-	<div id="contentPanel1">
-	<?php
-	// help
-	if(has_help_file()) {
-	?>
-		<div id="helpCont">.</div>
-		<div id="helpHand"><a href="javascript:;">Hilfe</a></div>
-	<?php
-	}
-	?>
-		<form action="" method="post" name="frmEdit" id="frmEdit">
-			<fieldset>
-				<legend>Designs ausw&auml;hlen</legend>
-				<select id="selDesigns"></select>
-				<input type="button" id="btnUpdate" name="btnUpdate" value="Dieses Design aktivieren" class="button" />
-				<div id="previewImage" style="padding:0.25em 0 0 0;"></div>
-				<hr size="1" noshade="noshade" />
-			</fieldset>
-		</form>
+	<?php require('common_nav_menu.php'); ?>
 
-		<form id="frmKopf">
-			<fieldset>
-				<legend id="confDesignLegend">Design Konfigurieren</legend>
-				<div id="settingsBlock">
-				<!--<input type="checkbox" id="chkZielGrpNav" value="mitZiel" checked="checked" /> <label for="chkZielGrpNav">Zielgruppennavigation</label>
-				<input type="checkbox" id="chkSuche" value="mitSuche" checked="checked" /> <label for="chkSuche">Suche</label>-->
-				</div>
-				<input type="button" id="btnUpdKopf" name="btnUpdKopf" class="button" value="Einstellungen speichern" />
-			</fieldset>
-		</form>
+	<div class="container page" id="contentPanel1">
+
+        <div class="page-header">
+            <h2 class="page-header">Design</h2>
+            <div class="pull-right">
+
+				 <?php
+	            	// help
+	            	if (has_help_file()) {
+	            ?>
+	            	<div class="help-container">
+						<a class="fetch btn btn btn-primary btn-light" href="javascript:void(0);"><i class="icon-white">?</i> Hilfe</a>
+						<div class="hover-popover">
+							<div class="header clearfix">
+								<h4>Hilfe</h4>
+								<div class="pull-right">
+									<a class="dismiss btn btn-black-white" href="javascript:void(0);">Ok</a>
+
+								</div>
+							</div>
+
+							<div class="content"></div>
+						</div>
+					</div>
+				<?php
+	            	}
+	            ?>
+	        </div>
+        </div>
+
+        <div class="row padding-top" id="current-design">
+        	<div class="span12">
+
+	        	<div class="row">
+	        		<div class="span7">
+						<h4 class="page-header">Aktuelles Design</h4>
+	        			<div id="current-design-img"> </div>
+	        		</div>
+
+	        		<div class="span5">
+	        			<h4 class="page-header">Design konfigurieren</h4>
+	        			<div id="design-settings"> </div>
+	        		</div>
+	        	</div>
+        	</div>
+        </div>
+
+        <div class="row padding-top">
+        	<div class="span12">
+	        	<h4 class="page-header">Alternative Designs</h4>
+
+        		<div id="designs" class="row"> </div>
+        	</div>
+        </div>
+
+
 	</div>
 
 <?php require('common_footer.php'); ?>
-</div>
+
 </body>
 
 </html>

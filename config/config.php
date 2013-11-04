@@ -50,13 +50,13 @@ $ne_config_info['upload_dir'] = $_SERVER['DOCUMENT_ROOT'] . '';
 
 
 // current public title with html
-$ne_config_info['app_title']        = 'NavEditor 2 <sup>Delta</sup>';
+$ne_config_info['app_title']        = 'NavEditor 3 <sup>Alpha</sup>';
 
 // current public title with html
-$ne_config_info['app_titleplain']   = 'NavEditor 2 Delta';
+$ne_config_info['app_titleplain']   = 'NavEditor 3 Delta';
 
 // current version
-$ne_config_info['version']          = '2.13.0814';
+$ne_config_info['version']          = '3.13.0814';
 
 // update host
 $ne_config_info['update_url']       = 'http://www.vorlagen.uni-erlangen.de/downloads/naveditor/';
@@ -270,8 +270,14 @@ $ne_config_info['regex_removed_symbols']    = '/[^a-zA-Z0-9\-_\s]/';
 
 
 //default html includes for every file
+$default_include_date = date('Ymdis');
 $ne_config_info['default_includes_js_css'] = Array(
-    "styles.css?".date('Ymdis'), "jquery-1.7.2.min.js", "loading.js"
+    "style.css, $default_include_date",
+    "bootstrap.css, $default_include_date",
+    "bootstrap-responsive.css, $default_include_date",
+    "jquery-1.10.1.min.js",
+    "loading.js",
+    "bootstrap.js"
 );
 
 

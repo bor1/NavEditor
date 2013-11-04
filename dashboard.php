@@ -1,6 +1,12 @@
 <?php
 require_once('auth.php');
 
+function formatDate($date) {
+	$eng = array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+	$deu = array("Januar", "Februar", "M&auml;rz", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember");
+
+	return str_replace($eng, $deu, $date);
+}
 
 $feedUrl = $ne_config_info['dashboard_feed'];
 
@@ -28,57 +34,51 @@ $sp->handle_content_type();
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Dashboard - <?php echo($ne_config_info['app_titleplain']); ?></title>
-<link rel="stylesheet" type="text/css" href="css/styles.css?<?php echo date('Ymdis'); ?>" />
-<link href="css/jquery-ui-1.8.2.custom.css" media="screen, projection" type="text/css" rel="stylesheet" />
-<script src="js/jquery-1.4.2.min.js" type="text/javascript"></script>
-<script src="js/jquery-ui-1.8.2.custom.js" type="text/javascript"></script>
-<script type="text/javascript" src="js/jquery.ui.accordion.min.js"></script>
-<script type="text/javascript">
-	$(document).ready(function() {
-		$("#acc").accordion({
-			active: false,
-			collapsible: true,
-			navigation: true,
-			autoHeight: false,
-			icons: {
-				'header': 'ui-icon-plus',
-				'headerSelected': 'ui-icon-minus'
-			}
-		});
-	});
-</script>
+
+<?php
+    echo NavTools::includeHtml("default");
+?>
+
 </head>
 
-<body id="bd_Dash">
-    <div id="wrapper">
-        <h1 id="header"><?php echo($ne_config_info['app_title']); ?></h1>
-        <div id="navBar">
-            <?php require('common_nav_menu.php'); ?>
-        </div>
+<body>
+	<?php require('common_nav_menu.php'); ?>
 
-        <div id="contentPanel1">
-            <?php
-            if ($sp->error()) {
-                echo('[ERR] ' . $sp->error() . '<br />');
-                $sp->__destruct();
-                unset($sp);
-            } else {
-                ?>
-                <h2 id="dashbrd_title"><a href="<?php echo($sp->get_permalink()); ?>"><?php echo($sp->get_title()); ?></a></h2>
-                <div id="acc">
-                    <?php foreach ($sp->get_items() as $item) { ?>
-                        <h3><a href="<?php echo $item->get_permalink(); ?>"><?php echo $item->get_title(); ?></a></h3>
-                        <div class="fc">
-                            <p class="ftime"><?php echo $item->get_date('j F Y | g:i a'); ?></p>
-                            <div class="fcontent"><?php echo $item->get_description(); ?></div>
-                        </div>
-                    <?php }
-                } ?>
-            </div>
-        </div>
+	<div class="dashboard">
 
-        <?php require('common_footer.php'); ?>
-    </div>
+		<div class="container">
+
+
+				<div class="page-header">
+					<h1> <a href="<?php echo($sp->get_permalink()); ?>"><?php echo($sp->get_title()); ?></a> <small>Nachrichten und Artikel des WebTeams</small></h1>
+				</div>
+
+
+			<div class="row padding-top">
+				<?php foreach($sp->get_items() as $item) { ?>
+					<div class="card span12" >
+						<div class="header clearfix">
+							<h5 class="title"><a href="<?php echo $item->get_permalink(); ?>"><?php echo $item->get_title(); ?></a></h5>
+							<p class="time"><?php echo formatDate($item->get_date('j. F Y - G:i')); ?> Uhr</p>
+						</div>
+						<div class="content"><?php echo $item->get_description(); ?></div>
+					</div>
+				<?php } ?>
+			</div>
+		</div>
+
+	</div>
+
+	<script>
+		$(".card").click(function() {
+			var $this = $(this);
+
+			$this.find(".content").slideDown();
+			$this.siblings().find(".content").slideUp();
+		});
+	</script>
+
+	<?php require('common_footer.php'); ?>
 </body>
 
 </html>
