@@ -1,6 +1,5 @@
 <?php
 require_once('auth.php');
-require_once('app/config.php');
 
 
 // help
@@ -166,7 +165,7 @@ $(document).ready(function() {
         <div class="page-header">
             <h3 class="page-header">Design</h3>
             <div class="pull-right">
-				
+
 				 <?php
 	            	// help
 	            	if (has_help_file()) {
@@ -186,7 +185,7 @@ $(document).ready(function() {
 						</div>
 					</div>
 				<?php
-	            	} 
+	            	}
 	            ?>
 	        </div>
         </div>
@@ -199,7 +198,7 @@ $(document).ready(function() {
 						<select id="selDesigns"></select>
 						<input type="button" id="btnUpdate" name="btnUpdate" value="Dieses Design aktivieren" class="btn btn-rounded btn-inverse pull-right" />
 						<div id="previewImage" style="padding:0.25em 0 0 0;"></div>
-						
+
 					</fieldset>
 				</form>
         	</div>
@@ -215,7 +214,7 @@ $(document).ready(function() {
         	</div>
         </div>
 
-	
+
 	</div>
 
 <?php require('common_footer.php'); ?>

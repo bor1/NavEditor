@@ -158,41 +158,6 @@ tinyMCE.init({
 	}
 });
 
-// tinyMCE.init({
-// 	mode: "textareas",
-// 	theme: "modern",
-// 	skin: "lightgray",
-// 	//language: "de",
-// 	forced_root_block : '',
-// 	//plugins: "safari,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template, mitarbeiter, feedimport, -variables",
-// 	relative_urls: false,
-// 	convert_urls: false,
-
-// 	theme_advanced_buttons1: "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,formatselect,styleselect,|,bullist,numlist,outdent,indent,blockquote,sub,sup,|,cut,copy,paste,pastetext,pasteword,|,search,replace,|,undo,redo",
-// 	theme_advanced_buttons2: "tablecontrols,|,link,unlink,anchor,image,cleanup,|,hr,removeformat,visualaid,|,charmap,emotions,media,iespell,|,ltr,rtl,|,fullscreen,help,code,|,nachOben, | ,mitarbeiter, feedimport, varslb",
-// 	theme_advanced_buttons3: "",
-
-// 	theme_advanced_toolbar_location: "top",
-// 	theme_advanced_toolbar_align: "left",
-// 	theme_advanced_statusbar_location: "bottom",
-// 	theme_advanced_blockformats: "p,address,pre,h2,h3,h4,h5,h6,blockquote,code", // p,address,pre,h1,h2,h3,h4,h5,h6
-// 	theme_advanced_styles: "<?php echo($custom_css_classes); ?>",
-// 	entity_encoding: "raw",
-// 	setup: function(ed) {
-// 		// ed.onKeyDown.add(function(ed, e) {
-// 		// 	g_tiny_isDirty = true;
-// 		// });
-// 		// add a custom button
-// 		ed.addButton("nachOben", {
-// 			title: "Nach oben Link einfuegen",
-// 			image: "/vkdaten/tools/NavEditor2/css/example.gif",
-// 			onclick: function() {
-// 				ed.focus();
-// 				ed.selection.setContent("<p class='noprint'><a href='#seitenmarke'>Nach oben</a></p>");
-// 			}
-// 		});
-// 	}
-// });
 </script>
 
 <script type="text/javascript">

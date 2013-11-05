@@ -175,7 +175,7 @@ switch($oper) {
         break;
     case 'do_update':
         $v = $_REQUEST['uv'];
-        echo(do_update('NavEditor2_' . $v . '.zip'));
+        echo(do_update('NavEditor3_' . $v . '.zip'));
         break;
     default:
         echo('Parameter error!');

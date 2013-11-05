@@ -1,7 +1,7 @@
 <?php
 
 /**
- * NavEditor2 Tools Class
+ * NavEditor3 Tools Class
  * Functions collection
  * @uses config.php - global variables
  */

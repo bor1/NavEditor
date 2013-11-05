@@ -24,7 +24,10 @@ add <html xmlns="http://www.w3.org/1999/xhtml" debug="true">
 <!--<link href="css/jqueryFileTree.css" rel="stylesheet" type="text/css" media="screen" />-->
 
 <?php
-    echo NavTools::includeHtml("default",
+//    $default_include_date = date('Ymdis');
+    echo NavTools::includeHtml(
+            "default",
+            "styles.css",
             "jqueryFileTree.css",
             "jqueryFileTree.js",
             "jquery-ui-1.8.18.custom.min.js",
@@ -37,8 +40,8 @@ add <html xmlns="http://www.w3.org/1999/xhtml" debug="true">
             "upload/jquery.image-gallery.js",
             "upload/jquery.xdr-transport.js",
             "jquery.ui.accordion.min.js",
-            "queryFolderImgPreview.js",
-            "tinymce/tinymce.min.js"
+            "queryFolderImgPreview.js"
+//            "tinymce/tinymce.min.js"
             );
 ?>
 

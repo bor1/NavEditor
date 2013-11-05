@@ -3,7 +3,7 @@
 class FileManager {
 
     public function __construct() {
-        
+
     }
 
     private function formatBytes($bytes, $precision = 2) {
@@ -65,7 +65,7 @@ class FileManager {
         if ($is_root) {
             $dl = array_diff(scandir($path), array('.', '..', 'js', 'Smarty', 'univis', 'vkapp')); // here insert excluded folders
         } else {
-            $dl = array_diff(scandir($path), array('.', '..', 'NavEditor2')); // here insert excluded folders
+            $dl = array_diff(scandir($path), array('.', '..', 'NavEditor3')); // here insert excluded folders
         }
         foreach ($dl as $di) {
             if (is_dir($path . '/' . $di)) {
@@ -211,7 +211,7 @@ class FileManager {
         }
         if (file_exists($file_path)) {
             if (filesize($file_path) == filesize($bak_file_path)) {
-                // Gleiche Datei, brauche nichts zu tun				
+                // Gleiche Datei, brauche nichts zu tun
                 return;
             } else {
                 // Neue Datei, also neue Konfigwerte

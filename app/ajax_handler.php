@@ -14,7 +14,7 @@ try {
     $data_to_return = '';
 
     //what file
-    //path will be resolved, full path will be modified to NavEditor2/ relative path
+    //path will be resolved, full path will be modified to NavEditorX/ relative path
     $file_to_call = str_replace($ne_config_info['app_path'], '', NavTools::simpleResolvePath(Input::get_post('file')));
     //what function
     $function_to_call = Input::get_post('function');

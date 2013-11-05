@@ -1,12 +1,11 @@
 <?php
 require_once('auth.php');
-require_once('app/config.php');
 
 
 // help
 function has_help_file() {
-	global $ne2_config_info;
-	$help_file = $ne2_config_info['help_path'] .'file_editor'. $ne2_config_info['help_filesuffix'] ;
+	global $ne_config_info;
+	$help_file = $ne_config_info['help_path'] .'file_editor'. $ne_config_info['help_filesuffix'];
 	return file_exists($help_file);
 }
 
@@ -24,11 +23,11 @@ function has_help_file() {
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="stylesheet" type="text/css" href="css/bootstrap.css?<?php echo date('Ymdis'); ?>" />
+<!--        <link rel="stylesheet" type="text/css" href="css/bootstrap.css?<?php echo date('Ymdis'); ?>" />
 		<link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.css?<?php echo date('Ymdis'); ?>" />
 		<link rel="stylesheet" type="text/css" href="css/style.css?<?php echo date('Ymdis'); ?>" />
 		<script src="js/jquery-1.10.1.js" type="text/javascript"></script>
-		<script src="js/bootstrap.js" type="text/javascript"></script>
+		<script src="js/bootstrap.js" type="text/javascript"></script>-->
 		<script src="js/jquery.MultiFile.js" type="text/javascript"></script>
 
 		<?php
@@ -47,11 +46,12 @@ function has_help_file() {
 	            "jquery.ui.accordion.min.js",
 	            "tinymce/tinymce.min.js",
 	            "upload/jquery.fileupload.js"
-	           
+
 		    );
 		?>
 
 		<script>
+
 			function getFileInfoCallback(resp) {
 				var fi = JSON.parse(resp);
 				if(fi.thumb_name != "") {
@@ -69,7 +69,7 @@ function has_help_file() {
 
 				if(fi.editable) {
 					var admin = <?php echo(($is_admin)? 1 : 0); ?>; //todo $is_admin -> test rights >= "admin" (1000)
-					var hideEditorMode = <?php echo(($ne2_config_info['hide_sourceeditor'])? 1 : 0); ?>;
+					var hideEditorMode = <?php echo(($ne_config_info['hide_sourceeditor'])? 1 : 0); ?>;
 					var extension = getExtension(fi.file_name);
 					var forb_folders = ['css/','grafiken/','img/','ssi/','js/','vkdaten/','univis/','vkapp/'];
 					if (admin || hideEditorMode == -1){
@@ -132,8 +132,8 @@ function has_help_file() {
 			}
 
 			function createFolder(path, folder_name, callback){
-				
-				
+
+
 				$.post("app/file_manager.php", {
 					"service": "create_subfolder",
 					"current_path": path,
@@ -145,7 +145,7 @@ function has_help_file() {
 						if(callback) callback();
 					}
 				});
-				
+
 			}
 
 			function createNewFile(path, file_name, file_ext){
@@ -170,14 +170,15 @@ function has_help_file() {
 
 			/* ---------- Here comes jQuery: ---------- */
 			$(document).ready(function() {
-				var current_file = "",
+                var root_path  = "<?php echo ($_SERVER['DOCUMENT_ROOT']); ?>",
+                    current_file = "",
 					tinymceReady = false,
 					picture_exts = [ "jpeg", "jpg", "png", "gif"],
 					text_exts = ["shtml", "html", "htaccess", "txt"],
 
 					file_details_source   = $("#file-details-template").html(),
 				 	file_details_template = Handlebars.compile(file_details_source),
-				 	
+
 				 	folder_details_source   = $("#folder-details-template").html(),
 				 	folder_details_template = Handlebars.compile(folder_details_source),
 
@@ -190,26 +191,26 @@ function has_help_file() {
 
 
 				 	tinyMCE.init({
-					forced_root_block : '',
-					mode: "textareas",
-					language: "de",
-					theme: "modern",
-					skin: "light",
-					plugins: "image link code table preview mitarbeiter feedimport ssiInclude image_choose",
-					menubar: false,
-					toolbar1: "undo redo | cut copy paste | link image table | mitarbeiter | feedimport | code | preview",
-					toolbar2: "fontselect fontsizeselect | styleselect | alignleft aligncenter alignright alignjustify | outdent indent | bold italic underline strikethrough | bullist numlist",
-					//theme: "advanced",
-					//language: "de",
-					//skin: "o2k7",
-					relative_urls: false,
-					convert_urls: false,
-					//plugins: "safari,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template",
-					theme_advanced_styles: "infologo",
-					theme_advanced_toolbar_location: "top",
-					theme_advanced_toolbar_align: "left",
-					theme_advanced_statusbar_location: "bottom",
-				});
+                        forced_root_block : '',
+                        mode: "textareas",
+                        language: "de",
+                        theme: "modern",
+                        skin: "light",
+                        plugins: "image link code table preview mitarbeiter feedimport ssiInclude image_choose",
+                        menubar: false,
+                        toolbar1: "undo redo | cut copy paste | link image table | mitarbeiter | feedimport | code | preview",
+                        toolbar2: "fontselect fontsizeselect | styleselect | alignleft aligncenter alignright alignjustify | outdent indent | bold italic underline strikethrough | bullist numlist",
+                        //theme: "advanced",
+                        //language: "de",
+                        //skin: "o2k7",
+                        relative_urls: false,
+                        convert_urls: false,
+                        //plugins: "safari,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template",
+                        theme_advanced_styles: "infologo",
+                        theme_advanced_toolbar_location: "top",
+                        theme_advanced_toolbar_align: "left",
+                        theme_advanced_statusbar_location: "bottom",
+                    });
 
 				// tinyMCE.init({
 				// 	forced_root_block : '',
@@ -269,21 +270,21 @@ function has_help_file() {
 
 
 				// File Tree
-				$('#file-tree').fileTree({ 
+				$('#file-tree').fileTree({
 					root: '/',
 					multiFolder: false,
 					loadCallBack: function() {
 						if(current_file != "") {
-							
+
 							var pictures = [],
 								data = { pictures : [] };
-							
+
 							$.each(fileInfoArray, function(elem) {
 
 								if(elem.indexOf(current_file) != -1 && picture_exts.indexOf(getExtension(elem)) != -1) {
 									pictures.push({ url: elem, titel: dateiname(elem) });
 								}
-									
+
 							});
 
 							data.pictures = pictures;
@@ -297,17 +298,17 @@ function has_help_file() {
 
 							$("#picture-preview").html(pictures_preview_template(data));
 						}
-						
+
 						$("#file-tree a").click(function(evt) {
 							$("#file-tree .active").removeClass("active");
 							$(this).addClass("active");
-							
+
 						});
 					}
-					
+
 				},
 				function(file, folder) {
-			       	
+
 					var context = {},
 						html = "";
 
@@ -320,7 +321,7 @@ function has_help_file() {
 						html    = file_details_template(context);
 
 						if(context.thumb_name == "") context.thumb_name = null;
-						
+
 
 
 						if(text_exts.indexOf(getExtension(file)) != -1) {
@@ -343,9 +344,9 @@ function has_help_file() {
 							$("#picture-preview").html(picture_preview_template(context));
 							$('#file-details-container a[href="#picture-preview"]').show();
 						}
-						
 
-						
+
+
 						current_file = file;
 
 			       	}else if(folder != null) {
@@ -354,13 +355,13 @@ function has_help_file() {
 
 						current_file = folder;
 			       	}
-					
+
 					$("#file-title").html(current_file);
 
 
 					$("#file-details").html(html);
 			    });
-				
+
 
 
 				// Neuer Ordner
@@ -389,7 +390,7 @@ function has_help_file() {
 				})
 				.bind('fileuploadstop', function (e, data) {
 						alert('DONE');
-						
+
 				});
 
 			    $('#fileupload').fileupload({
@@ -404,11 +405,11 @@ function has_help_file() {
 			    // Create New File
 			    $("#buttonFileCreate").click(function() {
 			    	var $this = $(this),
-			    		path = current_file,
+                    path = root_path + verzeichnis(current_file),
 			    		file_name = $("#inputFileCreateFileName").val(),
 			    		file_ext = $("#inputFileCreateType").val();
 
-			    	path = "/proj/websource/docs/RRZEWeb/www.test.rrze.uni-erlangen.de-2173/websource/" + path;
+//			    	path = "/proj/websource/docs/RRZEWeb/www.test.rrze.uni-erlangen.de-2173/websource" + path;
 
 			    	createNewFile(path, file_name, file_ext);
 			    });
@@ -418,7 +419,7 @@ function has_help_file() {
 			    	var $this = $(this),
 			    		path = current_file,
 			    		folder_name = $("#inputFolderCreateFolderName").val();
-			    		
+
 
 			    	path = "/proj/websource/docs/RRZEWeb/www.test.rrze.uni-erlangen.de-2173/websource/" + path;
 
@@ -429,7 +430,7 @@ function has_help_file() {
 
 			});
 		</script>
-        
+
         <script id="file-details-template" type="text/x-handlebars-template">
 		  	<form class="form-horizontal">
 			  <div class="control-group">
@@ -478,7 +479,7 @@ function has_help_file() {
 		</script>
 
 		<script id="picture-preview-template" type="text/x-handlebars-template">
-		  	
+
 		  	<div class="span3" style="height: 400px; margin-bottom: 60px;">
 		  		<div class="thumbnail">
 		  			<h5>{{titel}}</h5>
@@ -501,11 +502,11 @@ function has_help_file() {
 		  	</div>
 		  	{{/thumb_name}}
 
-		  	
+
 		</script>
 
 		<script id="pictures-preview-template" type="text/x-handlebars-template">
-		  
+
 		  	{{#pictures}}
 			  	<div class="span2" style="min-height: 200px; margin-bottom: 60px;">
 			  		<div class="thumbnail">
@@ -553,7 +554,7 @@ function has_help_file() {
 							</div>
 						</div>
 					<?php
-		            	} 
+		            	}
 		            ?>
 
 		            <div class="popover-container">
@@ -619,12 +620,12 @@ function has_help_file() {
 							</div>
 						</div>
 					</div>
-		            
+
 		        </div>
             </div>  <!-- Page Header End -->
 
             <div class="row">
-            		
+
             		<div id="file-tree-container" class="span3">
             			<h4 class="page-header">Ordnerstruktur</h4>
             			<div id="file-tree"></div>
@@ -646,8 +647,8 @@ function has_help_file() {
 						    	<div class="tab-pane active" id="basis">
 									<div id="file-details">
 			            				<form class="form-horizontal">
-										  
-										  
+
+
 										</form>
 			            			</div>
 						    	</div>
@@ -657,14 +658,14 @@ function has_help_file() {
 						    	</div>
 
 						    	<div class="tab-pane" id="picture-preview">
-						      		
+
 						    	</div>
 						  	</div>
 						</div>
-            			
+
             		</div>
 
-           
+
             </div>
 
 	    </div>
@@ -672,7 +673,7 @@ function has_help_file() {
 
 	    <?php require('common_footer.php'); ?>
 
-       
-        
+
+
     </body>
 </html>

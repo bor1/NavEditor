@@ -1,6 +1,5 @@
 <?php
 require_once('auth.php');
-require_once('app/config.php');
 
 
 // help
@@ -48,7 +47,7 @@ function has_help_file() {
 	            "tinymce/plugins/compat3x/tiny_mce_popup.js",
 
 	            "upload/jquery.fileupload.js"
-	           
+
 		    );
 		?>
 
@@ -133,8 +132,8 @@ function has_help_file() {
 			}
 
 			function createFolder(path, folder_name, callback){
-				
-				
+
+
 				$.post("app/file_manager.php", {
 					"service": "create_subfolder",
 					"current_path": path,
@@ -146,7 +145,7 @@ function has_help_file() {
 						if(callback) callback();
 					}
 				});
-				
+
 			}
 
 			function createNewFile(path, file_name, file_ext){
@@ -178,8 +177,8 @@ function has_help_file() {
 				function submit(url) {
 				    var parentWin = (!window.frameElement && window.dialogArguments) || opener || parent || top;
 				    var parentInput = parentWin.naveditor_activeInput;
-				    
-				    
+
+
 				    parentWin.naveditor_chosen_file = url;
 				    parentEditor.windowManager.close();
 				};
@@ -193,7 +192,7 @@ function has_help_file() {
 
 					file_details_source   = $("#file-details-template").html(),
 				 	file_details_template = Handlebars.compile(file_details_source),
-				 	
+
 				 	folder_details_source   = $("#folder-details-template").html(),
 				 	folder_details_template = Handlebars.compile(folder_details_source),
 
@@ -203,7 +202,7 @@ function has_help_file() {
 				 	pictures_preview_source   = $("#pictures-preview-template").html(),
 				 	pictures_preview_template = Handlebars.compile(pictures_preview_source);
 
-				 
+
 
 				// var FileBrowserDialogue = {
 				//     init : function () {
@@ -264,21 +263,21 @@ function has_help_file() {
 
 
 				// File Tree
-				$('#file-tree').fileTree({ 
+				$('#file-tree').fileTree({
 					root: '/',
 					multiFolder: false,
 					loadCallBack: function() {
 						if(current_file != "") {
-							
+
 							var pictures = [],
 								data = { pictures : [] };
-							
+
 							$.each(fileInfoArray, function(elem) {
 
 								if(elem.indexOf(current_file) != -1 && picture_exts.indexOf(getExtension(elem)) != -1) {
 									pictures.push({ url: elem, titel: dateiname(elem) });
 								}
-									
+
 							});
 
 							data.pictures = pictures;
@@ -292,17 +291,17 @@ function has_help_file() {
 
 							$("#picture-preview").html(pictures_preview_template(data));
 						}
-						
+
 						$("#file-tree a").click(function(evt) {
 							$("#file-tree .active").removeClass("active");
 							$(this).addClass("active");
-							
+
 						});
 					}
-					
+
 				},
 				function(file, folder) {
-			       	
+
 					var context = {},
 						html = "";
 
@@ -315,7 +314,7 @@ function has_help_file() {
 						html    = file_details_template(context);
 
 						if(context.thumb_name == "") context.thumb_name = null;
-						
+
 
 
 						if(text_exts.indexOf(getExtension(file)) != -1) {
@@ -338,9 +337,9 @@ function has_help_file() {
 							$("#picture-preview").html(picture_preview_template(context));
 							$('#file-details-container a[href="#picture-preview"]').show();
 						}
-						
 
-						
+
+
 						current_file = file;
 
 			       	}else if(folder != null) {
@@ -349,12 +348,12 @@ function has_help_file() {
 
 						current_file = folder;
 			       	}
-					
+
 
 
 					$("#file-details").html(html);
 			    });
-				
+
 
 
 				// Neuer Ordner
@@ -383,7 +382,7 @@ function has_help_file() {
 				})
 				.bind('fileuploadstop', function (e, data) {
 						alert('DONE');
-						
+
 				});
 
 			    $('#fileupload').fileupload({
@@ -412,7 +411,7 @@ function has_help_file() {
 			    	var $this = $(this),
 			    		path = current_file,
 			    		folder_name = $("#inputFolderCreateFolderName").val();
-			    		
+
 
 			    	path = "/proj/websource/docs/RRZEWeb/www.test.rrze.uni-erlangen.de-2173/websource/" + path;
 
@@ -423,7 +422,7 @@ function has_help_file() {
 
 			});
 		</script>
-        
+
         <script id="file-details-template" type="text/x-handlebars-template">
 		  	<form class="form-horizontal">
 			  <div class="control-group">
@@ -472,7 +471,7 @@ function has_help_file() {
 		</script>
 
 		<script id="picture-preview-template" type="text/x-handlebars-template">
-		  	
+
 		  	<div class="span3" style="height: 400px; margin-bottom: 60px;">
 		  		<div class="thumbnail">
 		  			<h5>{{titel}}</h5>
@@ -495,11 +494,11 @@ function has_help_file() {
 		  	</div>
 		  	{{/thumb_name}}
 
-		  	
+
 		</script>
 
 		<script id="pictures-preview-template" type="text/x-handlebars-template">
-		  
+
 		  	{{#pictures}}
 			  	<div class="span2" style="min-height: 200px; margin-bottom: 60px;">
 			  		<div class="thumbnail">
@@ -544,7 +543,7 @@ function has_help_file() {
 							</div>
 						</div>
 					<?php
-		            	} 
+		            	}
 		            ?>
 
 		            <div class="popover-container">
@@ -610,12 +609,12 @@ function has_help_file() {
 							</div>
 						</div>
 					</div>
-		            
+
 		        </div>
             </div>  <!-- Page Header End -->
 
             <div class="row">
-            		
+
             		<div id="file-tree-container" class="span3">
             			<h4 class="page-header">Ordnerstruktur</h4>
             			<div id="file-tree"></div>
@@ -624,7 +623,7 @@ function has_help_file() {
             		<div id="file-details-container" class="span9">
             			<h4 class="page-header">Details</h4>
             			<div class="tab-pane" id="picture-preview"></div>
-            		</div>           
+            		</div>
             </div>
 	    </div>
     </body>

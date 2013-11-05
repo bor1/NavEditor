@@ -1,6 +1,5 @@
 <?php
 require_once('auth.php');
-require_once('app/config.php');
 
 
 // help
@@ -33,20 +32,20 @@ function has_help_file() {
 
 		<?php
 		    echo NavTools::includeHtml("default",
-	            
+
 	            "handlebars.js",
 	            "jquery-ui-1.8.18.custom.min.js",
 	            "upload/jquery.iframe-transport.js",
-	            
+
 	            "tinymce/plugins/compat3x/tiny_mce_popup.js"
 
-	   
-	           
+
+
 		    );
 		?>
 
 		<script>
-			
+
 			var parentWin = (!window.frameElement && window.dialogArguments) || opener || parent || top;
 
 			var parentEditor = parentWin.naveditor_activeEditor;
@@ -56,8 +55,8 @@ function has_help_file() {
 			function submit(url) {
 			    var parentWin = (!window.frameElement && window.dialogArguments) || opener || parent || top;
 			    var parentInput = parentWin.naveditor_activeInput;
-			    
-			    
+
+
 			    parentWin.naveditor_chosen_file = url;
 			    parentEditor.windowManager.close();
 			};
@@ -73,7 +72,7 @@ function has_help_file() {
 				parentEditor.windowManager.close();
 			}
 
-			
+
 
 			/* ---------- Here comes jQuery: ---------- */
 			$(document).ready(function() {
@@ -90,7 +89,7 @@ function has_help_file() {
 
 					$("#osm-container").html(iframe);
 				});
-				
+
 
 				// Prompt
 				$(".btn-prompt").click(function(evt) {
@@ -122,7 +121,7 @@ function has_help_file() {
 							$(".full-screen-popover").hide();
 							$this.css("z-index", "10");
 						};
-						
+
 
 					if(prompt && prompt != undefined && !$this.hasClass("open")) {
 						// Button besitzt ein prompt.
@@ -151,9 +150,9 @@ function has_help_file() {
 
 						$this.addClass("open");
 						$this.append($controls);
-						
+
 						width_final = $this.width();
-						
+
 						$title.html(title_temp);
 						$this.removeClass("open");
 
@@ -181,13 +180,13 @@ function has_help_file() {
 							}
 						});
 					}
-					
+
 				});
 
 			});
 		</script>
-        
-        
+
+
 
 
     </head>
@@ -217,7 +216,7 @@ function has_help_file() {
 							<div class="span4">
 								<a class="vorschau btn btn-light btn-primary pull-right" href="javascript:void(0);">Vorschau anzeigen</a>
 							</div>
-							
+
 			    		</div>
 
 			    		<div class="tab-pane" id="address">
@@ -259,7 +258,7 @@ function has_help_file() {
 			  	<div id="osm-container">
 		            <iframe src="http://karte.fau.de/api/v1/iframe/term/lft/zoomcontrol/off/layercontrol/off" width="724px" height="400px" seamless style="border: 0; padding: 0; margin: 0; overflow: hidden;"></iframe>
 	            </div>
-	    		
+
 	    		<div class="page-header">
 	                <h3 class="page-header"></h3>
 	                <div class="pull-right">

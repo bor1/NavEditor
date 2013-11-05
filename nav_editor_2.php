@@ -1,6 +1,5 @@
 <?php
 	require_once('auth.php');
-	require_once('app/config.php');
 
 	// help
 	function has_help_file() {
@@ -26,7 +25,7 @@
 	<script src="js/handlebars.js"></script>
 	<script src="js/naveditor2.js"></script>
 	<script type="text/javascript">
-		
+
 		function globaleFunktion() {
 			console.log("Hello World!");
 		}
@@ -97,7 +96,7 @@
 							$(".full-screen-popover").hide();
 							$this.css("z-index", "10");
 						};
-						
+
 
 					if(prompt && prompt != undefined && !$this.hasClass("open")) {
 						// Button besitzt ein prompt.
@@ -126,9 +125,9 @@
 
 						$this.addClass("open");
 						$this.append($controls);
-						
+
 						width_final = $this.width();
-						
+
 						$title.html(title_temp);
 						$this.removeClass("open");
 
@@ -156,14 +155,14 @@
 							}
 						});
 					}
-					
+
 				});
-				
+
 
 				$.get("app/load_tree_data.php?r=" + Math.random(), {},
 				function(content) {
 					var data = JSON.parse(content);
-					
+
 					navTreeOper.refreshNavTree(data);
 
 					$.each(data, function(id, item) {
@@ -211,7 +210,7 @@
 							"json_oper": "get_content",
 							"json_data": JSON.stringify(data)
 						}, function(content) {
-														
+
 							content = JSON.parse(content);
 
 							if(content) {
@@ -221,8 +220,8 @@
 								$this.parent().addClass("active");
 
 								$("#file-title").html(title);
-								
-								
+
+
 								if(!content.is_locked) {
 
 									console.log(content.content_html);
@@ -242,7 +241,7 @@
 							"json_oper": "get_backup_list",
 							"json_data": JSON.stringify(data)
 						}, function(content) {
-														
+
 							content = JSON.parse(content);
 
 							if(content) {
@@ -253,7 +252,7 @@
 
 						});
 					});
-					
+
 
 				});
 
@@ -296,7 +295,7 @@
 	</script>
 
 	<script id="menue-template" type="text/x-handlebars-template">
-		  
+
 
 	    <h5>{{ title }}</h5>
 
@@ -327,7 +326,7 @@
 				{{/if}}
 			{{/data}}
 		</ul>
-	  	
+
 
 	</script>
 
@@ -349,7 +348,7 @@
 	        <h2 id="page-title" class="page-header">Seite und Navigation <small>Bearbeiten Sie hier Ihre Internetpresenz</h2>
 
 	        <div class="pull-right">
-				
+
 				<?php
 	            	// help
 	            	if (has_help_file()) {
@@ -368,10 +367,10 @@
 							<div class="content"></div>
 						</div>
 					</div>
-					
-					
+
+
 				<?php
-	            	} 
+	            	}
 	            ?>
 	        </div>
         </div>
@@ -380,11 +379,11 @@
         <!--=======================================================================================-->
 
         <div class="row padding-top">
-        	
+
         	<!--==== Menue ====-->
         	<div class="span3">
         		<div id="menue-sidebar">
-	        		
+
 	        	</div>
 
         		<hr style="border-top: solid 1px #ccc;
@@ -404,7 +403,7 @@ border-bottom: solid 1px transparent;">
                     <h4 id="file-title" class="page-header"><small class="path"></small>Startseite</h4>
 
                     <div class="pull-right">
-						
+
 						<span class="btn btn-prompt btn-light btn-danger" data-prompt="Sind Sie sicher?" data-prompt-buttons="Ja|Nein" data-prompt-icons="ok|remove"  data-callback="globaleFunktion">
 							<i class="icon-trash icon-white"></i>
 							<span class="title"> Seite L&ouml;schen</span>
@@ -417,7 +416,7 @@ border-bottom: solid 1px transparent;">
 
 			        </div>
                 </div>
-		        
+
 		        <div class="tabbable"> <!-- Only required for left/right tabs -->
 					<ul class="nav nav-tabs nav-tabs-custom">
 				    	<li class="active"><a href="#edit" data-toggle="tab"><i class="icon-pencil"></i> Seite Bearbeiten</a></li>
@@ -430,7 +429,7 @@ border-bottom: solid 1px transparent;">
 			    		</div>
 
 			    		<div class="tab-pane" id="options">
-			      			
+
 			      				<div class="span3">
 									<div class="control-group">
 										<label class="control-label" for="inputTitel">Titel mit HTML</label>
@@ -477,7 +476,7 @@ border-bottom: solid 1px transparent;">
 										</div>
 									</div>
 								</div>
-							
+
 
 			    		</div>
 
@@ -541,8 +540,8 @@ border-bottom: solid 1px transparent;">
 
 
 	</div>
-	
-<?php require('common_footer.php'); ?>	
+
+<?php require('common_footer.php'); ?>
 
 </body>
 

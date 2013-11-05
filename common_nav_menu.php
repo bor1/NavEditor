@@ -82,7 +82,7 @@ function createSubMenu($num)   {
 <nav class="navbar navbar-inverse navbar-fixed-top">
 	<div class="navbar-inner">
 		<div class="container">
-			<a class="brand" href="./index.php"><?php echo($ne2_config_info['app_title']); ?></a>
+			<a class="brand" href="./index.php"><?php echo($ne_config_info['app_title']); ?></a>
 			<ul class="nav">
 				<?php echo createSubMenu(0);    ?>
 			</ul>

@@ -1,5 +1,6 @@
 <?php
-define ('NE_DIR_ROOT', $_SERVER['DOCUMENT_ROOT'].'/vkdaten/tools/NavEditor2/');
+define ('NE_DIR_RELATIVE', '/vkdaten/tools/NavEditor3/');
+define ('NE_DIR_ROOT', $_SERVER['DOCUMENT_ROOT'].NE_DIR_RELATIVE);
 define ('NE_DIR_CONFIG', NE_DIR_ROOT.'config/');
 define ('NE_DIR_CLASSES', NE_DIR_ROOT.'app/classes/');
 
@@ -27,9 +28,8 @@ $ne_config_info['areas_settings'] = $g_areas_settings;
 
 
 //========================USUAL SETTINGS========================================
-// the path of NavEditor2, by default: $_SERVER['DOCUMENT_ROOT'] . '/vkdaten/tools/NavEditor2/'
 // please include trailing slash!
-$ne_config_info['app_path_without_host'] = '/vkdaten/tools/NavEditor2/';
+$ne_config_info['app_path_without_host'] = NE_DIR_RELATIVE;
 $ne_config_info['app_path']     = NE_DIR_ROOT;
 $ne_config_info['log_path']     = NE_DIR_ROOT . "log/";
 $ne_config_info['cgi-bin_path'] = NavTools::simpleResolvePath($_SERVER['DOCUMENT_ROOT'] . "/../cgi-bin/");
@@ -272,9 +272,9 @@ $ne_config_info['regex_removed_symbols']    = '/[^a-zA-Z0-9\-_\s]/';
 //default html includes for every file
 $default_include_date = date('Ymdis');
 $ne_config_info['default_includes_js_css'] = Array(
-    "style.css, $default_include_date",
-    "bootstrap.css, $default_include_date",
-    "bootstrap-responsive.css, $default_include_date",
+    "style.css?, $default_include_date",
+    "bootstrap.css?, $default_include_date",
+    "bootstrap-responsive.css?, $default_include_date",
     "jquery-1.10.1.min.js",
     "loading.js",
     "bootstrap.js"
