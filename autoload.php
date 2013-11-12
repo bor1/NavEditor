@@ -19,7 +19,7 @@ spl_autoload_register(function($className) {
                 $className = substr($className, 1);
             }
 
-            $filePath = NE_DIR_CLASSES . $className . '.php';
+            $filePath = NE_DIR_CLASSES . str_replace("\\","/",$className) . '.php';
 
             if (is_file($filePath))
                 require_once $filePath;
