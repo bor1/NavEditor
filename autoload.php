@@ -11,8 +11,6 @@ if (strcmp(realpath(__FILE__), realpath($_SERVER['DOCUMENT_ROOT'] . $_SERVER['PH
 }
 
 spl_autoload_register(function($className) {
-            //security?
-            $className = str_replace('../', '', $className);
 
             //namespaces
             if ($className[0] === '\\') {
