@@ -1,10 +1,11 @@
 <?php
 require_once('auth.php');
 
+
 // help
 function has_help_file() {
-	global $ne_config_info;
-	$help_file = $ne_config_info['help_path'] .'design_editor'. $ne_config_info['help_filesuffix'] ;
+	global $ne2_config_info;
+	$help_file = $ne2_config_info['help_path'] .'design_editor'. $ne2_config_info['help_filesuffix'] ;
 	return file_exists($help_file);
 }
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -12,7 +13,7 @@ function has_help_file() {
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Design wechseln - <?php echo($ne_config_info['app_titleplain']); ?></title>
+<title>Design wechseln - <?php echo($ne2_config_info['app_titleplain']); ?></title>
 
 <?php echo NavTools::includeHtml("default"); ?>
 
@@ -23,25 +24,8 @@ var helpText = "";
 
 function loadContentCallback(data) {
         if(!data){alert('no designs found');return;}
-	var current = data.current_design,
-		current_design_img_url = "/css/" + current.replace(/head-/gi, '').replace(/.shtml/gi, '') + "/thumb.png",
-		current_design_img = $('<img src="'+current_design_img_url+'">'),
-
-		rendered_designs = new Array();
-
-	for (var i = 0; i < data.designs.length; i++) {
-		if(data.designs[i].value === current) continue;
-		var img_url = "/css/" + data.designs[i].value.replace(/head-/gi, '').replace(/.shtml/gi, '') + "/thumb.png",
-			img = $('<img src="'+img_url+'">'),
-			caption_content = "<h4>"+data.designs[i].text+'</h4><a data-design="'+data.designs[i].value+'" href="javascript:void(0);" class="btn btn-success btn-light pull-right">Ausw&auml;hlen</a>',
-			caption = $('<div class="caption clearfix">').html(caption_content),
-			thumbnail = $('<div class="thumbnail">').html(new Array(img, caption)),
-			html = $('<div class="span6">').html(thumbnail).css("height", "400px").css("margin-bottom", "60px");
-		rendered_designs.push(html);
-	};
-
-
-	/*
+	var curr = data.current_design;
+	var optHtml = "";
 	for(var i = 0; i < data.designs.length; i++) {
 		if(data.designs[i].value == curr) {
 			optHtml += "<option value=\"" + data.designs[i].value + "\" selected=\"selected\">" + data.designs[i].text + "</option>";
@@ -50,17 +34,10 @@ function loadContentCallback(data) {
 			optHtml += "<option value=\"" + data.designs[i].value + "\">" + data.designs[i].text + "</option>";
 		}
 	}
-	$("#selDesigns").html(optHtml);*/
-
-
-	$("#designs").html(rendered_designs);
-	$("#current-design-img").html(current_design_img);
-
-	loadChkboxes(current);
-
+	$("#selDesigns").html(optHtml);
 	loadFileListDone = true;
 	showScreenShot($("#selDesigns").val());
-	$('#confDesignLegend').html('Design '+ current +" konfigurieren");
+	$('#confDesignLegend').html('Design '+ curr +" konfigurieren");
 }
 
 function saveContentCallback(data) {
@@ -90,18 +67,18 @@ function loadChkboxes(design){
                             din_chkboxes_html = "no setting found";
                         }else{
                             for(var i = 0; i < rdata.length; i++){
-					// <label class="checkbox">
-					//   <input type="checkbox" value="">
-					//   Option one is this and that—be sure to include why it's great
-					// </label>
-					din_chkboxes_html += '<label class="checkbox">';
-					din_chkboxes_html +=	'<input type="checkbox" id="' + rdata[i].setting + '" value="' + rdata[i].setting +'" '+ (rdata[i].checked ? 'checked="checked"': '') + ' />';
-					din_chkboxes_html += 	decode_utf8(rdata[i].setting_descr);
-					din_chkboxes_html += '</label>';
-                    // din_chkboxes_html += "<input type='checkbox' id='"+ rdata[i].setting +"' value='" + rdata[i].setting +"' "+ (rdata[i].checked ? "checked='checked'" : "") +" /><label for='"+ rdata[i].setting +"'>  "+ decode_utf8(rdata[i].setting_descr) +"</label><br>";
+        						// <label class="checkbox">
+								//   <input type="checkbox" value="">
+								//   Option one is this and that—be sure to include why it's great
+								// </label>
+								din_chkboxes_html += '<label class="checkbox">';
+								din_chkboxes_html +=	'<input type="checkbox" id="' + rdata[i].setting + '" value="' + rdata[i].setting +'" '+ (rdata[i].checked ? 'checked="checked"': '') + ' />';
+								din_chkboxes_html += 	decode_utf8(rdata[i].setting_descr);
+								din_chkboxes_html += '</label>';
+                                // din_chkboxes_html += "<input type='checkbox' id='"+ rdata[i].setting +"' value='" + rdata[i].setting +"' "+ (rdata[i].checked ? "checked='checked'" : "") +" /><label for='"+ rdata[i].setting +"'>  "+ decode_utf8(rdata[i].setting_descr) +"</label><br>";
                             }
                         }
-			$('#design-settings').html(din_chkboxes_html);
+			$('#settingsBlock').html(din_chkboxes_html);
 		});
 }
 
@@ -174,7 +151,7 @@ $(document).ready(function() {
 
 	$(".hover-popover .dismiss").click(function() {
 		$(this).closest(".hover-popover").hide();
-    });
+	});
 });
 </script>
 </head>
@@ -186,7 +163,7 @@ $(document).ready(function() {
 	<div class="container page" id="contentPanel1">
 
         <div class="page-header">
-            <h2 class="page-header">Design</h2>
+            <h3 class="page-header">Design</h3>
             <div class="pull-right">
 
 				 <?php
@@ -194,7 +171,7 @@ $(document).ready(function() {
 	            	if (has_help_file()) {
 	            ?>
 	            	<div class="help-container">
-						<a class="fetch btn btn btn-primary btn-light" href="javascript:void(0);"><i class="icon-white">?</i> Hilfe</a>
+						<a class="fetch btn btn btn-primary btn-rounded" href="javascript:void(0);">Hilfe</a>
 						<div class="hover-popover">
 							<div class="header clearfix">
 								<h4>Hilfe</h4>
@@ -213,28 +190,27 @@ $(document).ready(function() {
 	        </div>
         </div>
 
-        <div class="row padding-top" id="current-design">
-        	<div class="span12">
+        <div class="row">
+        	<div class="span6">
+        		<form action="" method="post" name="frmEdit" id="frmEdit">
+					<fieldset>
+						<legend>Designs ausw&auml;hlen</legend>
+						<select id="selDesigns"></select>
+						<input type="button" id="btnUpdate" name="btnUpdate" value="Dieses Design aktivieren" class="btn btn-rounded btn-inverse pull-right" />
+						<div id="previewImage" style="padding:0.25em 0 0 0;"></div>
 
-	        	<div class="row">
-	        		<div class="span7">
-						<h4 class="page-header">Aktuelles Design</h4>
-	        			<div id="current-design-img"> </div>
-	        		</div>
-
-	        		<div class="span5">
-	        			<h4 class="page-header">Design konfigurieren</h4>
-	        			<div id="design-settings"> </div>
-	        		</div>
-	        	</div>
+					</fieldset>
+				</form>
         	</div>
-        </div>
-
-        <div class="row padding-top">
-        	<div class="span12">
-	        	<h4 class="page-header">Alternative Designs</h4>
-
-        		<div id="designs" class="row"> </div>
+        	<div class="span6">
+        		<form id="frmKopf">
+					<fieldset>
+						<legend id="confDesignLegend">Design Konfigurieren</legend>
+						<div id="settingsBlock">
+						</div>
+						<input type="button" id="btnUpdKopf" name="btnUpdKopf" class="btn btn-rounded btn-inverse pull-right" value="Einstellungen speichern" />
+					</fieldset>
+				</form>
         	</div>
         </div>
 
