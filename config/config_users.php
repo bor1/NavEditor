@@ -213,10 +213,9 @@ $ne_user_php_persmissions = array(
     'app/log_funcs.php'         => 'admin',//include only
     'app/sessions.php'          => 'admin',//include only
 
-    'file_editor2.php'          => 'admin',//testing
-    'design_editor2.php'          => 'admin',//testing
-    'nav_editor_2.php'          => 'admin',//testing
-    'nav_editor_neu.php'          => 'admin',//testing
+    'file_editor_old.php'          => 'admin',//testing
+    'design_editor_old.php'          => 'admin',//testing
+    'nav_editor_old.php'          => 'admin',//testing
     'osm_popover.php'          => 'admin',//testing
     'file_editor_popover.php'          => 'admin',//testing
 
