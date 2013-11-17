@@ -15,15 +15,15 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>Logo bearbeiten - <?php echo($ne_config_info['app_titleplain']); ?></title>
-	<link rel="stylesheet" type="text/css" href="css/bootstrap.css?<?php echo date('Ymdis'); ?>" />
-	<link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.css?<?php echo date('Ymdis'); ?>" >
-	<link rel="stylesheet" type="text/css" href="css/style.css?<?php echo date('Ymdis'); ?>" />
-	<script src="js/jquery-1.10.1.js" type="text/javascript"></script>
-	<script src="js/bootstrap.js" type="text/javascript"></script>
-	<script type="text/javascript" src="js/json2.js"></script>
-	<script src="js/tinymce/tinymce.min.js"></script>
-	<script src="js/handlebars.js"></script>
-	<script src="js/naveditor2.js"></script>
+
+    <?php
+    echo NavTools::includeHtml(
+            'default',
+            'json2.js',
+            'tinymce/tinymce.min.js',
+            'handlebars.js',
+            'naveditor2.js');
+    ?>
 	<script type="text/javascript">
 
 		function globaleFunktion() {
