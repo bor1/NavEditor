@@ -49,7 +49,7 @@ tinyMCE.init({
 		// add a custom button
 		ed.addButton("addIB1", {
 			title: "Inhaltsblock-1 einfügen",
-			image: "/vkdaten/tools/NavEditor3/css/ib1.gif",
+			image: "<? echo NE_DIR_RELATIVE; ?>css/ib1.gif",
 			onclick: function() {
 				ed.focus();
 				var divId = "custom" + Math.random();
@@ -60,7 +60,7 @@ tinyMCE.init({
 		// add a custom button
 		ed.addButton("addIB2", {
 			title: "Inhaltsblock-2 einfügen",
-			image: "/vkdaten/tools/NavEditor3/css/ib2.gif",
+			image: "<? echo NE_DIR_RELATIVE; ?>css/ib2.gif",
 			onclick: function() {
 				ed.focus();
 				var divId = "custom" + Math.random();
@@ -71,7 +71,7 @@ tinyMCE.init({
 		// add a custom button
 		ed.addButton("addIB3", {
 			title: "Inhaltsblock-3 einfügen",
-			image: "/vkdaten/tools/NavEditor3/css/ib3.gif",
+			image: "<? echo NE_DIR_RELATIVE; ?>css/ib3.gif",
 			onclick: function() {
 				ed.focus();
 				var divId = "custom" + Math.random();
