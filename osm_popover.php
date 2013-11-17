@@ -4,8 +4,8 @@ require_once('auth.php');
 
 // help
 function has_help_file() {
-	global $ne2_config_info;
-	$help_file = $ne2_config_info['help_path'] .'file_editor'. $ne2_config_info['help_filesuffix'] ;
+	global $ne_config_info;
+	$help_file = $ne_config_info['help_path'] .'file_editor'. $ne_config_info['help_filesuffix'] ;
 	return file_exists($help_file);
 }
 

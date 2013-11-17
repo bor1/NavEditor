@@ -18,7 +18,7 @@ function getFileInfoCallback(resp) {
 
 	if(fi.editable) {
 		var admin = <?php echo(($is_admin)? 1 : 0); ?>; //todo $is_admin -> test rights >= "admin" (1000)
-		var hideEditorMode = <?php echo(($ne2_config_info['hide_sourceeditor'])? 1 : 0); ?>;
+		var hideEditorMode = <?php echo(($ne_config_info['hide_sourceeditor'])? 1 : 0); ?>;
 		var extension = getExtension(fi.file_name);
 		var forb_folders = ['css/','grafiken/','img/','ssi/','js/','vkdaten/','univis/','vkapp/'];
 		if (admin || hideEditorMode == -1){
@@ -114,8 +114,8 @@ function tree_refresh(pfad, mode){
 function treeMarkPermissions(permissions, color_notallow, color_someallow){
 //    alert(permissions);
     var perm_type;
-    color_notallow = (color_notallow == null)?"<?php echo $ne2_config_info['jquery_file_tree']['colors']['color_notallow'];?>":color_notallow;
-    color_someallow = (color_someallow == null)?"<?php echo $ne2_config_info['jquery_file_tree']['colors']['color_someallow'];?>":color_someallow;
+    color_notallow = (color_notallow == null)?"<?php echo $ne_config_info['jquery_file_tree']['colors']['color_notallow'];?>":color_notallow;
+    color_someallow = (color_someallow == null)?"<?php echo $ne_config_info['jquery_file_tree']['colors']['color_someallow'];?>":color_someallow;
     $(".jqueryFileTree").find("a").each(function(){
         perm_type = allowPermission($(this).attr("rel"), permissions);
         if (perm_type == 0){
@@ -183,10 +183,10 @@ function treeSelect(relation){
 
 	$('.action_icons').remove();
 	$('.selectedTreeElement').after('<div class="action_icons"></div>');
-	if(!thisIsAFile){$('.action_icons').append('<img id="newfolder_icon" title="Unterverzeichnis erstellen" src="<?php echo $ne2_config_info['jquery_file_tree']['icons']['newfolder_icon'];?>"/>');}
-	$('.action_icons').append('<img id="rename_icon"  title="Umbenennen" src="<?php echo $ne2_config_info['jquery_file_tree']['icons']['rename_icon'];?>"/>');
-	$('.action_icons').append('<img id="delete_icon"  title="L&ouml;schen" src="<?php echo $ne2_config_info['jquery_file_tree']['icons']['delete_icon'];?>"/>');
-        if(!thisIsAFile){$('.action_icons').append('<img id="create_new_icon"  title="Eine Datei erstellen" src="<?php echo $ne2_config_info['jquery_file_tree']['icons']['create_new_icon'];?>"/>');}
+	if(!thisIsAFile){$('.action_icons').append('<img id="newfolder_icon" title="Unterverzeichnis erstellen" src="<?php echo $ne_config_info['jquery_file_tree']['icons']['newfolder_icon'];?>"/>');}
+	$('.action_icons').append('<img id="rename_icon"  title="Umbenennen" src="<?php echo $ne_config_info['jquery_file_tree']['icons']['rename_icon'];?>"/>');
+	$('.action_icons').append('<img id="delete_icon"  title="L&ouml;schen" src="<?php echo $ne_config_info['jquery_file_tree']['icons']['delete_icon'];?>"/>');
+        if(!thisIsAFile){$('.action_icons').append('<img id="create_new_icon"  title="Eine Datei erstellen" src="<?php echo $ne_config_info['jquery_file_tree']['icons']['create_new_icon'];?>"/>');}
 	$('.action_icons img').addClass('action_icon_img');
 
 
@@ -364,15 +364,15 @@ function createNewFile(path, file_name, file_ext){
 
 function filterSymbols(string){
     var filteredString = string;
-    var find = $.parseJSON('<?php echo(json_encode($ne2_config_info['symbols_being_replaced'])); ?>');
-    var replace = $.parseJSON('<?php echo(json_encode($ne2_config_info['symbols_replacement'])); ?>');
+    var find = $.parseJSON('<?php echo(json_encode($ne_config_info['symbols_being_replaced'])); ?>');
+    var replace = $.parseJSON('<?php echo(json_encode($ne_config_info['symbols_replacement'])); ?>');
     var regex;
     for (var i = 0; i < find.length; i++) {
         regex = new RegExp(find[i], "g");
         filteredString = filteredString.replace(regex, replace[i]);
     }
-    //regex = new RegExp('<?php echo($ne2_config_info['regex_removed_symbols']); ?>', "g");
-    filteredString = filteredString.replace(<?php echo($ne2_config_info['regex_removed_symbols']); ?>g, "");
+    //regex = new RegExp('<?php echo($ne_config_info['regex_removed_symbols']); ?>', "g");
+    filteredString = filteredString.replace(<?php echo($ne_config_info['regex_removed_symbols']); ?>g, "");
     return filteredString;
 }
 

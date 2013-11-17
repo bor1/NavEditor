@@ -4,8 +4,8 @@ require_once('auth.php');
 
 // help
 function has_help_file() {
-	global $ne2_config_info;
-	$help_file = $ne2_config_info['help_path'] .'file_editor'. $ne2_config_info['help_filesuffix'] ;
+	global $ne_config_info;
+	$help_file = $ne_config_info['help_path'] .'file_editor'. $ne_config_info['help_filesuffix'] ;
 	return file_exists($help_file);
 }
 
@@ -69,7 +69,7 @@ function has_help_file() {
 
 				if(fi.editable) {
 					var admin = <?php echo(($is_admin)? 1 : 0); ?>; //todo $is_admin -> test rights >= "admin" (1000)
-					var hideEditorMode = <?php echo(($ne2_config_info['hide_sourceeditor'])? 1 : 0); ?>;
+					var hideEditorMode = <?php echo(($ne_config_info['hide_sourceeditor'])? 1 : 0); ?>;
 					var extension = getExtension(fi.file_name);
 					var forb_folders = ['css/','grafiken/','img/','ssi/','js/','vkdaten/','univis/','vkapp/'];
 					if (admin || hideEditorMode == -1){

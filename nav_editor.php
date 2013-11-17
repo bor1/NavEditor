@@ -3,8 +3,8 @@
 
 	// help
 	function has_help_file() {
-		global $ne2_config_info;
-		$help_file = $ne2_config_info['help_path'] .'website_editor'. $ne2_config_info['help_filesuffix'] ;
+		global $ne_config_info;
+		$help_file = $ne_config_info['help_path'] .'website_editor'. $ne_config_info['help_filesuffix'] ;
 		return file_exists($help_file);
 	}
 ?>
@@ -14,7 +14,7 @@
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>Logo bearbeiten - <?php echo($ne2_config_info['app_titleplain']); ?></title>
+	<title>Logo bearbeiten - <?php echo($ne_config_info['app_titleplain']); ?></title>
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.css?<?php echo date('Ymdis'); ?>" />
 	<link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.css?<?php echo date('Ymdis'); ?>" >
 	<link rel="stylesheet" type="text/css" href="css/style.css?<?php echo date('Ymdis'); ?>" />
