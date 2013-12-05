@@ -23,15 +23,10 @@ function has_help_file() {
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!--        <link rel="stylesheet" type="text/css" href="css/bootstrap.css?<?php echo date('Ymdis'); ?>" />
-		<link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.css?<?php echo date('Ymdis'); ?>" />
-		<link rel="stylesheet" type="text/css" href="css/style.css?<?php echo date('Ymdis'); ?>" />
-		<script src="js/jquery-1.10.1.js" type="text/javascript"></script>
-		<script src="js/bootstrap.js" type="text/javascript"></script>-->
-		<script src="js/jquery.MultiFile.js" type="text/javascript"></script>
 
 		<?php
 		    echo NavTools::includeHtml("default",
+                "jquery.MultiFile.js",
 	            "jqueryFileTree.css",
 	            "jqueryFileTree.js",
 	            "queryFolderImgPreview.js",
@@ -51,6 +46,28 @@ function has_help_file() {
 		?>
 
 		<script>
+            //globals
+
+            /**
+             * Path to root dir.
+             * @type String
+             */
+            var root_path  = "<?php echo ($_SERVER['DOCUMENT_ROOT']); ?>";
+
+            /**
+             * FileTree Object
+             * @type FileTree
+             */
+            var FileTree = null;
+
+            /**
+             * Current selected path
+             * @type String
+             */
+            var current_path = "/";
+
+
+
 
 			function getFileInfoCallback(resp) {
 				var fi = JSON.parse(resp);
@@ -66,39 +83,38 @@ function has_help_file() {
 				$("#fileSizeTd").html(fi.file_size + " Byte");
 				$("#fileLastModTd").html(fi.modified_time);
 				$("#txtFileUrl").val(fi.url);
-
-				if(fi.editable) {
-					var admin = <?php echo(($is_admin)? 1 : 0); ?>; //todo $is_admin -> test rights >= "admin" (1000)
-					var hideEditorMode = <?php echo(($ne_config_info['hide_sourceeditor'])? 1 : 0); ?>;
-					var extension = getExtension(fi.file_name);
-					var forb_folders = ['css/','grafiken/','img/','ssi/','js/','vkdaten/','univis/','vkapp/'];
-					if (admin || hideEditorMode == -1){
-						$("#btnQuickEdit").removeAttr("disabled");
-						$("#btnEditorEdit").removeAttr("disabled");
-					}else{
-						if (extension == "shtml" || extension == "html"){
-							$("#btnQuickEdit").attr("disabled", "true");
-							$("#btnEditorEdit").removeAttr("disabled");
-						}else if(hideEditorMode == 1){
-							$("#btnQuickEdit").attr("disabled", "true");
-							$("#btnEditorEdit").attr("disabled", "true");
-						}else if(hideEditorMode == 0){
-							$("#btnQuickEdit").removeAttr("disabled");
-							$("#btnEditorEdit").attr("disabled", "true");
-							for (var fold_tmp in forb_folders){
-								if (fi.url.indexOf(forb_folders[fold_tmp]) != -1 && fi.url.indexOf(forb_folders[fold_tmp]) < 2){
-									$("#btnQuickEdit").attr("disabled", "true");
-									break;
-								}
-							}
-
-						}
-					}
-				}else{
-					$("#btnQuickEdit").attr("disabled", "true");
-					$("#btnEditorEdit").attr("disabled", "true");
-				}
-			}
+//
+//				if(fi.editable) {
+//					var admin = <?php echo(($is_admin) ? 1 : 0); ?>; //todo $is_admin -> test rights >= "admin" (1000)
+//					var hideEditorMode = <?php echo(($ne_config_info['hide_sourceeditor']) ? 1 : 0); ?>;
+//					var extension = getExtension(fi.file_name);
+//					var forb_folders = ['css/','grafiken/','img/','ssi/','js/','vkdaten/','univis/','vkapp/'];
+//					if (admin || hideEditorMode == -1){
+//						$("#btnQuickEdit").removeAttr("disabled");
+//						$("#btnEditorEdit").removeAttr("disabled");
+//					}else{
+//						if (extension == "shtml" || extension == "html"){
+//							$("#btnQuickEdit").attr("disabled", "true");
+//							$("#btnEditorEdit").removeAttr("disabled");
+//						}else if(hideEditorMode == 1){
+//							$("#btnQuickEdit").attr("disabled", "true");
+//							$("#btnEditorEdit").attr("disabled", "true");
+//						}else if(hideEditorMode == 0){
+//							$("#btnQuickEdit").removeAttr("disabled");
+//							$("#btnEditorEdit").attr("disabled", "true");
+//							for (var fold_tmp in forb_folders){
+//								if (fi.url.indexOf(forb_folders[fold_tmp]) != -1 && fi.url.indexOf(forb_folders[fold_tmp]) < 2) {
+//                                        $("#btnQuickEdit").attr("disabled", "true");
+//                                        break;
+//                                }
+//                            }
+//                        }
+//                    }
+//                } else {
+//                    $("#btnQuickEdit").attr("disabled", "true");
+//                    $("#btnEditorEdit").attr("disabled", "true");
+//                }
+            }
 
 			function getExtension(path){
 				var str = path + '',
@@ -123,12 +139,6 @@ function has_help_file() {
 				var str = path + '',
 			        slash = str.lastIndexOf('/');
 				return str.substr(slash+1);
-			}
-
-			function deleteCurFileVars(){
-				curFilePath = "";
-				fpath = "";
-				thisIsAFile = false;
 			}
 
 			function createFolder(path, folder_name, callback){
@@ -159,7 +169,7 @@ function has_help_file() {
 						if(resp == "0") {
 							alert("Fehler bei der Erstellung der Datei; Bitte versuchen Sie es noch einmal!");
 						}else if(resp == "1"){
-                            console.log("success");
+//                            console.log("success");
                             //tree_refresh(relFromFullPath(path));
                         } else {
                             alert(resp);
@@ -168,12 +178,88 @@ function has_help_file() {
 			    }
 			}
 
+
+            /**
+             * test if path is a directory
+             * @param {String} path
+             * @returns {Boolean} true if is directory
+             */
+            function isDir(path){
+                return (path.substr(-1,1) === "/");
+            }
+
+//            //pruefen ob zugriff auf datei erlaubt ist, abhaengig von permissions array
+//            //return 0 -> kein zugriff, 1->full zugriff, 2->unterordner/files erlaubt
+//            function allowPermission(path, permissions){
+//                var retVal = 0;
+//
+//                //pruefen ob path in permissions bzw obere element drin ist
+//                $.each(permissions, function(){
+//                    if(path.substr(0,this.length).toLowerCase() == this.toLowerCase()){
+//                            retVal = 1;
+//                            return false;
+//                    }
+//                });
+//
+//                //falls nichts gefunden
+//                if (retVal == 0) {
+//                   //umgekehrt, pruefen ob irgendwas unter dem path erlaubt ist, dann return 2 (dateien unter dem ordner)
+//                    $.each(permissions, function(){
+//                        //falls path von ordner..
+//                        if(path.substr(-1,1) == "/"){
+//                            if(this.substr(0,path.length).toLowerCase() == path.toLowerCase()){
+//                                retVal = 2;
+//                                return false;
+//                            }
+//                        }
+//                    });
+//                }
+//                return retVal;
+//            }
+
+            function deleteElement(path){
+                if(path === "") {
+                    alert(unescape("Bitte eine Datei oder Verzeichnis w%E4hlen!"));
+                    return;
+                }
+
+                //loeschen nur falls volles zugriff
+//                if(allowPermission(path, gUserPermissionsArray) !== 1){
+//                    alert(unescape("Kein zugriff"));
+//                    return;
+//                }
+
+                var bIsDir = isDir(path);
+
+                if(bIsDir){
+                    if(confirm(unescape("CAUTION! Sind Sie wirklich sicher, das GANZE verzeichnis zu l%F6schen?"))) {
+                        $.post("app/file_manager.php", {
+                            "service": "delete_folder",
+                            "folder": path
+                        }, function(resp) {
+                            alert(resp);
+//                            loadFolderTree("delete", path);
+                        });
+                    }
+                }else{
+                    if(!window.confirm(unescape("Sind Sie sicher, diese Datei zu l%F6schen?"))) {
+                        return;
+                    }
+                    $.post("app/file_manager.php", {
+                        "service": "delete_file",
+                        "file_path": root_path + path
+                    }, function() {
+                        FileTree.refreshPath(verzeichnis(path));
+//                        FileTree.openPath("/");
+//                        loadFolderTree("delete", path);
+                    });
+                }
+            }
+
 			/* ---------- Here comes jQuery: ---------- */
 			$(document).ready(function() {
-                var root_path  = "<?php echo ($_SERVER['DOCUMENT_ROOT']); ?>",
-                    current_file = "",
-					tinymceReady = false,
-					picture_exts = [ "jpeg", "jpg", "png", "gif"],
+
+				var picture_exts = ["jpeg", "jpg", "png", "gif"],
 					text_exts = ["shtml", "html", "htaccess", "txt"],
 
 					file_details_source   = $("#file-details-template").html(),
@@ -187,7 +273,6 @@ function has_help_file() {
 
 				 	pictures_preview_source   = $("#pictures-preview-template").html(),
 				 	pictures_preview_template = Handlebars.compile(pictures_preview_source);
-
 
 
 				 	tinyMCE.init({
@@ -209,36 +294,8 @@ function has_help_file() {
                         theme_advanced_styles: "infologo",
                         theme_advanced_toolbar_location: "top",
                         theme_advanced_toolbar_align: "left",
-                        theme_advanced_statusbar_location: "bottom",
+                        theme_advanced_statusbar_location: "bottom"
                     });
-
-				// tinyMCE.init({
-				// 	forced_root_block : '',
-				// 	mode: "textareas",
-				// 	language: "de",
-				// 	height : 500,
-				// 	plugins: "image link code table preview mitarbeiter feedimport ssiInclude",
-				// 	menubar: false,
-				// 	toolbar1: "undo redo | cut copy paste | link image table | outdent indent | code | preview | mitarbeiter | feedimport",
-				// 	toolbar2: "fontselect fontsizeselect | styleselect | alignleft aligncenter alignright alignjustify | bold italic underline strikethrough | bullist numlist",
-				// 	skin: "light",
-				// 	plugins: "image link code table preview mitarbeiter feedimport ssiInclude image_choose",
-				// 	menubar: false,
-				// 	toolbar1: "undo redo | cut copy paste | link image table | mitarbeiter | feedimport | code | preview",
-				// 	toolbar2: "fontselect fontsizeselect | styleselect | alignleft aligncenter alignright alignjustify | outdent indent | bold italic underline strikethrough | bullist numlist",
-				// 	//theme: "advanced",
-
-				// 	relative_urls: false,
-				// 	convert_urls: false,
-				// 	//plugins: "safari,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template",
-				// 	theme_advanced_styles: "infologo",
-				// 	theme_advanced_toolbar_location: "top",
-				// 	theme_advanced_toolbar_align: "left",
-				// 	theme_advanced_statusbar_location: "bottom",
-				// 	oninit: function() {
-				// 		tinymceReady = true;
-				// 	}
-				// });
 
 				// help
 				$("#show-help").click(function() {
@@ -269,103 +326,100 @@ function has_help_file() {
 				});
 
 
-				// File Tree
-				$('#file-tree').fileTree({
-					root: '/',
-					multiFolder: false,
-					loadCallBack: function() {
-						if(current_file != "") {
+                // File Tree
+                FileTree = new $('#file-tree').fileTree({
+                    root: '/',
+                    showRoot: true,
+                    multiFolder: false,
+                    expandCallBack: function() {
+                        console.log("expandCallBack");
+                        if(current_path != "") {
 
-							var pictures = [],
-								data = { pictures : [] };
+                            var pictures = [],
+                            data = { pictures : [] };
 
-							$.each(fileInfoArray, function(elem) {
+                            $.each(FileTree.fileInfoArray, function(elem) {
 
-								if(elem.indexOf(current_file) != -1 && picture_exts.indexOf(getExtension(elem)) != -1) {
-									pictures.push({ url: elem, titel: dateiname(elem) });
-								}
+                                if(elem.indexOf(current_path) != -1 && picture_exts.indexOf(getExtension(elem)) != -1) {
+                                    pictures.push({ url: elem, titel: dateiname(elem) });
+                                }
 
-							});
+                            });
 
-							data.pictures = pictures;
+                            data.pictures = pictures;
 
-							console.log(pictures);
+                            if(pictures.length > 0) {
+                                $('#file-details-container a[href="#picture-preview"]').show();
+                            }
 
-							if(pictures.length > 0) {
-								console.log("show preview");
-								$('#file-details-container a[href="#picture-preview"]').show();
-							}
+                            $("#picture-preview").html(pictures_preview_template(data));
+                        }
 
-							$("#picture-preview").html(pictures_preview_template(data));
-						}
+                        //no need?
+                        $("#file-tree a").click(function(evt) {
+                            $("#file-tree .active").removeClass("active");
+                            $(this).addClass("active");
 
-						$("#file-tree a").click(function(evt) {
-							$("#file-tree .active").removeClass("active");
-							$(this).addClass("active");
+                        });
+                    },
 
-						});
-					}
+                    selectCallBack: function(sPath, isFile) {
+                        console.log("click callback: path: "+ sPath + " isFile: " + isFile);
+                        var context = {},
+                        html = "";
 
-				},
-				function(file, folder) {
+                        $('#file-details-container .tabbable a').hide();
 
-					var context = {},
-						html = "";
+                        $('#file-details-container a[href="#basis"]').show().tab('show');
 
-					$('#file-details-container .tabbable a').hide();
+                        if(isFile) {
+                            context = FileTree.fileInfoArray[sPath];
+                            html    = file_details_template(context);
 
-					$('#file-details-container a[href="#basis"]').show().tab('show');
-
-			       	if(file != null) {
-			       		context = fileInfoArray[file];
-						html    = file_details_template(context);
-
-						if(context.thumb_name == "") context.thumb_name = null;
-
-
-
-						if(text_exts.indexOf(getExtension(file)) != -1) {
-							console.log("found");
-							$.post("app/file_manager.php", {
-								"service": "load_file_content",
-								"file_path": file
-							}, function(data) {
-								data = data.replace(/<comment_ssi>/g, "<!-" + "-#");
-								data = data.replace(/<comment>/g, "<!-" + "-");
-								data = data.replace(/<\/comment>/g, "-" + "->");
-								tinymce.activeEditor.setContent(data);
-							});
-
-							$('#file-details-container a[href="#file-content"]').show();
-						}
-
-						if(picture_exts.indexOf(getExtension(file)) != -1) {
-							context.titel = dateiname(file);
-							$("#picture-preview").html(picture_preview_template(context));
-							$('#file-details-container a[href="#picture-preview"]').show();
-						}
+                            if(context.thumb_name === "") context.thumb_name = null;
 
 
 
-						current_file = file;
+                            if(text_exts.indexOf(getExtension(sPath)) !== -1) {
+                                //							console.log("found");
+                                $.post("app/file_manager.php", {
+                                    "service": "load_file_content",
+                                    "file_path": sPath
+                                }, function(data) {
+                                    data = data.replace(/<comment_ssi>/g, "<!-" + "-#");
+                                    data = data.replace(/<comment>/g, "<!-" + "-");
+                                    data = data.replace(/<\/comment>/g, "-" + "->");
+                                    tinymce.activeEditor.setContent(data);
+                                });
 
-			       	}else if(folder != null) {
-			       		context = { verzeichnis: verzeichnis(folder)},
-						html    = folder_details_template(context);
+                                $('#file-details-container a[href="#file-content"]').show();
+                            }
 
-						current_file = folder;
-			       	}
+                            if(picture_exts.indexOf(getExtension(sPath)) !== -1) {
+                                context.titel = dateiname(sPath);
+                                $("#picture-preview").html(picture_preview_template(context));
+                                $('#file-details-container a[href="#picture-preview"]').show();
+                            }
 
-					$("#file-title").html(current_file);
+                        }else {//is a forder
+                            context = { verzeichnis: verzeichnis(sPath)},
+                            html    = folder_details_template(context);
+
+                        }
+
+                        current_path = sPath;
+
+                        $("#file-title").html(sPath);
 
 
-					$("#file-details").html(html);
-			    });
+                        $("#file-details").html(html);
+                    }
+
+                });
 
 
 
 				// Neuer Ordner
-
 				$("#folder-add").click(function() {
 					$.post("app/file_manager.php", {
 						"service": "create_subfolder",
@@ -397,7 +451,7 @@ function has_help_file() {
 			        dataType: 'json',
 			        autoUpload: false,
 			        done: function (e, data) {
-			            console.log
+
 			        }
 			    });
 
@@ -405,11 +459,9 @@ function has_help_file() {
 			    // Create New File
 			    $("#buttonFileCreate").click(function() {
 			    	var $this = $(this),
-                    path = root_path + verzeichnis(current_file),
+                    path = root_path + verzeichnis(current_path),
 			    		file_name = $("#inputFileCreateFileName").val(),
-			    		file_ext = $("#inputFileCreateType").val();
-
-//			    	path = "/proj/websource/docs/RRZEWeb/www.test.rrze.uni-erlangen.de-2173/websource" + path;
+			    		file_ext = $("#inputFileCreateType").val().substr(1); //substr: .ext -> ext
 
 			    	createNewFile(path, file_name, file_ext);
 			    });
@@ -417,15 +469,15 @@ function has_help_file() {
 			    // Create New Folder
 			    $("#buttonFolderCreate").click(function() {
 			    	var $this = $(this),
-			    		path = current_file,
+			    		path = root_path + verzeichnis(current_path),
 			    		folder_name = $("#inputFolderCreateFolderName").val();
-
-
-			    	path = "/proj/websource/docs/RRZEWeb/www.test.rrze.uni-erlangen.de-2173/websource/" + path;
 
 			    	createFolder(path, folder_name);
 			    });
 
+                $("#delete-element").click(function(){
+                    deleteElement(current_path);
+                });
 
 
 			});
@@ -540,7 +592,7 @@ function has_help_file() {
 		            	if (has_help_file()) {
 		            ?>
 		            	<div class="popover-container">
-							<a id="show-help" class="fetch btn btn btn-primary btn-light" href="javascript:void(0);"><i class="icon-white">?</i> Hilfe</a>
+							<a id="show-help" class="fetch btn btn-primary btn-light" href="javascript:void(0);"><i class="icon-white">?</i> Hilfe</a>
 							<div class="hover-popover">
 								<div class="header clearfix">
 									<h4>Hilfe</h4>
@@ -556,6 +608,11 @@ function has_help_file() {
 					<?php
 		            	}
 		            ?>
+
+                    <div class="popover-container">
+                        <a id="delete-element" class="fetch btn btn-danger btn-light" href="javascript:void(0);"><i class="icon-white">X</i>L&ouml;schen</a>
+                    </div>
+
 
 		            <div class="popover-container">
 						<a href="javascript:void(0);" class="btn btn-success btn-light" id="btnUpdate" name="btnUpdate" ><i class="icon-white icon-plus-sign"></i> Hinzuf&uuml;gen</a>
@@ -621,7 +678,7 @@ function has_help_file() {
 						</div>
 					</div>
 
-		        </div>
+                </div>
             </div>  <!-- Page Header End -->
 
             <div class="row">
