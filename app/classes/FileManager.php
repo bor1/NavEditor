@@ -153,7 +153,7 @@ class FileManager {
         if (file_exists($thumb_path)) {
             @unlink($thumb_path);
         }
-        @unlink($file_path);
+        return @unlink($file_path);
     }
 
     public function deleteFolder($folder_path) {
