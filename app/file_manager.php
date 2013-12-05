@@ -47,7 +47,12 @@ switch ($service_type) {
         break;
     case 'delete_file':
         $fpath = NavTools::root_filter(Input::get_post('file_path'));
-        $fm->deleteFile($fpath);
+        $success = $fm->deleteFile($fpath);
+        if ($success === FALSE) {
+            echo('0');
+        } else {
+            echo('1');
+        }
         break;
     case 'rename':
         $file_path = NavTools::root_filter(Input::get_post('current_path'));
