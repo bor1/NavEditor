@@ -66,56 +66,6 @@ function has_help_file() {
              */
             var current_path = "/";
 
-
-
-
-			function getFileInfoCallback(resp) {
-				var fi = JSON.parse(resp);
-				if(fi.thumb_name != "") {
-			//		var thumbHtml = "<img alt='' src='" + fi.thumb_name + "' style='border:0;' />";
-			//		$("#thumbImage").html(thumbHtml);
-					$("#txtFileThumbUrl").val(fi.thumb_name);
-				} else {
-					$("#thumbImage").html("");
-					$("#txtFileThumbUrl").val("");
-				}
-				$("#fileNameTd").html(fi.file_name);
-				$("#fileSizeTd").html(fi.file_size + " Byte");
-				$("#fileLastModTd").html(fi.modified_time);
-				$("#txtFileUrl").val(fi.url);
-//
-//				if(fi.editable) {
-//					var admin = <?php echo(($is_admin) ? 1 : 0); ?>; //todo $is_admin -> test rights >= "admin" (1000)
-//					var hideEditorMode = <?php echo(($ne_config_info['hide_sourceeditor']) ? 1 : 0); ?>;
-//					var extension = getExtension(fi.file_name);
-//					var forb_folders = ['css/','grafiken/','img/','ssi/','js/','vkdaten/','univis/','vkapp/'];
-//					if (admin || hideEditorMode == -1){
-//						$("#btnQuickEdit").removeAttr("disabled");
-//						$("#btnEditorEdit").removeAttr("disabled");
-//					}else{
-//						if (extension == "shtml" || extension == "html"){
-//							$("#btnQuickEdit").attr("disabled", "true");
-//							$("#btnEditorEdit").removeAttr("disabled");
-//						}else if(hideEditorMode == 1){
-//							$("#btnQuickEdit").attr("disabled", "true");
-//							$("#btnEditorEdit").attr("disabled", "true");
-//						}else if(hideEditorMode == 0){
-//							$("#btnQuickEdit").removeAttr("disabled");
-//							$("#btnEditorEdit").attr("disabled", "true");
-//							for (var fold_tmp in forb_folders){
-//								if (fi.url.indexOf(forb_folders[fold_tmp]) != -1 && fi.url.indexOf(forb_folders[fold_tmp]) < 2) {
-//                                        $("#btnQuickEdit").attr("disabled", "true");
-//                                        break;
-//                                }
-//                            }
-//                        }
-//                    }
-//                } else {
-//                    $("#btnQuickEdit").attr("disabled", "true");
-//                    $("#btnEditorEdit").attr("disabled", "true");
-//                }
-            }
-
 			function getExtension(path){
 				var str = path + '',
 					dotP = str.lastIndexOf('.') + 1;
@@ -135,45 +85,59 @@ function has_help_file() {
 			}
 
 
-			function dateiname(path){
+ 			function dateiname(path){
 				var str = path + '',
 			        slash = str.lastIndexOf('/');
 				return str.substr(slash+1);
 			}
 
-			function createFolder(path, folder_name, callback){
-
+            /**
+             * Created folder (ajax)
+             * @param {String} path relative! path where to create
+             * @param {String} folder_name folder name
+             * @param {Function} fnCallback callback function after create. Called with 1 arg: responce
+             */
+			function createFolder(path, folder_name, fnCallback){
 
 				$.post("app/file_manager.php", {
 					"service": "create_subfolder",
-					"current_path": path,
+					"current_path": root_path + path,
 					"new_subfolder_name": folder_name
 				}, function(resp) {
-					if(resp == "0") {
+					if(resp === "0") {
 						alert("Fehler bei der Erstellung des Verzeichnises; Bitte versuchen Sie es noch einmal!");
-					} else {
-						if(callback) callback();
 					}
+
+                    if(fnCallback) fnCallback(resp);
 				});
 
 			}
 
-			function createNewFile(path, file_name, file_ext){
+            /**
+             * Creates file (ajax)
+             * @param {String} path relative! path of folder
+             * @param {String} file_name name of file to create
+             * @param {String} file_ext extension of file to create, without point.
+             * @param {Function} fnCallback callback function after create. Called with 1 arg: responce
+             */
+			function createNewFile(path, file_name, file_ext, fnCallback){
 			    if(file_ext != "" && file_ext != null && path != null) {
 			        $.post("app/file_manager.php", {
 						"service": "create_new_file",
-						"current_path": path,
+						"current_path": root_path + path,
 						"new_file_name": file_name,
-			                        "extension": file_ext
+			            "extension": file_ext
 					}, function(resp) {
-						if(resp == "0") {
+						if(resp === "0") {
 							alert("Fehler bei der Erstellung der Datei; Bitte versuchen Sie es noch einmal!");
-						}else if(resp == "1"){
+						}else if(resp === "1"){
 //                            console.log("success");
                             //tree_refresh(relFromFullPath(path));
                         } else {
                             alert(resp);
 						}
+
+                        if(fnCallback) fnCallback(resp);
 					});
 			    }
 			}
@@ -229,37 +193,34 @@ function has_help_file() {
 //                    return;
 //                }
 
-                var bIsDir = isDir(path);
+                var sWarning; //warning message
+                var ajaxCommand; //ajax command for php backend
+                var dirToRefresh; //dir in tree to refresh
 
-                if(bIsDir){
-                    if(confirm(unescape("CAUTION! Sind Sie wirklich sicher, das GANZE verzeichnis zu l%F6schen?"))) {
-                        $.post("app/file_manager.php", {
-                            "service": "delete_folder",
-                            "folder": path
-                        }, function(resp) {
-                            alert(resp);
-//                            loadFolderTree("delete", path);
-                        });
-                    }
+                if(isDir(path)){
+                    sWarning = 'CAUTION! Sind Sie sicher, dass Sie das GANZE Verzeichnis: "'+path+'" l%F6schen wollen?';
+                    ajaxCommand = 'delete_folder';
+                    dirToRefresh = verzeichnis(path.slice(0,-1));
                 }else{
-                    if(!window.confirm(unescape("Sind Sie sicher, diese Datei zu l%F6schen?"))) {
-                        return;
-                    }
-                    $.post("app/file_manager.php", {
-                        "service": "delete_file",
-                        "file_path": root_path + path
-                    }, function() {
-                        FileTree.refreshPath(verzeichnis(path));
-//                        FileTree.openPath("/");
-//                        loadFolderTree("delete", path);
-                    });
+                    sWarning = 'Sind Sie sicher, dass Sie diese Datei: "'+path+'" l%F6schen wollen?';
+                    ajaxCommand = 'delete_file';
+                    dirToRefresh = verzeichnis(path);
                 }
+
+                if(confirm(unescape(sWarning))) {
+                    $.post('app/file_manager.php', {
+                        "service": ajaxCommand,
+                        "folder": root_path + path
+                    }, function() {
+                        FileTree.refreshPath(dirToRefresh); //parent dir.
+                    });
+               }
             }
 
 			/* ---------- Here comes jQuery: ---------- */
 			$(document).ready(function() {
 
-				var picture_exts = ["jpeg", "jpg", "png", "gif"],
+				var picture_exts = ["jpeg", "jpg", "png", "gif"], //todo load from config.
 					text_exts = ["shtml", "html", "htaccess", "txt"],
 
 					file_details_source   = $("#file-details-template").html(),
@@ -333,7 +294,7 @@ function has_help_file() {
                     multiFolder: false,
                     expandCallBack: function() {
                         console.log("expandCallBack");
-                        if(current_path != "") {
+                        if(current_path !== "") {
 
                             var pictures = [],
                             data = { pictures : [] };
@@ -401,7 +362,7 @@ function has_help_file() {
                                 $('#file-details-container a[href="#picture-preview"]').show();
                             }
 
-                        }else {//is a forder
+                        }else {//is a folder
                             context = { verzeichnis: verzeichnis(sPath)},
                             html    = folder_details_template(context);
 
@@ -417,22 +378,6 @@ function has_help_file() {
 
                 });
 
-
-
-				// Neuer Ordner
-				$("#folder-add").click(function() {
-					$.post("app/file_manager.php", {
-						"service": "create_subfolder",
-						"current_path": path,
-						"new_subfolder_name": folderName
-					}, function(resp) {
-						if(resp == "0") {
-							alert("Fehler bei der Erstellung des Verzeichnises; Bitte versuchen Sie es noch einmal!");
-						} else {
-							loadFolderTree('createSubFolder', relFromFullPath(path));
-						}
-					});
-				})
 
 			    // File List
 			    $("#file-list-add").click(function() {
@@ -455,24 +400,32 @@ function has_help_file() {
 			        }
 			    });
 
+                //TODO one func create(path, fileOrFolder, callback)
+                //$this.closest(".hover-popover").hide() as func open() and close()
 
 			    // Create New File
 			    $("#buttonFileCreate").click(function() {
 			    	var $this = $(this),
-                    path = root_path + verzeichnis(current_path),
+                        path = verzeichnis(current_path),
 			    		file_name = $("#inputFileCreateFileName").val(),
 			    		file_ext = $("#inputFileCreateType").val().substr(1); //substr: .ext -> ext
 
-			    	createNewFile(path, file_name, file_ext);
+			    	createNewFile(path, file_name, file_ext, function(){
+                        FileTree.refreshPath(path);
+                        $this.closest(".hover-popover").hide();
+                    });
 			    });
 
 			    // Create New Folder
 			    $("#buttonFolderCreate").click(function() {
 			    	var $this = $(this),
-			    		path = root_path + verzeichnis(current_path),
+                        path = verzeichnis(current_path),
 			    		folder_name = $("#inputFolderCreateFolderName").val();
 
-			    	createFolder(path, folder_name);
+			    	createFolder(path, folder_name, function(){
+                        FileTree.refreshPath(path);
+                        $this.closest(".hover-popover").hide();
+                    });
 			    });
 
                 $("#delete-element").click(function(){

@@ -61,6 +61,8 @@ if(jQuery) (function($){
      * @class FileTree
      * @param {Object} settings
      * @property {Object} fileInfoArray array for all cached file info, in opened tree
+     * @property {Object} boundTo jQuery DOM element where the Free is builded
+     * @property {Object} o options
      * @returns {FileTree}
      */
     var FileTree = function(settings){
@@ -81,7 +83,7 @@ if(jQuery) (function($){
 
 
         /**
-         * jQuery placeholder for FileTree
+         * jQuery DOM element for FileTree
          * @public
          * @type Object
          */
@@ -149,7 +151,7 @@ if(jQuery) (function($){
         /**
          * refresh the whole tree (rebuild)
          */
-        this.refreshTree = function(){
+         this.refreshTree = function(){
             build(self.boundTo, self.o);
         };
 
@@ -207,31 +209,30 @@ if(jQuery) (function($){
             self.o.showRoot         = ( settings.showRoot !== undefined )        ?settings.showRoot :        false;
 
 
-            self.boundTo.each( function() {
-                //function per data object
-                self.boundTo.data('openPathIfFound', function(path){
-                    self.openPathIfFound(path);
-                });
 
-                self.boundTo.data('openPath', function(path){
-                    self.openPath(path);
-                });
-
-                self.boundTo.data('refreshPath', function(path){
-                    self.refreshPath(path);
-                });
-
-                self.boundTo.data('refreshTree', function(){
-                    self.refreshTree();
-                });
-
-
-                // Loading message
-                self.boundTo.html('<ul class="jqueryFileTree start"><li class="wait">' + self.o.loadMessage + '<li></ul>');
-                // Get the initial file list
-                showTree( self.boundTo, escape(self.o.root) );
-
+            //function per data object
+            self.boundTo.data('openPathIfFound', function(path){
+                self.openPathIfFound(path);
             });
+
+            self.boundTo.data('openPath', function(path){
+                self.openPath(path);
+            });
+
+            self.boundTo.data('refreshPath', function(path){
+                self.refreshPath(path);
+            });
+
+            self.boundTo.data('refreshTree', function(){
+                self.refreshTree();
+            });
+
+
+            // Loading message
+            self.boundTo.html('<ul class="jqueryFileTree start"><li class="wait">' + self.o.loadMessage + '<li></ul>');
+            // Get the initial file list
+            showTree( self.boundTo, escape(self.o.root) );
+
 
             self.o.loadCallBack();
 
@@ -287,6 +288,7 @@ if(jQuery) (function($){
         function bindTree(t) {
             $(t).find('LI A').bind(self.o.folderEvent, function() {
                 var isFile;
+                var isDir;
                 var sPath;
 
                 sPath = $(this).attr('rel');
@@ -300,12 +302,15 @@ if(jQuery) (function($){
                 //for others files and folders..
                 } else {
 
-                    //if permission check function from current relation = false
+                    //if permission check function from current relation == false
                     if (!self.o.checkPermFunc(sPath)) {
                         //do nothing
                         return false;
                     }
-                    if ($(this).parent().hasClass('directory')) {
+
+                    isDir = $(this).parent().hasClass('directory');
+                    isFile = !isDir;
+                    if (isDir) {
                         if ($(this).parent().hasClass('collapsed')) {
                             // Expand
                             openFolder($(this));
@@ -314,9 +319,6 @@ if(jQuery) (function($){
                             // Collapse
                             closeFolder($(this));
                         }
-                        isFile = false;
-                    } else {
-                        isFile = true;
                     }
 
                 }
@@ -359,14 +361,15 @@ if(jQuery) (function($){
                 if(typeof(fnAdditionalCallback) === 'function' ) fnAdditionalCallback();// own callback
             };
 
+            //anyway try to close dir.
+            obj.parent().removeClass('expanded').addClass('collapsed');
+
             var toSlideUp = obj.parent().find('UL').first();
 
-
-            //in case opened
+            //in case there is something to collapse
             if(toSlideUp.length > 0){
                 toSlideUp.slideUp(self.o.collapseSpeed,self.o.collapseEasing, totalCallback);
-                obj.parent().removeClass('expanded').addClass('collapsed');
-            //in case closed
+            //in case closed, or nothinng to to collapse, just callback.
             }else{
                 totalCallback();
             }
