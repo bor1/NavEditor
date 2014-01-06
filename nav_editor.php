@@ -41,7 +41,7 @@
 				$("#show-help").click(function() {
 
 					var $this = $(this),
-						content = $this.siblings(".hover-popover").find("content").html(),
+						content = $this.siblings(".hover-popover").find(".content").html(),
 						showContent = function(content) {
 							$this.siblings(".hover-popover").show().find(".content").html(content);
 						};
@@ -224,7 +224,7 @@
 
 								if(!content.is_locked) {
 
-									console.log(content.content_html);
+//									console.log(content.content_html);
 
 									content.content_html = content.content_html.replace(/<comment_ssi>/g, "<!-" + "-#");
 									content.content_html = content.content_html.replace(/<comment>/g, "<!-" + "-");
@@ -246,7 +246,7 @@
 
 							if(content) {
 
-								console.log(content);
+//								console.log(content);
 
 							}
 
@@ -285,7 +285,7 @@
 					theme_advanced_styles: "infologo",
 					theme_advanced_toolbar_location: "top",
 					theme_advanced_toolbar_align: "left",
-					theme_advanced_statusbar_location: "bottom",
+					theme_advanced_statusbar_location: "bottom"
 				});
 
 

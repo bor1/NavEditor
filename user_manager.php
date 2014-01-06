@@ -645,7 +645,7 @@ $(document).ready(function() {
     // help
     $("#show-help").click(function() {
         var $this = $(this),
-            content = $this.siblings(".hover-popover").find("content").html(),
+            content = $this.siblings(".hover-popover").find(".content").html(),
             showContent = function(content) {
                 $this.siblings(".hover-popover").show().find(".content").html(content);
             };
