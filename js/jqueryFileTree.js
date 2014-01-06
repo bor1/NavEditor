@@ -11,10 +11,6 @@
 // Usage: $('.fileTreeDemo').fileTree(options);
 // Usage: var fileTree = new $('.fileTreeDemo').fileTree(options);
 //
-// function fired after click any link
-// callback: function(path, isFile);
-//   isFile: true for file, false for folder
-//   path  : relative path of selected element
 //
 // Options:  root           - root folder to display; default = /
 //           script         - location of the serverside AJAX file to use; default = jqueryFileTree.php
