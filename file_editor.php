@@ -125,7 +125,7 @@ function has_help_file() {
 			    if(file_ext != "" && file_ext != null && path != null) {
 			        $.post("app/file_manager.php", {
 						"service": "create_new_file",
-						"current_path": root_path + path,
+						"current_path": path,
 						"new_file_name": file_name,
 			            "extension": file_ext
 					}, function(resp) {
@@ -206,7 +206,7 @@ function has_help_file() {
                 if(confirm(unescape(sWarning))) {
                     $.post('app/file_manager.php', {
                         "service": ajaxCommand,
-                        "folder": path
+                        "file_path": path
                     }, function() {
                         FileTreeObj.refreshPath(dirToRefresh); //parent dir.
                     });
