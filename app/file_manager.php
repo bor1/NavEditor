@@ -56,10 +56,16 @@ switch ($service_type) {
         break;
     case 'rename':
         $file_path = NavTools::root_filter(Input::get_post('current_path'));
+        //darf nicht root sein
+        if(realpath ($file_path) === realpath($_SERVER['DOCUMENT_ROOT'])){
+            echo('Sie duerfen nicht Root-Ordner umbenennen');
+            break;
+        }
+
         $new_file_name = NavTools::filterSymbols(Input::get_post('new_name'));
         $success = $fm->renameFile($file_path, $new_file_name);
         if ($success === FALSE) {
-            echo('0');
+            echo("Umbenennen fehlgeschlagen\nfilepath:$file_path\nnew file name:$new_file_name");
         } else {
             echo('1');
         }
