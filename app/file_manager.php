@@ -78,8 +78,8 @@ switch ($service_type) {
     case 'save_file_content':
         $fpath = $_SERVER['DOCUMENT_ROOT'] . Input::get_post('file_path');
         $content = Input::get_post('new_content');
-        $fm->setFileContent($fpath, $content);
-        echo("File updated!");
+        $success = $fm->setFileContent($fpath, $content);
+        echo(($success)?'Aktualisiert!':'Fehlgeschlagen');
         break;
     case 'check_dup_name':
         $file_path = NavTools::root_filter(Input::get_post('file_path'));
