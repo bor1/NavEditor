@@ -584,7 +584,7 @@ function has_help_file() {
 			  <div class="control-group">
 			    <label class="control-label" for="inputFileSize">Dateigr&ouml;&szlig;e</label>
 			    <div class="controls">
-			      <input id="inputFileSize" type="text" placeholder="{{file_size}} kB" disabled>
+			      <input id="inputFileSize" type="text" placeholder="{{file_size}} Byte" disabled>
 			    </div>
 			  </div>
 			  <div class="control-group">
