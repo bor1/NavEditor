@@ -205,13 +205,19 @@ class FileManager {
         }
     }
 
+    /**
+     * sets new content to file. Replaces '&lt;comment_ssi&gt;', '&lt;comment&gt;', '&lt;/comment&gt;'
+     * @param String $file_path full file path
+     * @param String $content new content to save
+     * @return Boolean success
+     */
     public function setFileContent($file_path, $content) {
         if (file_exists($file_path)) {
             if (get_magic_quotes_gpc()) {
                 $content = stripslashes($content);
             }
             $content = str_replace(array('<comment_ssi>', '<comment>', '</comment>'), array('<!-' . '-#', '<!--', '-->'), $content);
-            file_put_contents($file_path, $content);
+            return file_put_contents($file_path, $content);
         }
     }
 
