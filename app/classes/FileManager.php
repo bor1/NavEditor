@@ -18,6 +18,11 @@ class FileManager {
         return round($bytes, $precision) . ' ' . $units[$pow];
     }
 
+    /**
+     * recursive remove directory $dir
+     * @param String $dir path to directory
+     * @return boolean success
+     */
     private function rrmdir($dir) {
         if (is_dir($dir)) {
             $objects = scandir($dir);
@@ -160,6 +165,19 @@ class FileManager {
         return $this->rrmdir($folder_path); //ddd
     }
 
+    /**
+     * rename file/folder<br/>
+     * if a thumb_ file exists, it will be renamed too.<br/>
+     * <pre>
+     * Example:
+     * renames /path/to/file.txt => /path/to/new_filename.txt
+     * <code>
+     * renameFile('/path/to/file.txt', 'new_filename');
+     * </code></pre>
+     * @param String $file_path full path to file
+     * @param String $new_name only the new name of folder or file without extension
+     * @return Boolean success
+     */
     public function renameFile($file_path, $new_name) {
         $info = pathinfo($file_path);
         $path = $info['dirname'];
