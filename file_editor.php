@@ -676,7 +676,7 @@ function has_help_file() {
 
         	<div class="page-header">
                 <h3 class="page-header">Bilder und Dateien verwalten</h3>
-                <div class="pull-right">
+                <div id="edit_buttons_block" class="pull-right">
 					<?php
 		            	// help
 		            	if (has_help_file()) {

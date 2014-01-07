@@ -364,3 +364,8 @@ div.page-header {
     .footer h4 b {
       background: #555;
       padding: 1px 3px; }
+
+#edit_buttons_block {
+  position: fixed;
+  margin-top: -65px;
+  margin-left: 570px; }
