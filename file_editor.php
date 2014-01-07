@@ -505,10 +505,24 @@ function has_help_file() {
                     deleteElement(current_path);
                 });
 
+                $("#rename-element").click(function(){
+                    if(!ensureSelected()) return;
+                    var newName = '';
+                    var oldName = NavTools.basename(current_path);
+                    if(isDir(current_path)){
+                        newName = prompt("Neuer Name des Verzeichnises:", oldName);
+                    }else{
+                        newName = prompt("Neuer Name der Datei (ohne Erweiterung!)", nameWOextension(oldName));
+                    }
+
+                    renameElement(current_path, newName);
+                });
+
                 //dinamisch "umbennen" button laden, wenn name geaendert wird
                 $( document )
                 .on('keydown', '#inputFileName',function(eventObj){
                     var input = $(eventObj.target);
+                    //falls noch kein button, erstellen
                     if(input.parent().find("#buttonRename").length <= 0){
                         var dynButtonHtml = '<button name="buttonRename" id="buttonRename" class="btn">umbenennen</button>';
                         $(dynButtonHtml).insertAfter(input).hide().fadeIn('200');
@@ -663,8 +677,13 @@ function has_help_file() {
 		            ?>
 
                     <div class="popover-container">
-                        <a id="delete-element" class="fetch btn btn-danger btn-light" href="javascript:void(0);"><i class="icon-white">X</i>L&ouml;schen</a>
+                        <a id="delete-element" class="fetch btn btn-danger btn-light" href="javascript:void(0);"><i class="icon-white icon-remove"></i>L&ouml;schen</a>
                     </div>
+
+                    <div class="popover-container">
+                        <a id="rename-element" class="btn btn-warning btn-light" href="javascript:void(0);"><i class="icon-white icon-pencil"></i>Umbenennen</a>
+                    </div>
+
 
 
 		            <div class="popover-container">
