@@ -503,12 +503,14 @@ function has_help_file() {
                     });
 			    });
 
+                // Delete File/Folder
                 $("#delete-element").click(function(){
                     if(!ensureSelected()) return;
 
                     deleteElement(current_path);
                 });
 
+                //Rename File/Folder
                 $("#rename-element").click(function(){
                     if(!ensureSelected()) return;
                     var newName = '';
@@ -522,6 +524,7 @@ function has_help_file() {
                     renameElement(current_path, newName);
                 });
 
+                //tyniMCE save content
                 $("#btnSaveEditedFile").click(function(){
                     if(!confirm("Sind Sie sicher dass sie Inhalt speichern wollen?")) {
                         return;
@@ -541,6 +544,8 @@ function has_help_file() {
                     });
                 });
 
+
+                //------------------DYNAMIC EVENT HANDLERS--------------------//
                 //dinamisch "umbennen" button laden, wenn name geaendert wird
                 $( document )
                 .on('keydown', '#inputFileName',function(eventObj){
@@ -551,6 +556,7 @@ function has_help_file() {
                         $(dynButtonHtml).insertAfter(input).hide().fadeIn('200');
                     }
                 })
+
                 //event for "rename" button click
                 .on('click', '#buttonRename', function(eventObj){
                     eventObj.preventDefault();
@@ -565,7 +571,6 @@ function has_help_file() {
                     }else{
                         newName = NavTools.pathinfo(newNamePath,'PATHINFO_FILENAME');
                     }
-
 
                     renameElement(current_path, newName);
                 });
