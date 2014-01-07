@@ -93,8 +93,8 @@ switch ($service_type) {
         $success = $fm->setFileContent($fpath, $content);
         echo(($success)?'Aktualisiert!':'Fehlgeschlagen');
         break;
-    case 'check_dup_name':
-        $file_path = NavTools::root_filter(Input::get_post('file_path'));
+    case 'check_dup_name'://deprecated?
+        $file_path = modifyRelativePath(Input::get_post('file_path'));
         if (file_exists($file_path)) {
             echo('1');
         } else {
@@ -102,15 +102,16 @@ switch ($service_type) {
         }
         break;
     case 'delete_folder':
-        $folder = NavTools::root_filter(Input::get_post('folder'));
+        $folder = modifyRelativePath(Input::get_post('file_path'));
         $un_folders = $ne_config_info['important_folders']; //array('vkdaten', 'ssi', 'css', 'grafiken', 'img', 'js');
         if (is_dir($folder)) {
-            if (NavTools::endsWith($folder, 'websource') || NavTools::endsWith($folder, 'websource/')) { // root dir!
-                echo('Dieses Verzeichnis darf nicht entfernt werden!');
+            if(realpath ($folder) === realpath($_SERVER['DOCUMENT_ROOT'])){
+                echo('Root Verzeichnis darf nicht entfernt werden!');
                 return;
             }
+
             foreach ($un_folders as $uf) {
-                if (NavTools::endsWith($folder, $uf) || NavTools::endsWith($folder, $uf . '/')) {
+                if (NavTools::startsWith($folder, $_SERVER['DOCUMENT_ROOT'].'/'.$uf, FALSE)) {
                     echo('Dieses Verzeichnis darf nicht entfernt werden!');
                     return;
                 }
@@ -123,9 +124,9 @@ switch ($service_type) {
         }
 
         break;
-    case 'get_htusers':
+    case 'get_htusers'://deprecated?
         $ret = array();
-        $folder = NavTools::root_filter(Input::get_post('folder'));
+        $folder = modifyRelativePath(Input::get_post('folder'));
 
         // list all htusers
         if (file_exists($htusers_file)) {
@@ -160,8 +161,8 @@ switch ($service_type) {
         }
         echo(json_encode($ret));
         break;
-    case 'set_htusers':
-        $folder = NavTools::root_filter($_POST['folder']);
+    case 'set_htusers': //deprecated?
+        $folder = modifyRelativePath(Input::get_post('folder'));
         $htacc_file = $folder . '/.htaccess';
         $user_line = trim($_POST['users']);
         $host_line = trim($_POST['hosts']);
@@ -186,7 +187,7 @@ switch ($service_type) {
         }
         echo('Done!');
         break;
-    case 'add_htuser':
+    case 'add_htuser'://deprecated?
         $username = $_POST['username'];
         $password = $_POST['password'];
         $line = $username . ":" . htpasswd($password) . "\n";
@@ -204,7 +205,7 @@ switch ($service_type) {
             fclose($fh);
         }
         break;
-    case 'get_hthosts':
+    case 'get_hthosts'://deprecated?
         $ret = array();
         $folder = set_htusers(Input::get_post('folder'));
         // list all hosts
