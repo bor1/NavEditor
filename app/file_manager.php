@@ -16,16 +16,29 @@ function htpasswd($pwd) {
     return crypt(trim($pwd), base64_encode(CRYPT_STD_DES));
 }
 
+/**
+ * modify relative to absolute path.
+ * @param String $sPath relative path to modify
+ * @return String modified absolute path, or empty string if over root (e.g. $sPath = /../../)
+ */
+function modifyRelativePath($sPath){
+    //add slash if not exist
+    if($sPath[0] != '/'){ $sPath = '/'+$sPath;}
+    //make full path
+    $path = $_SERVER['DOCUMENT_ROOT'] . $sPath;
+    //return filtered
+    return NavTools::root_filter($path);
+}
 
 $service_type = Input::get_post('service');
 
 switch ($service_type) {
     case 'get_file_info':
-        $file_path = NavTools::root_filter(Input::get_post('file_path'));
+        $file_path = modifyRelativePath(Input::get_post('file_path'));
         echo(json_encode($fm->getFileInfo($file_path)));
         break;
     case 'create_subfolder':
-        $current_path = NavTools::root_filter(Input::get_post('current_path'));
+        $current_path = modifyRelativePath(Input::get_post('current_path'));
         $new_subfolder_name = NavTools::filterSymbols(Input::get_post('new_subfolder_name'));
         $succ = $fm->createSubFolder($current_path, $new_subfolder_name);
         if ($succ === FALSE) {
@@ -35,7 +48,7 @@ switch ($service_type) {
         }
         break;
     case 'create_new_file':
-        $current_path = NavTools::root_filter(Input::get_post('current_path'));
+        $current_path = modifyRelativePath(Input::get_post('current_path'));
         $new_file_name = NavTools::filterSymbols(Input::get_post('new_file_name'));
         $ext = Input::get_post('extension');
         $succ = $fm->createNewFile($current_path, $new_file_name, $ext);
@@ -46,7 +59,7 @@ switch ($service_type) {
         }
         break;
     case 'delete_file':
-        $fpath = NavTools::root_filter(Input::get_post('file_path'));
+        $fpath = modifyRelativePath(Input::get_post('file_path'));
         $success = $fm->deleteFile($fpath);
         if ($success === FALSE) {
             echo('0');
@@ -55,7 +68,7 @@ switch ($service_type) {
         }
         break;
     case 'rename':
-        $file_path = NavTools::root_filter(Input::get_post('current_path'));
+        $file_path = modifyRelativePath(Input::get_post('current_path'));
         //darf nicht root sein
         if(realpath ($file_path) === realpath($_SERVER['DOCUMENT_ROOT'])){
             echo('Sie duerfen nicht Root-Ordner umbenennen');
@@ -71,12 +84,11 @@ switch ($service_type) {
         }
         break;
     case 'load_file_content':
-        $fpath = Input::get_post('file_path');
-        $fpath = $_SERVER['DOCUMENT_ROOT'] . $fpath;
+        $fpath = modifyRelativePath(Input::get_post('file_path'));
         echo($fm->getFileContent($fpath));
         break;
     case 'save_file_content':
-        $fpath = $_SERVER['DOCUMENT_ROOT'] . Input::get_post('file_path');
+        $fpath = modifyRelativePath(Input::get_post('file_path'));
         $content = Input::get_post('new_content');
         $success = $fm->setFileContent($fpath, $content);
         echo(($success)?'Aktualisiert!':'Fehlgeschlagen');

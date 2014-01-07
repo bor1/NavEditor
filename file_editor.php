@@ -102,7 +102,7 @@ function has_help_file() {
 
 				$.post("app/file_manager.php", {
 					"service": "create_subfolder",
-					"current_path": root_path + path,
+					"current_path": path,
 					"new_subfolder_name": folder_name
 				}, function(resp) {
 					if(resp === "0") {
@@ -206,7 +206,7 @@ function has_help_file() {
                 if(confirm(unescape(sWarning))) {
                     $.post('app/file_manager.php', {
                         "service": ajaxCommand,
-                        "folder": root_path + path
+                        "folder": path
                     }, function() {
                         FileTreeObj.refreshPath(dirToRefresh); //parent dir.
                     });
@@ -239,7 +239,7 @@ function has_help_file() {
                 var result = true;
                 $.post("app/file_manager.php", {
                     "service": "rename",
-                    "current_path": root_path + path,
+                    "current_path": path,
                     "new_name": newName
                 }, function(resp) {
                     if(resp !== '1') {
@@ -309,7 +309,8 @@ function has_help_file() {
 
 				 	tinyMCE.init({
                         forced_root_block : '',
-                        mode: "textareas",
+//                        mode: "textareas",
+                        selector: "#file-content-textarea",
                         language: "de",
                         theme: "modern",
                         skin: "light",
@@ -516,6 +517,25 @@ function has_help_file() {
                     }
 
                     renameElement(current_path, newName);
+                });
+
+                $("#btnSaveEditedFile").click(function(){
+                    if(!confirm("Sind Sie sicher dass sie Inhalt speichern wollen?")) {
+                        return;
+                    }
+//                    var cnt = $("#file-content-textarea").val();
+                    var cnt = tinyMCE.get('file-content-textarea').getContent();
+                    console.log(cnt);
+                    cnt = cnt.replace(new RegExp("<!-" + "-#", "g"), "<comment_ssi>");
+                    cnt = cnt.replace(/<!--/g, "<comment>");
+                    cnt = cnt.replace(/-->/g, "</comment>");
+                    $.post("app/file_manager.php", {
+                        "service": "save_file_content",
+                        "file_path": current_path,
+                        "new_content": cnt
+                    }, function(resp) {
+                        alert(resp);
+                    });
                 });
 
                 //dinamisch "umbennen" button laden, wenn name geaendert wird
@@ -784,6 +804,7 @@ function has_help_file() {
 
 						    	<div class="tab-pane" id="file-content">
 							      <textarea id="file-content-textarea" class="padding-top" name="file-content-textarea" cols="160" rows="250" class="textBox"></textarea>
+                                  <button id="btnSaveEditedFile" class="btn btn-light btn-success"><i class="icon-white icon-ok"></i>Speichern</button>
 						    	</div>
 
 						    	<div class="tab-pane" id="picture-preview">
