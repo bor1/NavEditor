@@ -433,6 +433,8 @@ function has_help_file() {
 
                             if(picture_exts.indexOf(getExtension(sPath)) !== -1) {
                                 context.titel = dateiname(sPath);
+                                //da nu thumb file name nicht vorhanden, generieren, fuer template
+                                context.thumb_file_name = dateiname(context.thumb_name);
                                 $("#picture-preview").html(picture_preview_template(context));
                                 $('#file-details-container a[href="#picture-preview"]').show();
                             }
@@ -631,23 +633,23 @@ function has_help_file() {
 		  		<div class="thumbnail">
 		  			<h5>{{titel}}</h5>
 		  			<img src="{{url}}">
-		  			<div class="caption clearfix">
+		  			<!--<div class="caption clearfix">
 		  				<a href="javascript:void(0);" class="btn btn-danger btn-light pull-right">L&ouml;schen</a>
-		  			</div>
+		  			</div>-->
 		  		</div>
 		  	</div>
 
-		  	{{#thumb_name}}
+		  	{{#if thumb_name}}
 		  	<div class="span3" style="height: 400px; margin-bottom: 60px;">
 		  		<div class="thumbnail">
-		  			<h5>{{this}}</h5>
-		  			<img src="{{this}}">
-		  			<div class="caption clearfix">
+		  			<h5>{{thumb_file_name}}</h5>
+		  			<img src="{{thumb_name}}">
+		  			<!--<div class="caption clearfix">
 		  				<a href="javascript:void(0);" class="btn btn-danger btn-light pull-right">L&ouml;schen</a>
-		  			</div>
+		  			</div>-->
 		  		</div>
 		  	</div>
-		  	{{/thumb_name}}
+		  	{{/if}}
 
 
 		</script>
@@ -659,9 +661,9 @@ function has_help_file() {
 			  		<div class="thumbnail">
 			  			<h5>{{titel}}</h5>
 			  			<img height="100px" src="{{url}}">
-			  			<div class="caption clearfix">
+			  			<!--<div class="caption clearfix">
 			  				<a href="javascript:void(0);" class="btn btn-danger btn-light pull-right">L&ouml;schen</a>
-			  			</div>
+			  			</div>-->
 			  		</div>
 			  	</div>
 			{{/pictures}}
