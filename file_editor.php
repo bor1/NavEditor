@@ -40,7 +40,8 @@ function has_help_file() {
 	            "upload/jquery.xdr-transport.js",
 	            "jquery.ui.accordion.min.js",
 	            "tinymce/tinymce.min.js",
-	            "upload/jquery.fileupload.js"
+	            "upload/jquery.fileupload.js",
+	            "nav_tools.js"
 
 		    );
 		?>
@@ -58,7 +59,7 @@ function has_help_file() {
              * FileTree Object
              * @type FileTree
              */
-            var FileTree = null;
+            var FileTreeObj = null;
 
             /**
              * Current selected path
@@ -182,11 +183,6 @@ function has_help_file() {
 //            }
 
             function deleteElement(path){
-                if(path === "") {
-                    alert(unescape("Bitte eine Datei oder Verzeichnis w%E4hlen!"));
-                    return;
-                }
-
                 //loeschen nur falls volles zugriff
 //                if(allowPermission(path, gUserPermissionsArray) !== 1){
 //                    alert(unescape("Kein zugriff"));
@@ -212,9 +208,84 @@ function has_help_file() {
                         "service": ajaxCommand,
                         "folder": root_path + path
                     }, function() {
-                        FileTree.refreshPath(dirToRefresh); //parent dir.
+                        FileTreeObj.refreshPath(dirToRefresh); //parent dir.
                     });
                }
+            }
+
+            /**
+             * rename file/folder (ajax)
+             * @param {String} path relative path to element
+             * @param {String} newName new name of directory or file without extension
+             * @returns {boolean} false if not connected or some error by input data check
+             */
+            function renameElement(path, newName){
+                if(newName === "" && newName === undefined) {
+                    alert('Name darf nicht leer sein!');
+                    return false;
+                }
+
+                //symbole filtern
+                newName = filterSymbols(newName);
+
+                if (!confirm('Sind Sie sicher, dass Sie : "'+path+'" in "'+newName+'" umbenennen wollen?'))
+                    return false;
+
+                if(path === "/" || path === "" || path === "\\"){
+                    alert("Sie dürfen nicht Root-Ordner umbennen");
+                    return false;
+                }
+
+                var result = true;
+                $.post("app/file_manager.php", {
+                    "service": "rename",
+                    "current_path": root_path + path,
+                    "new_name": newName
+                }, function(resp) {
+                    if(resp !== '1') {
+                        alert("Fehler beim Umbenennen:\n"+resp);
+                    } else {
+                        var dirToRefresh = verzeichnis(path.slice(0,-1));
+                        FileTreeObj.refreshPath(dirToRefresh); //parent dir.
+                    }
+                })
+                .fail(function(){
+                    alert('Server connection error');
+                    result = false;
+                });
+
+                return result;
+
+            }
+
+            /**
+             * Ensure if any path is selected
+             * @returns {boolean} if selected
+             */
+            function ensureSelected(){
+                if(current_path === "" || current_path === undefined) {
+                    alert(unescape("Bitte eine Datei oder Verzeichnis w%E4hlen!"));
+                    return false;
+                }
+
+                return true;
+            }
+
+            /**
+             * Filter/replace symbols in string, to make accepted name
+             * @returns {String} filtered string
+             */
+            function filterSymbols(string){
+                var filteredString = string;
+                var find = $.parseJSON('<?php echo(json_encode($ne_config_info['symbols_being_replaced'])); ?>');
+                var replace = $.parseJSON('<?php echo(json_encode($ne_config_info['symbols_replacement'])); ?>');
+                var regex;
+                for (var i = 0; i < find.length; i++) {
+                    regex = new RegExp(find[i], "g");
+                    filteredString = filteredString.replace(regex, replace[i]);
+                }
+                filteredString = filteredString.replace(<?php echo($ne_config_info['regex_removed_symbols']); ?>g, "");
+                return filteredString;
             }
 
 			/* ---------- Here comes jQuery: ---------- */
@@ -288,7 +359,7 @@ function has_help_file() {
 
 
                 // File Tree
-                FileTree = new $('#file-tree').fileTree({
+                FileTreeObj = new FileTree($('#file-tree'), {
                     root: '/',
                     showRoot: true,
                     multiFolder: false,
@@ -299,7 +370,7 @@ function has_help_file() {
                             var pictures = [],
                             data = { pictures : [] };
 
-                            $.each(FileTree.fileInfoArray, function(elem) {
+                            $.each(FileTreeObj.fileInfoArray, function(elem) {
 
                                 if(elem.indexOf(current_path) != -1 && picture_exts.indexOf(getExtension(elem)) != -1) {
                                     pictures.push({ url: elem, titel: dateiname(elem) });
@@ -325,7 +396,7 @@ function has_help_file() {
                     },
 
                     selectCallBack: function(sPath, isFile) {
-                        console.log("click callback: path: "+ sPath + " isFile: " + isFile);
+//                        console.log("click callback: path: "+ sPath + " isFile: " + isFile);
                         var context = {},
                         html = "";
 
@@ -334,7 +405,7 @@ function has_help_file() {
                         $('#file-details-container a[href="#basis"]').show().tab('show');
 
                         if(isFile) {
-                            context = FileTree.fileInfoArray[sPath];
+                            context = FileTreeObj.fileInfoArray[sPath];
                             html    = file_details_template(context);
 
                             if(context.thumb_name === "") context.thumb_name = null;
@@ -342,7 +413,7 @@ function has_help_file() {
 
 
                             if(text_exts.indexOf(getExtension(sPath)) !== -1) {
-                                //							console.log("found");
+                                //console.log("found");
                                 $.post("app/file_manager.php", {
                                     "service": "load_file_content",
                                     "file_path": sPath
@@ -411,7 +482,7 @@ function has_help_file() {
 			    		file_ext = $("#inputFileCreateType").val().substr(1); //substr: .ext -> ext
 
 			    	createNewFile(path, file_name, file_ext, function(){
-                        FileTree.refreshPath(path);
+                        FileTreeObj.refreshPath(path);
                         $this.closest(".hover-popover").hide();
                     });
 			    });
@@ -423,15 +494,44 @@ function has_help_file() {
 			    		folder_name = $("#inputFolderCreateFolderName").val();
 
 			    	createFolder(path, folder_name, function(){
-                        FileTree.refreshPath(path);
+                        FileTreeObj.refreshPath(path);
                         $this.closest(".hover-popover").hide();
                     });
 			    });
 
                 $("#delete-element").click(function(){
+                    if(!ensureSelected()) return;
+
                     deleteElement(current_path);
                 });
 
+                //dinamisch "umbennen" button laden, wenn name geaendert wird
+                $( document )
+                .on('keydown', '#inputFileName',function(eventObj){
+                    var input = $(eventObj.target);
+                    if(input.parent().find("#buttonRename").length <= 0){
+                        var dynButtonHtml = '<button name="buttonRename" id="buttonRename" class="btn">umbenennen</button>';
+                        $(dynButtonHtml).insertAfter(input).hide().fadeIn('200');
+                    }
+                })
+                //event for "rename" button click
+                .on('click', '#buttonRename', function(eventObj){
+                    eventObj.preventDefault();
+                    if(!ensureSelected()) return;
+
+                    var newNamePath = $("#inputFileName").val();
+                    var newName = '';
+
+                    //basename
+                    if(isDir(current_path)){
+                        newName = NavTools.pathinfo(newNamePath,'PATHINFO_BASENAME');
+                    }else{
+                        newName = NavTools.pathinfo(newNamePath,'PATHINFO_FILENAME');
+                    }
+
+
+                    renameElement(current_path, newName);
+                });
 
 			});
 		</script>
