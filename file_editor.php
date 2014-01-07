@@ -276,6 +276,9 @@ function has_help_file() {
              * @returns {String} filtered string
              */
             function filterSymbols(string){
+                if(string === undefined || string.length === 0){
+                    return "";
+                }
                 var filteredString = string;
                 var find = $.parseJSON('<?php echo(json_encode($ne_config_info['symbols_being_replaced'])); ?>');
                 var replace = $.parseJSON('<?php echo(json_encode($ne_config_info['symbols_replacement'])); ?>');
