@@ -317,7 +317,7 @@ function has_help_file() {
                         language: "de",
                         theme: "modern",
                         skin: "light",
-                        plugins: "image link code table preview mitarbeiter feedimport ssiInclude image_choose",
+                        plugins: "image link code table preview mitarbeiter feedimport ssiInclude image_choose noneditable",
                         menubar: false,
                         toolbar1: "undo redo | cut copy paste | link image table | mitarbeiter | feedimport | code | preview",
                         toolbar2: "fontselect fontsizeselect | styleselect | alignleft aligncenter alignright alignjustify | outdent indent | bold italic underline strikethrough | bullist numlist",
