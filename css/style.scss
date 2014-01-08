@@ -237,12 +237,6 @@ div.page-header {
 		}
 	}
 
-
-	.btn {
-		float: right;
-		margin-top: 16px;
-		margin-left: 14px;
-	}
 }
 
 
@@ -568,7 +562,11 @@ div.page-header {
 
 
 #edit_buttons_block {
+    float: right;
+    margin-top: 0px;
+    margin-left: 0px;
     position: fixed;
-    margin-top: -65px;
-    margin-left: 570px;
+    margin-top: -68px;
+    margin-left: 615px;
+    z-index: 100;
 }

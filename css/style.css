@@ -167,10 +167,6 @@ div.page-header {
       border-left: 10px solid transparent;
       border-right: 10px solid transparent;
       border-bottom: 11px solid black; }
-  div.page-header .btn {
-    float: right;
-    margin-top: 16px;
-    margin-left: 14px; }
 
 [class*="span"] .page-header {
   margin: 14px 0 !important; }
@@ -366,6 +362,10 @@ div.page-header {
       padding: 1px 3px; }
 
 #edit_buttons_block {
+  float: right;
+  margin-top: 0px;
+  margin-left: 0px;
   position: fixed;
-  margin-top: -65px;
-  margin-left: 570px; }
+  margin-top: -68px;
+  margin-left: 615px;
+  z-index: 100; }
