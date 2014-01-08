@@ -134,7 +134,7 @@ function FileTree(jQDOM, settings){
             return;
         }
 
-        var objToOperate = $(".jqueryFileTree [rel='"+ path +"']");
+        var objToOperate = boundTo.find("[rel='"+ path +"']").first();
         closeFolder(objToOperate, function(){openFolder(objToOperate);});
     };
 
@@ -168,6 +168,25 @@ function FileTree(jQDOM, settings){
 
         return false;
     };
+
+    /**
+     * test if path sPath is opened. If dir, must be visible and expanded, if file, must be visible.
+     * @public
+     * @param {String} sPath
+     * @returns {Boolean} true if opened
+     */
+    this.pathOpened = function(sPath) {
+        var found = boundTo.find("[rel='" + sPath + "']").first().parent();
+        if (found.length > 0) {
+            if (found.hasClass('file')) {
+                return true;
+            }
+            if (found.hasClass('directory') && found.hasClass('expanded')) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * @constructor
@@ -347,7 +366,9 @@ function FileTree(jQDOM, settings){
     function closeFolder(obj, fnAdditionalCallback){
         var totalCallback = function(){
             self.o.collapseCallBack();
-            cleanUp(obj);// cleanup
+            //only if parent still collapsed. To prevent wrong cleanup by fast clicking close/open
+            if(!obj.parent().hasClass('expanded'))
+                cleanUp(obj);// cleanup
             if(typeof(fnAdditionalCallback) === 'function' ) fnAdditionalCallback();// own callback
         };
 
@@ -382,7 +403,10 @@ function FileTree(jQDOM, settings){
      * @returns {Boolean} success
      */
     function openPathHelperRecursive(aPathSplitted, idx){
-
+        //ignore opened
+        if(self.pathOpened(aPathSplitted[idx])){
+            return openPathHelperRecursive(aPathSplitted, idx+1);
+        }
         //build path to open
         var bResult = false;
         bResult = self.openPathIfFound(aPathSplitted[idx]);
