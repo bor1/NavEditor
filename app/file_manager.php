@@ -91,7 +91,7 @@ switch ($service_type) {
         $fpath = modifyRelativePath(Input::get_post('file_path'));
         $content = Input::get_post('new_content');
         $success = $fm->setFileContent($fpath, $content);
-        echo(($success)?'Aktualisiert!':'Fehlgeschlagen');
+        echo(($success===FALSE)?'Fehlgeschlagen':'Aktualisiert!');
         break;
     case 'check_dup_name'://deprecated?
         $file_path = modifyRelativePath(Input::get_post('file_path'));
