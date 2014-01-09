@@ -150,7 +150,7 @@ function FileTree(jQDOM, settings){
      * opens any path, file or directory (try to find it)
      * @public
      * @param {String} path path that have to be opened
-     * @type Boolean
+     * @returns {Boolean} success
      */
     this.openPath = function(path){
         var aPathSplitted = getSplittedPath(path);
@@ -158,10 +158,6 @@ function FileTree(jQDOM, settings){
 
         //if elements found, start recursion
         if(aPathSplitted.length > 0){
-            //try to open, if possible
-            if (this.openPathIfFound(aPathSplitted[aPathSplitted.length-1])) {
-                return true;
-            }
 
             return openPathHelperRecursive(aPathSplitted, 0);
         }
@@ -192,7 +188,6 @@ function FileTree(jQDOM, settings){
      * @constructor
      * @param {Object} src_obj jQuery html container
      * @param {Object} settings
-     * @returns {FileTree} has jQuery properties of bounded object
      */
     function build(src_obj, settings) {
         boundTo = src_obj;
@@ -244,8 +239,6 @@ function FileTree(jQDOM, settings){
 
 
         self.o.loadCallBack();
-
-        return true;
     };
 
     /**
@@ -253,7 +246,6 @@ function FileTree(jQDOM, settings){
      * @private
      * @param {Object} jQObj jquery selected object/s
      * @param {String} sPath start path
-     * @returns {undefined}
      */
     function showTree(jQObj, sPath) {
         $(jQObj).addClass('wait');
@@ -405,6 +397,9 @@ function FileTree(jQDOM, settings){
     function openPathHelperRecursive(aPathSplitted, idx){
         //ignore opened
         if(self.pathOpened(aPathSplitted[idx])){
+            if(idx === aPathSplitted.length-1){
+                return true;//last path opened
+            }
             return openPathHelperRecursive(aPathSplitted, idx+1);
         }
         //build path to open
@@ -433,8 +428,7 @@ function FileTree(jQDOM, settings){
      * @example getSplittedPath(/folder/subfolder//file.txt)
      *          returns:  array("/", "/folder/", "/folder/subfolder/", "/folder/subfolder/file.txt")
      * @param {string} sPath
-     * @return array that contains paths parts
-     * @type Array
+     * @returns {Array} array that contains paths parts
      */
     function getSplittedPath(sPath){
         sPath = sPath.replace("//", "/");
