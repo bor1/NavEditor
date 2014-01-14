@@ -56,6 +56,13 @@
  * @returns {FileTree}
  */
 function FileTree(jQDOM, settings){
+    /* global jQuery */
+
+    /**
+     * jQuery alias
+     * @type jQuery
+     */
+    var $ = jQuery;
 
     /**
      * Reference for itself for private funcs
@@ -141,7 +148,7 @@ function FileTree(jQDOM, settings){
     /**
      * refresh the whole tree (rebuild)
      */
-     this.refreshTree = function(){
+    this.refreshTree = function() {
         build(boundTo, self.o);
     };
 
@@ -182,7 +189,7 @@ function FileTree(jQDOM, settings){
             }
         }
         return false;
-    }
+    };
 
     /**
      * @constructor
@@ -239,7 +246,7 @@ function FileTree(jQDOM, settings){
 
 
         self.o.loadCallBack();
-    };
+    }
 
     /**
      * requests ajax data, shows new tree
@@ -432,7 +439,7 @@ function FileTree(jQDOM, settings){
      */
     function getSplittedPath(sPath){
         sPath = sPath.replace("//", "/");
-        var aResArray = new Array();
+        var aResArray = [];
         //sPath.length-1 because we dont need to push the full path. will be done after the loop
         for (var i = 0; i < sPath.length-1; i++) {
             if(sPath.charAt(i) === '/'){
@@ -441,7 +448,7 @@ function FileTree(jQDOM, settings){
         }
         aResArray.push(sPath);
         return aResArray;
-    };
+    }
 
     //create the object, and apply to the selector
     build(jQDOM, settings);
@@ -449,4 +456,4 @@ function FileTree(jQDOM, settings){
     $.extend(this,boundTo);
 
     return this;
-};
+}
