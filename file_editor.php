@@ -47,7 +47,7 @@ function has_help_file() {
         ?>
 
         <script>
-            //globals
+            /* globals $, tinyMCE, Handlebars, NavTools, FileTree*/
 
             /**
              * Path to root dir.
@@ -75,7 +75,7 @@ function has_help_file() {
 
             function nameWOextension(path){
                 var str = path + '',
-                       dotP = str.lastIndexOf('.');
+                    dotP = str.lastIndexOf('.');
                 return str.substr(0, dotP);
             }
 
@@ -273,6 +273,7 @@ function has_help_file() {
 
             /**
              * Filter/replace symbols in string, to make accepted name
+             * @param {String} string string being filtered
              * @returns {String} filtered string
              */
             function filterSymbols(string){
@@ -341,7 +342,7 @@ function has_help_file() {
                             $this.siblings(".hover-popover").show().find(".content").html(content);
                         };
 
-                    if(content === undefined || content == "") {
+                    if(content === undefined || content === "") {
                         $.get("app/get_help.php?r=" + Math.random(), {
                             "page_name": "file_editor"
                         }, showContent);
@@ -376,7 +377,7 @@ function has_help_file() {
 
                             $.each(FileTreeObj.fileInfoArray, function(elem) {
 
-                                if(elem.indexOf(current_path) != -1 && picture_exts.indexOf(getExtension(elem)) != -1) {
+                                if(elem.indexOf(current_path) !== -1 && picture_exts.indexOf(getExtension(elem)) !== -1) {
                                     pictures.push({ url: elem, titel: dateiname(elem) });
                                 }
 
@@ -425,7 +426,7 @@ function has_help_file() {
                                     data = data.replace(/<comment_ssi>/g, "<!-" + "-#");
                                     data = data.replace(/<comment>/g, "<!-" + "-");
                                     data = data.replace(/<\/comment>/g, "-" + "->");
-                                    tinymce.activeEditor.setContent(data);
+                                    tinyMCE.activeEditor.setContent(data);
                                 });
 
                                 $('#file-details-container a[href="#file-content"]').show();
