@@ -457,25 +457,60 @@ function has_help_file() {
                 });
 
 
+                //fileupload, settings and functions
+                $('#fileupload').fileupload({
+                    url: 'app/upload.php',
+                    dataType: 'json',
+                    autoUpload: true,
+                    singleFileUploads: false,
+                    //extra info
+                    formData: function(form){
+                        return [
+                                {
+                                    name: 'folder',
+                                    value: current_path
+                                }
+                                ];
+                    },
+                   /**
+                    * Wenn irgendwas von dem Server-Upload-Script erhalten.
+                    * TODO bessere Fehlerbehandlung
+                    * @param {Object} e jQuery event
+                    * @param@param {Object} data result data
+                    */
+                    done: function (e, data) {
+                        var result;
+                        
+                        if(data.result.length === 0){
+                            result = 'Vielleicht Fehlerhaft hochgeladen, bitte alle hochgeladene Dateien überprüfen!';
+                        }
+
+                        //jedes result element nach "error" property suchen, error dateien sammeln
+                        $.each(data.result, function(i,element){
+                            if(element.error){
+                                if(!result){result = "Fehler beim Hochladen!\nNicht hochgeladene Dateien:";}
+                                result += '\n"'+ element.name + "\""
+                            }
+                        });
+
+
+                        //falls gab's fehler
+                        if(!result){
+                            result = "Hochgeladen!";
+                        }
+                        alert(result);
+                        FileTreeObj.refreshPath(current_path);
+                    },
+
+                    //wenn gar kein/falsche antwort von dem Server erhalten
+                    fail: function(e, data){
+                        alert('Fehler beim Hochladen (Server unereichbar?)');
+                    }
+                });
+
                 // File List
                 $("#file-list-add").click(function() {
-                    $('input[type="file"]').click();
-                });
-
-                $('#fileupload').fileupload({
-                    url: 'app/upload.php?folder='
-                })
-                .bind('fileuploadstop', function (e, data) {
-                        alert('DONE');
-
-                });
-
-                $('#fileupload').fileupload({
-                    dataType: 'json',
-                    autoUpload: false,
-                    done: function (e, data) {
-
-                    }
+                    $("#fileupload").click();
                 });
 
                 //TODO one func create(path, fileOrFolder, callback)
@@ -738,6 +773,8 @@ function has_help_file() {
                                   <div class="tab-content">
                                     <div class="tab-pane active" id="upload">
                                         <a id="file-list-add" style="float: none;margin: 10px 30px;" class="span3 btn btn-large btn-black-white" href="javascript:void(0);">Datei ausw&auml;hlen</a>
+                                        <!--hidden input field for file upload -->
+                                        <input id="fileupload" type="file" multiple="" name="files[]" style="display: none">
                                     </div>
                                     <div class="tab-pane" id="createFile">
                                         <form class="form-horizontal">
