@@ -418,18 +418,22 @@ function has_help_file() {
 
 
                             if(text_exts.indexOf(getExtension(sPath)) !== -1) {
-                                //console.log("found");
-                                $.post("app/file_manager.php", {
-                                    "service": "load_file_content",
-                                    "file_path": sPath
-                                }, function(data) {
-                                    data = data.replace(/<comment_ssi>/g, "<!-" + "-#");
-                                    data = data.replace(/<comment>/g, "<!-" + "-");
-                                    data = data.replace(/<\/comment>/g, "-" + "->");
-                                    tinyMCE.activeEditor.setContent(data);
-                                });
 
-                                $('#file-details-container a[href="#file-content"]').show();
+
+                                $('#file-details-container a[href="#file-content"]')
+                                        .show()
+                                        .on('click', function(){
+                                            //console.log("found");
+                                            $.post("app/file_manager.php", {
+                                                "service": "load_file_content",
+                                                "file_path": sPath
+                                            }, function(data) {
+                                                data = data.replace(/<comment_ssi>/g, "<!-" + "-#");
+                                                data = data.replace(/<comment>/g, "<!-" + "-");
+                                                data = data.replace(/<\/comment>/g, "-" + "->");
+                                                tinyMCE.activeEditor.setContent(data);
+                                            });
+                                        });
                             }
 
                             if(picture_exts.indexOf(getExtension(sPath)) !== -1) {
@@ -480,7 +484,7 @@ function has_help_file() {
                     */
                     done: function (e, data) {
                         var result;
-                        
+
                         if(data.result.length === 0){
                             result = 'Vielleicht Fehlerhaft hochgeladen, bitte alle hochgeladene Dateien überprüfen!';
                         }
