@@ -103,14 +103,13 @@ function FileTree(jQDOM, settings){
      * @returns {Boolean} Success
      */
     this.openPathIfFound = function(path){
-
-        if (path === "/") {
-            this.refreshTree();
-            return true;
-        }
-
-
         try{
+            if (path === "/") {
+                this.refreshTree();
+                return true;
+            }
+
+
             var element = boundTo.find("[rel='"+path+"']").first();
             if (element.length < 1){return false;}
 
@@ -123,7 +122,7 @@ function FileTree(jQDOM, settings){
             }
 
         }catch(e){
-            console.log(e);
+            errorHandler(e);
             return false;
         }
 
@@ -136,20 +135,32 @@ function FileTree(jQDOM, settings){
      * @param {String} path path to refresh
      */
     this.refreshPath = function(path){
-        if (path === "/") {
-            this.refreshTree();
-            return;
+        try {
+            if (path === "/") {
+                this.refreshTree();
+                return;
+            }
+
+            var objToOperate = boundTo.find("[rel='" + path + "']").first();
+            closeFolder(objToOperate, function() {
+                openFolder(objToOperate);
+            });
+        } catch (e) {
+            errorHandler(e);
         }
 
-        var objToOperate = boundTo.find("[rel='"+ path +"']").first();
-        closeFolder(objToOperate, function(){openFolder(objToOperate);});
     };
 
     /**
      * refresh the whole tree (rebuild)
      */
     this.refreshTree = function() {
-        build(boundTo, self.o);
+        try {
+            build(boundTo, self.o);
+        } catch (e) {
+            errorHandler(e);
+        }
+
     };
 
 
@@ -160,14 +171,19 @@ function FileTree(jQDOM, settings){
      * @returns {Boolean} success
      */
     this.openPath = function(path){
-        var aPathSplitted = getSplittedPath(path);
+        try {
+            var aPathSplitted = getSplittedPath(path);
 
 
-        //if elements found, start recursion
-        if(aPathSplitted.length > 0){
+            //if elements found, start recursion
+            if (aPathSplitted.length > 0) {
 
-            return openPathHelperRecursive(aPathSplitted, 0);
+                return openPathHelperRecursive(aPathSplitted, 0);
+            }
+        } catch (e) {
+            errorHandler(e);
         }
+
 
         return false;
     };
@@ -179,15 +195,20 @@ function FileTree(jQDOM, settings){
      * @returns {Boolean} true if opened
      */
     this.pathOpened = function(sPath) {
-        var found = boundTo.find("[rel='" + sPath + "']").first().parent();
-        if (found.length > 0) {
-            if (found.hasClass('file')) {
-                return true;
+        try {
+            var found = boundTo.find("[rel='" + sPath + "']").first().parent();
+            if (found.length > 0) {
+                if (found.hasClass('file')) {
+                    return true;
+                }
+                if (found.hasClass('directory') && found.hasClass('expanded')) {
+                    return true;
+                }
             }
-            if (found.hasClass('directory') && found.hasClass('expanded')) {
-                return true;
-            }
+        } catch (e) {
+            errorHandler(e);
         }
+
         return false;
     };
 
@@ -450,10 +471,24 @@ function FileTree(jQDOM, settings){
         return aResArray;
     }
 
-    //create the object, and apply to the selector
-    build(jQDOM, settings);
-    //bind jquery properties to the object
-    $.extend(this,boundTo);
+    /**
+     * error handler
+     * @private
+     * @param {Object} error error-object
+     */
+    function errorHandler(error){
+        console.log(error);
+    }
+
+    try {
+        //create the object, and apply to the selector
+        build(jQDOM, settings);
+        //bind jquery properties to the object
+        $.extend(this, boundTo);
+    } catch (e) {
+        errorHandler(e);
+    }
+
 
     return this;
 }
