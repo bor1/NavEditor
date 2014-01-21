@@ -421,6 +421,7 @@ function has_help_file() {
 
 
                                 $('#file-details-container a[href="#file-content"]')
+                                        .unbind()
                                         .show()
                                         .on('click', function(){
                                             //console.log("found");
