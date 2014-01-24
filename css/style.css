@@ -51,18 +51,6 @@ body {
   padding: 14px 30px !important;
   font-size: 14px; }
 
-.btn-light.btn-primary {
-  background-color: #0087f7 !important; }
-
-.btn-light.btn-success {
-  background-color: #78b153 !important; }
-
-.btn-light.btn-danger {
-  background-color: #da4f49 !important; }
-
-.btn-light.btn-warning {
-  background-color: #faa732 !important; }
-
 .btn-prompt {
   text-align: left;
   position: relative; }
