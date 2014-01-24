@@ -1,5 +1,6 @@
 <?php
 require_once('auth.php');
+//BAD CODE. TODO AngularJS ?
 
 // help
 function has_help_file() {
@@ -17,8 +18,8 @@ function has_help_file() {
 
 <?php
     echo NavTools::includeHtml("default",
-            "jquery-ui-1.8.18.custom.min.js",
             "jqueryui/ne2-theme/jquery-ui-1.8.17.custom.css",
+            "jquery-ui.min.js",
             "json2.js",
             "naveditor2.js",
             "jquery.md5.js",
@@ -42,6 +43,7 @@ var _not_editable_user_params_array = $.parseJSON('<?php echo(json_encode(get_ne
 var _user_params_full = $.parseJSON('<?php echo(json_encode($ne_user_params)); ?>');
 var _somethingChanged = false;
 var _check_boxes_status = [];
+var FileTreeObj = null;
 
 function load_validation(){
     //helper func.
@@ -150,23 +152,26 @@ function loadFilePermTree(){
 }
 
 function addFolderTree(){
+    FileTreeObj = new FileTree($('#userPermission'), {
+        root: '/',
+        permissions: '1',
+        expandCallBack: function(){
+            loadCheckBoxes();
+            fillPermissionSubCheckBox();
+        },
+        selectCallBack: function(path, isFile) {
+            var rel = "";
+            if (isFile){
+                rel = path;
+                //toggle checkbox on click on file
+                var checkBox = $('#userPermission input[value="'+rel+'"]');
+                checkBox.prop('checked', !checkBox.is(':checked'));
 
-	$('#userPermission').fileTree({ root: '/', rechte: '1', expandCallBack: function(){loadCheckBoxes();fillPermissionSubCheckBox();}}, function(file, folder) {
-		var rel = "";
-		if (file != null){
-			rel = file;
-                        //toggle checkbox on click on file
-                        var selectdChkBx = $('#userPermission input[value="'+rel+'"]:checked');
-                        if(selectdChkBx.length != 0){
-                            selectdChkBx.removeAttr('checked');
-                        }else{
-                            $('#userPermission input[value="'+rel+'"]').attr('checked', 'true');
-                        }
-
-		}else if(folder != null){
-			//rel = folder;
-		}
-	});
+            }else if(!isFile){
+                //rel = folder;
+            }
+        }
+    });
 }
 
 function loadCheckBoxes(){
@@ -224,13 +229,9 @@ function fillFieldsWithData(dataArray){
     //set datepicker for some of elements.  Bugged. need to dynamically recreate on focus.
     $(document).on('focus', '#userOptions :input[name="ablaufdatum"]',  function(){
         $(this).datepicker( "destroy" );
-        var date = $.datepicker.parseDate('dd/mm/yy', $(this).val());
-        $(this).datepicker();
-        $(this).datepicker( "setDate" , date );
-        $(this).datepicker( "option", "dateFormat", "dd/mm/yy" );
-
-    //    $('#userOptions :input[name="ablaufdatum"]').datepicker('resfresh');
-        $(this).datepicker('show');
+        $(this).datepicker({
+            dateFormat: "dd/mm/yy"
+        });
     });
 }
 
@@ -292,7 +293,7 @@ function fillPermissionSubCheckBox(pfad, checked){
         if(pfad.length == 0){return;};
         if(count>1000){return;}
         var parent = verzeichniss(pfad);
-        $('#userPermission input[value="'+parent+'"]').removeAttr('checked');
+        $('#userPermission input[value="'+parent+'"]').prop('checked', false);
             //for global array of chkbx state
             saveChkBoxStatus(parent, false);
             $("#userPermission input[value^='"+ parent +"']:checked").each(function(i, obj){
@@ -308,7 +309,7 @@ function fillPermissionSubCheckBox(pfad, checked){
         if(count>1000){return;}
         var verz = verzeichniss(pfad);
         if($("#userPermission input[value^='"+ verz +"']").not(':checked').length == 1){
-            $('#userPermission input[value="'+verz+'"]').attr('checked', 'true');
+            $('#userPermission input[value="'+verz+'"]').prop('checked', true);
             saveChkBoxStatus(verz, true);
         }
         if(verz != "/"){
@@ -332,7 +333,7 @@ function fillPermissionSubCheckBox(pfad, checked){
         //even checking subfolders/files
         $.each($("#userPermission input"), function(i, obj){
             if(hasparent($(obj).val(),checkedArray)){
-                $(obj).attr('checked', 'true');
+                $(obj).prop('checked', true);
             }
         });
         //test if all files are checked for the parent folder. In case its true, check parent
@@ -341,7 +342,7 @@ function fillPermissionSubCheckBox(pfad, checked){
     }else{
         //uncheck folder -> uncheck all files contained in the folder
         if(pfad.match(/.*\/$/)){
-            $('#userPermission input[value^="'+pfad+'"]').removeAttr('checked');
+            $('#userPermission input[value^="'+pfad+'"]').prop('checked',false);
         }
         removeCheckBoxParentRek(pfad, 0);
     }
