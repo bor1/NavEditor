@@ -313,7 +313,6 @@ function has_help_file() {
 
                 tinyMCE.init({
                     forced_root_block : '',
-//                        mode: "textareas",
                     selector: "#file-content-textarea",
                     language: "de",
                     theme: "modern",
@@ -322,16 +321,10 @@ function has_help_file() {
                     menubar: false,
                     toolbar1: "undo redo | cut copy paste | link image table | mitarbeiter | feedimport | code | preview",
                     toolbar2: "fontselect fontsizeselect | styleselect | alignleft aligncenter alignright alignjustify | outdent indent | bold italic underline strikethrough | bullist numlist",
-                    //theme: "advanced",
-                    //language: "de",
-                    //skin: "o2k7",
                     relative_urls: false,
                     convert_urls: false,
+                    height: 300
                     //plugins: "safari,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template",
-                    theme_advanced_styles: "infologo",
-                    theme_advanced_toolbar_location: "top",
-                    theme_advanced_toolbar_align: "left",
-                    theme_advanced_statusbar_location: "bottom"
                 });
 
                 // help
@@ -856,7 +849,7 @@ function has_help_file() {
                                 </div>
 
                                 <div class="tab-pane" id="file-content">
-                                  <textarea id="file-content-textarea" class="padding-top" name="file-content-textarea" cols="160" rows="250" class="textBox"></textarea>
+                                  <textarea id="file-content-textarea" class="padding-top input-block-level" name="file-content-textarea" cols="160" rows="20" class="textBox"></textarea>
                                   <button id="btnSaveEditedFile" class="btn btn-light btn-success"><i class="icon-white icon-ok"></i>Speichern</button>
                                 </div>
 
