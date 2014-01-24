@@ -40,7 +40,7 @@ if (file_exists($root . $dir)) {
           $files = array_diff($files, $forbFolders );
           } */
 
-        //checkbox loading if post[checkbox] = 1;
+        //checkbox loading if post[$permissions] = 1;
         foreach ($files as $file) {
             if (file_exists($root . $dir . $file) && $file != '.' && $file != '..' && is_dir($root . $dir . $file)) {
                 $relation = htmlentities($dir . $file);
