@@ -132,7 +132,6 @@ function has_help_file() {
                         if(resp === "0") {
                             alert("Fehler bei der Erstellung der Datei; Bitte versuchen Sie es noch einmal!");
                         }else if(resp === "1"){
-//                            console.log("success");
                             //tree_refresh(relFromFullPath(path));
                         } else {
                             alert(resp);
@@ -364,7 +363,6 @@ function has_help_file() {
                     showRoot: true,
                     multiFolder: false,
                     expandCallBack: function() {
-                        console.log("expandCallBack");
                         if(current_path !== "") {
 
                             var pictures = [],
@@ -396,7 +394,6 @@ function has_help_file() {
                     },
 
                     selectCallBack: function(sPath, isFile) {
-//                        console.log("click callback: path: "+ sPath + " isFile: " + isFile);
                         var context = {},
                         html = "";
 
@@ -419,7 +416,6 @@ function has_help_file() {
                                         .unbind()
                                         .show()
                                         .on('click', function(){
-                                            //console.log("found");
                                             $.post("app/file_manager.php", {
                                                 "service": "load_file_content",
                                                 "file_path": sPath
@@ -588,7 +584,6 @@ function has_help_file() {
                         var cnt = tinyMCE.get('file-content-textarea').getContent();
                     }
 
-                    console.log(cnt);
                     cnt = cnt.replace(new RegExp("<!-" + "-#", "g"), "<comment_ssi>");
                     cnt = cnt.replace(/<!--/g, "<comment>");
                     cnt = cnt.replace(/-->/g, "</comment>");
