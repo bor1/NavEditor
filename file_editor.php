@@ -296,7 +296,9 @@ function has_help_file() {
             $(document).ready(function() {
 
                 var picture_exts = ["jpeg", "jpg", "png", "gif"], //todo load from config.
-                    text_exts = ["shtml", "html", "htaccess", "txt"],
+                    html_exts = ["shtml", "html"],
+                    no_html_exts = ["htaccess", "txt", "conf"],
+                    editor_exts = no_html_exts.concat(html_exts),
 
                     file_details_source   = $("#file-details-template").html(),
                     file_details_template = Handlebars.compile(file_details_source),
@@ -410,7 +412,7 @@ function has_help_file() {
 
 
 
-                            if(text_exts.indexOf(getExtension(sPath)) !== -1) {
+                            if(editor_exts.indexOf(getExtension(sPath)) !== -1) {
 
 
                                 $('#file-details-container a[href="#file-content"]')
@@ -425,7 +427,17 @@ function has_help_file() {
                                                 data = data.replace(/<comment_ssi>/g, "<!-" + "-#");
                                                 data = data.replace(/<comment>/g, "<!-" + "-");
                                                 data = data.replace(/<\/comment>/g, "-" + "->");
-                                                tinyMCE.activeEditor.setContent(data);
+                                                //falls ist kein html file, nur simple area text editor
+                                                if(no_html_exts.indexOf(getExtension(sPath)) !== -1){
+                                                    tinyMCE.activeEditor.hide();
+                                                    tinyMCE.activeEditor.getElement().value = data;
+                                                }
+                                                //falls html, tinyMCE einschalten
+                                                else{
+                                                    tinyMCE.activeEditor.show();
+                                                    tinyMCE.activeEditor.setContent(data);
+                                                }
+
                                             });
                                         });
                             }
@@ -565,8 +577,17 @@ function has_help_file() {
                     if(!confirm("Sind Sie sicher dass sie Inhalt speichern wollen?")) {
                         return;
                     }
-//                    var cnt = $("#file-content-textarea").val();
-                    var cnt = tinyMCE.get('file-content-textarea').getContent();
+                    //mini workaround fuer text editor.
+                    //TODO class, mit ".getContent() .setContent() .isTiny(), .getTiny() .getArea()"
+                    //falls nur txt editor
+                    if($("#file-content-textarea").is(":visible")){
+                        var cnt = $("#file-content-textarea").val();
+                    }
+                    //falls html editor
+                    else{
+                        var cnt = tinyMCE.get('file-content-textarea').getContent();
+                    }
+
                     console.log(cnt);
                     cnt = cnt.replace(new RegExp("<!-" + "-#", "g"), "<comment_ssi>");
                     cnt = cnt.replace(/<!--/g, "<comment>");
