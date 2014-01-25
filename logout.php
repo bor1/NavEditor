@@ -56,7 +56,7 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>Ausloggen - <?php echo($ne_config_info['app_titleplain']); ?></title>
-        <link rel="stylesheet" type="text/css" href="css/styles.css?<?php echo date('Ymdis'); ?>" />
+        <?php echo NavTools::includeHtml("default"); ?>
     </head>
 
     <body>
