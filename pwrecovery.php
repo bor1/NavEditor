@@ -121,9 +121,8 @@ $_SESSION['rndZahl'] = (string) (rand(10000, 99999));
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>Passwort vergessen - <?php echo($ne_config_info['app_titleplain']); ?></title>
-        <link rel="stylesheet" type="text/css" href="css/styles.css?<?php echo date('Ymdis'); ?>" />
+        <?php echo NavTools::includeHtml("default"); ?>
     </head>
-    <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
     <script type="text/javascript">
         var toWaitJs = <?php echo $toWait ?>;
         var restZeit = new Date(toWaitJs*1000);
@@ -175,7 +174,7 @@ $_SESSION['rndZahl'] = (string) (rand(10000, 99999));
     </script>
     <body>
         <div id="wrapper">
-            <h1 id="header">Passwort vergessen</h1>
+            <h1 id="header" style="text-align: center">Passwort vergessen</h1>
             <?php
             if (strcmp($oper, "mailsend") == 0) {
                 echo "<p style='text-align:center;font-size:large;'>Mail mit dem Aktivierungslink wurde versendet</p>";
