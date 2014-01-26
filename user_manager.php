@@ -120,30 +120,29 @@ function loadContentCallback(data) {
      _user_data_array = data;
 
     $.each(data, function (index, value) {
-        var li = $("<li>"),
+        var li = $("<li>").attr('id', index),
             icon = $('<i class="icon-user">'),
-            a = $('<a href="javascript:void(0);">').addClass("user_button").attr("id", index).html(value.user_name);
+            a = $('<a href="javascript:void(0);">').addClass("user_button").html(value.user_name);
 
         console.log(value);
         li.html(new Array(icon, a));
         users.push(li);
     });
+    //add new button
+
+    users.push($("<li>").attr('id', 'addNewUser')
+            .append($('<i class="icon-plus-sign">'))
+            .append($('<a href="javascript:void(0);">')
+                        .addClass("user_button")
+                        .html('Add new user')
+                    )
+             );
 
     users_ul.html(users);
     $("#userList").html(users_ul);
 
     loadFilePermTree();
 
-    reInitUi();
-
- //        _user_data_array = data;
-
- //        var ulhtml = "<ul>";
- //        for(var i = 0; i < data.length; i++) {
-	// 	ulhtml += "<li><button class='user_button' id="+ i +">"+data[i].user_name+"</button></li>";
-	// }
- //        ulhtml += "<li><button id='addNewUser'>Add new user</button></li>";
- //        ulhtml += "</ul>";
 }
 
 function loadFilePermTree(){
@@ -166,7 +165,7 @@ function addFolderTree(){
                 //toggle checkbox on click on file
                 var checkBox = $('#userPermission input[value="'+rel+'"]');
                 checkBox.prop('checked', !checkBox.is(':checked'));
-
+                checkBox.change();
             }else if(!isFile){
                 //rel = folder;
             }
@@ -235,22 +234,10 @@ function fillFieldsWithData(dataArray){
     });
 }
 
-function reInitUi(){
-
-    //bug by reuse .button() multiple spans..
-    $('button').not($('span').parent('button')).button();
-
-    $('button').button('disable');
-    $('button').button('enable');
-
-}
-
-
 function addContentToElement(div, content){
     var tmpHtmlUO = div.html();
     tmpHtmlUO += content;
     div.html(tmpHtmlUO);
-    reInitUi();
 }
 
 function createOptionHtml(optionName, htmlNameParam, wert, disParam, type){
@@ -280,7 +267,7 @@ function createDropBoxOptionHtml(optionName, optionHtmlNameParam, listArray, sel
 }
 
 function createButtonHtml(buttonName, label){
-    var html = '<button class="temp_buttons" id='+buttonName+'>'+ label +'</button>';
+    var html = '<button class="temp_buttons btn" id='+buttonName+'>'+ label +'</button>';
     return html;
 }
 function clearTempButtons(){
@@ -524,19 +511,10 @@ function saveChkBoxStatus(value, chkYesNo){
         }
     }
 
-//select a menu button, unselect others
-function selectMenu(element_button){
-    $.each($("#userList button"), function(){
-           $(this).blur();
-           $(this).find('span').removeClass('buttonMenuSelected');
-          });
-    element_button.find('span').addClass('buttonMenuSelected');
-}
 
 
 /* ---------- Here comes jQuery: ---------- */
 $(document).ready(function() {
-    $("button").button();
 
     $.getJSON("app/edit_user.php?r=" + Math.random(), {
         "json_oper": "get_users"
@@ -551,34 +529,37 @@ $(document).ready(function() {
 
     });
 
-    $(document).on('click', "#userList .user_button", function(){
+    //on select some user, or click "add user" menu
+    $(document).on('click', "#userList li", function(){
         if(checkInputChange()){return;}
-
         var $this = $(this),
+            userArray = _empty_user_data_array,
+            userName = '',
+            addButtonsHtml = '';
+
+        $this.addClass("active");
+        $this.siblings().removeClass("active");
+
+        if($this.attr('id') !== 'addNewUser'){
             userArray = _user_data_array[$this.attr("id")];
-
-        $this.parent().addClass("active");
-        $this.parent().siblings().removeClass("active");
-
+            userName= userArray['user_name'];
+            addButtonsHtml = createButtonHtml('updateUser', 'Save') + createButtonHtml('removeUser', 'Delete User');
+        }
+        //add new user element
+        else{
+            //empty values
+            //and new buttons
+            addButtonsHtml = createButtonHtml('createUser', 'Save New User');
+        }
+        $('#user_name_in_haeder').html((userName) ? userName: 'Neu Benutzer');
         fillFieldsWithData(userArray);
-        _currentValues['user'] = userArray['user_name'];
+        _currentValues['user'] = userName;
         //ui bug ? ..
-        addContentToElement($('#userOptions'), createButtonHtml('updateUser', 'Save') + createButtonHtml('removeUser', 'Delete User'));
-        //addContentToElement($('#userOptions'), createButtonHtml('removeUser', 'Delete User'));
+        addContentToElement($('#userOptions'), addButtonsHtml);
         checkInputChange(false);
 
-        selectMenu($(this));
     });
 
-    $(document).on('click', "#userList #addNewUser", function() {
-        if(checkInputChange()){return;}
-        fillFieldsWithData(_empty_user_data_array);
-        clearTempButtons();
-        addContentToElement($('#userOptions'), createButtonHtml('createUser', 'Save New User'));
-        _currentValues['user'] = "";
-        checkInputChange(false);
-        selectMenu($(this));
-    });
 
     $(document).on('click', "#usermanager #createUser", function() {
         if(!checkForm(true)){
@@ -721,12 +702,12 @@ $(document).ready(function() {
                 <div class="span9 page" id="userDetails">
 
                     <div class="page-header">
-                        <h4 class="page-header">uq04idat</h4>
+                        <h4 id='user_name_in_haeder' class="page-header"></h4>
 
-                        <div class="pull-right">
+<!--                        <div class="pull-right">
                                     <a class="dismiss btn btn-light btn-danger" href="javascript:void(0);"><i class="icon-white icon-trash"></i> Nutzer L&ouml;schen</a>
 
-                        </div>
+                        </div>-->
                     </div>
 
                     <div class="tabbable"> <!-- Only required for left/right tabs -->
