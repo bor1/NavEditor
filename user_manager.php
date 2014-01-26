@@ -112,6 +112,7 @@ function array_diff_key (arr1) {
 
 var _editable_user_params_array = array_diff_key(_empty_user_data_array, _not_editable_user_params_array);
 
+//wird aufgerufen nach dem page geladen ist, und 1. daten ajax responce da ist.
 function loadContentCallback(data) {
 
     var users = new Array(),
@@ -124,12 +125,11 @@ function loadContentCallback(data) {
             icon = $('<i class="icon-user">'),
             a = $('<a href="javascript:void(0);">').addClass("user_button").html(value.user_name);
 
-        console.log(value);
         li.html(new Array(icon, a));
         users.push(li);
     });
-    //add new button
 
+    //add new button
     users.push($("<li>").attr('id', 'addNewUser')
             .append($('<i class="icon-plus-sign">'))
             .append($('<a href="javascript:void(0);">')
@@ -177,6 +177,7 @@ function loadCheckBoxes(){
     $("#userPermission input").val(_check_boxes_status);
 }
 
+//dynamische form daten pro benutzer
 function fillFieldsWithData(dataArray){
     var html = "";
     for(var element in dataArray){
@@ -199,7 +200,7 @@ function fillFieldsWithData(dataArray){
                 case "letzter_login": case "erstellungsdatum":  case "ablaufdatum":
                     if(dataArray[element] > 0){
                         var datum = new Date(dataArray[element]*1000);
-                        var datumString = (datum.getDate()<10 ? "0"+(datum.getDate()) : datum.getDate()) + "/"+ (datum.getMonth()<10 ? "0"+(datum.getMonth()+1):datum.getMonth()+1) +"/"+datum.getFullYear(); //datum.toLocaleString();
+                        var datumString = $.datepicker.formatDate("dd/mm/yy",datum);
                         if(element == "letzter_login"){datumString = datum.toLocaleString();} // mit time anzeigen
                     }else{
                         var datumString = "";
@@ -394,6 +395,9 @@ function checkForm(pwcheck){
     return true;
 }
 
+//prueft ob path in permission's array einen parent pfad hat.
+//z.b. path: /foo/bar/file.txt hat parent /foo/bar/
+//path: /foo/bar/ hat parent /foo/
 function hasparent(path, permission){
     var retVal = false;
     var verz, regexpparent;
@@ -418,6 +422,7 @@ function verzeichniss(path){
     return str.substr(0, slash+1);
 }
 
+//fuellt checkboxes abhaengig von permArray
 function readPermissions(permArray){
     var permission = [];
     //nichts uebergeben? die sichtbare checkbox's auslesen
@@ -439,7 +444,7 @@ function readPermissions(permArray){
     return permission.join("|");
 }
 
-
+//liest daten von input, und gibt als array zurueck
 function readInput(){
     var arrValues = _editable_user_params_array;
     var serArr = [];
@@ -490,9 +495,9 @@ function saveChkBoxStatus(value, chkYesNo){
             _check_boxes_status.push(value);
         }else{
             //remove pfad
-            _check_boxes_status = $.grep(_check_boxes_status, function(elem) {
-                return elem != value;
-            });
+            _check_boxes_status.splice(_check_boxes_status.indexOf(value),1);// = $.grep(_check_boxes_status, function(elem) {
+                //return elem != value;
+            //});
         }
         //remove childs
         _check_boxes_status = $.grep(_check_boxes_status, function(elem) {
@@ -505,9 +510,10 @@ function saveChkBoxStatus(value, chkYesNo){
         if(_check_boxes_status.length == 0){
             _check_boxes_status.push("");
         }else if(_check_boxes_status.length > 1 ){
-            _check_boxes_status = $.grep(_check_boxes_status, function(elem) {
-                return elem != "";
-            });
+//            _check_boxes_status = $.grep(_check_boxes_status, function(elem) {
+//                return elem != "";
+//            });
+            _check_boxes_status.splice(_check_boxes_status.indexOf(""),1);
         }
     }
 
@@ -515,18 +521,27 @@ function saveChkBoxStatus(value, chkYesNo){
 
 /* ---------- Here comes jQuery: ---------- */
 $(document).ready(function() {
-
+    //daten per ajax laden
     $.getJSON("app/edit_user.php?r=" + Math.random(), {
         "json_oper": "get_users"
     }, loadContentCallback);
 
+    //rechten checkbox's fuellen wenn noetig
     $(document).on('change', "#userPermission input", function(){
-
         var checkedYesNo = $(this).prop('checked');
         var thisRef = $(this).val();
         saveChkBoxStatus(thisRef, checkedYesNo );
         fillPermissionSubCheckBox(thisRef, checkedYesNo);
 
+    });
+
+    //input changed, merken
+    $(document).on('change', '#userDetails input', function(){
+       if(_currentValues['user'] != null){
+           if( _currentValues['user'].length > 0){
+               _somethingChanged = true;
+           }
+       }
     });
 
     //on select some user, or click "add user" menu
@@ -537,8 +552,9 @@ $(document).ready(function() {
             userName = '',
             addButtonsHtml = '';
 
-        $this.addClass("active");
-        $this.siblings().removeClass("active");
+            //visuelle "angeklickt"
+            $this.addClass("active");
+            $this.siblings().removeClass("active");
 
         if($this.attr('id') !== 'addNewUser'){
             userArray = _user_data_array[$this.attr("id")];
@@ -551,7 +567,7 @@ $(document).ready(function() {
             //and new buttons
             addButtonsHtml = createButtonHtml('createUser', 'Save New User');
         }
-        $('#user_name_in_haeder').html((userName) ? userName: 'Neu Benutzer');
+        $('#user_name_in_haeder').html((userName) ? userName: 'Neuer Benutzer');
         fillFieldsWithData(userArray);
         _currentValues['user'] = userName;
         //ui bug ? ..
@@ -577,7 +593,7 @@ $(document).ready(function() {
         }, createUserCallback);
 
     });
-
+    //on save user changes
     $(document).on('click', "#usermanager #updateUser", function() {
         if(!checkForm()){
             return;
@@ -601,7 +617,7 @@ $(document).ready(function() {
 
 
     });
-
+    //on click remove user
     $(document).on('click', "#usermanager #removeUser", function() {
         var userName = _currentValues['user'];
         if(confirm(unescape('Den Benutzer: \"'+ userName + '" l%F6schen?'))){
@@ -616,13 +632,6 @@ $(document).ready(function() {
         }
     });
 
-    $('#usermanager').find(':input').on('change', function(){
-       if(_currentValues['user'] != null){
-           if( _currentValues['user'].length > 0){
-               _somethingChanged = true;
-           }
-       }
-    });
 
     // help
     $("#show-help").click(function() {
