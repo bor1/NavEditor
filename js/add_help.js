@@ -1,13 +1,17 @@
 /**
  * @author Dmitry Gorelenkov
  * @requires jQuery, Bootstrap(Modal)
- * @description Adds help link in navigation by NavEditor<br>
- * by clicking on the link, current page help will be loaded as Bootstrap-modal
+ * @description NavHelp object.<br/>
+ * Adds dynamically help link for current page in NavEditor navigation.<br/>
+ * by clicking on the link, current page help will be loaded as Bootstrap-modal<br/>
+ * Object loads only after document is loaded!
+ * @type NavHelp
  */
-var Help = {};
-//Initialize Help object only after document loaded
+var NavHelp = {};
+//Initialize Class and Help object only after document is loaded
 $(function(){
-    Help = new function(){
+
+    NavHelp = new function(){
         var self = this;
         var helpPageName = '';
 
@@ -28,18 +32,26 @@ $(function(){
 
         //modal HTML
         var helpPopoverHtml = $.parseHTML(
-                '<div id="'+modalId+'" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Hilfe" aria-hidden="true">' +
-                    '<div class="modal-header">' +
-                        '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
-                        '<h3 id="'+modalLabelId+'"></h3>' +
-                    '</div>' +
-                    '<div class="modal-body">' +
-                    '</div>' +
-                    '<div class="modal-footer">' +
-                        '<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>' +
-                    '</div>' +
-                '</div>'
-                );
+            '<div id="'+modalId+'" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Hilfe" aria-hidden="true">' +
+                '<div class="modal-header">' +
+                    '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
+                    '<h3 id="'+modalLabelId+'"></h3>' +
+                '</div>' +
+                '<div class="modal-body">' +
+                '</div>' +
+                '<div class="modal-footer">' +
+                    '<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>' +
+                '</div>' +
+            '</div>'
+        );
+
+        /**
+         * @private
+         * @returns help page name, depends on current location path
+         */
+        function getLocationHelpPageName(){
+            return window.location.pathname.match(/([^\/]+)(?=\.\w+$)/)[0];
+        }
 
         /**
          * loads content from PHP to help container
@@ -75,16 +87,17 @@ $(function(){
          * @returns {String} current helpPageName if set, otherwiese default filename depending on path
          */
         this.getHelpPageName = function(){
-            return helpPageName || window.location.pathname.match(/([^\/]+)(?=\.\w+$)/)[0];
+            return helpPageName || getLocationHelpPageName();
         };
 
         /**
          * sets current help file name
+         * if filename is empty default page file name will be set
          * @public
          * @param {String} sName helpPageName wihtout extension
          */
         this.setHelpPageName = function(sName){
-            helpPageName = sName || '';
+            helpPageName = sName || getLocationHelpPageName();
             $('#'+modalLabelId).html(helpPageName + ' - Hilfe');
         };
 
@@ -94,7 +107,7 @@ $(function(){
          */
         this.getModal = function(){
             return $(helpPopoverHtml);
-        }
+        };
 
 
 
@@ -118,7 +131,7 @@ $(function(){
         });
 
         //set current help page default name TODO better name
-        self.setHelpPageName(window.location.pathname.match(/[^\/]+$/)[0]); //e.g. nav_editor.php
+        this.setHelpPageName(); //e.g. nav_editor.php
 
     };
 });
