@@ -12,7 +12,7 @@ $(function(){
     var dynHelpId = 'dyn_help_link';
     //new help link in navigation
     var newHelpLinkHtml = $('<li>').html($("<a>")
-            .attr('href','#')
+            .attr('href','javascript:;')
             .attr('id',dynHelpId)
             .html('Diese Seite'));
 
