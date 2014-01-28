@@ -50,13 +50,8 @@ function loadContentCallback(data) {
 
 function previewImageLoadCallback() {
 	if(imgObj.complete) {
-		if(imgW ==""){
-		imgW = imgObj.width;
-		}
-		if(imgH ==""){
-		imgH = imgObj.height;
-
-		}
+        imgW = imgW || imgObj.width;
+        imgH = imgW || imgObj.height;
 	}
 }
 
@@ -86,7 +81,8 @@ function saveVars(datab4){
 
 
 function imgPreLoad(){
-	if($("#logo-URL").val() != ""){
+    var imgStr = "";
+	if($("#logo-URL").val() !== ""){
 		var imgsrctmp = $("#logo-URL").val();
 		var imgalttmp = $("#logo-Alt").val();
 		imgH = $("#logo-Height").val();
@@ -94,9 +90,10 @@ function imgPreLoad(){
 		imgObj = new Image();
 		imgObj.src = imgsrctmp;
 		imgObj.onload = previewImageLoadCallback;
-		var imgStr = "<img alt=\"" + imgalttmp + "\" height=\"" + imgH + "\" width=\"" + imgW + "\" src=\"" + imgsrctmp + "\" />";
+        var hStyle = (imgH)?"height:" + imgH + "px;":"";
+        var wStyle = (imgW)?"width:" + imgW + "px;":"";
+		imgStr = "<img alt='" + imgalttmp + "' style='" + hStyle + wStyle + "' src='" + imgsrctmp + "' border='0'/>";
 	}
-	else{var imgStr = "";}
 	$("#imgPrev").html(imgStr);
 }
 
@@ -108,19 +105,19 @@ function loading(yesNo){
 			$('body').append('<div class="tmpLoadingOverlay"><div style="z-index:1000;position:fixed;top:0;bottom:0;left:0;width:100%;height=100%;background:#000;opacity:0.35;-moz-opacity:0.35;filter:alpha(opacity=35);visibility:visible;"><p class="p_tmp_class_loading"  style="position:fixed;top:50%;width:100%;z-index:1001;color:#fff;font-size:20px;font-weight:bold;text-align:center;">Loading...</p></div></div>');
 		}
 		$("body").css("overflow", "hidden");
-	}else if(!yesNo){
+	}else{
 		$('div.tmpLoadingOverlay').fadeOut(1000);
 		$("body").css("overflow", "auto");
-		}
+    }
 }
 
 
 $(document).ready(function() {
 	loadConf(thisConf);
-	//on change any param of logo, reload it (preview)
-//	$("#bildBlock :input").bind($.browser.msie ? 'change':'input', function() {
-//	setTimeout(imgPreLoad, 500);
-//	});
+//	on change any param of logo, reload it (preview)
+	$("#bildBlock :input").on('keydown', function() {
+        setTimeout(imgPreLoad, 500);
+	});
 	//all inputs add class 'textBox'
 	$('input[type="text"]').attr('class', 'textBox');
 
@@ -132,30 +129,32 @@ $(document).ready(function() {
 			}
 		});
 		loading(true);
-		btnTmp = $(this);
-		btnTmpVal = $(this).val();
+		var btnTmp = $(this);
+		var btnTmpVal = $(this).val();
 		$(this).val("Moment...");
-			$(this).attr("disabled", "disabled");
-			$.post("app/edit_conf.php", {
-				"oper": "set_conf",
-				"conf_file_name": thisConf,
-				"jsonData": JSON.stringify(jsonArray)
-			}, function(rdata) {
-				alert(rdata);
-				btnTmp.val(btnTmpVal);
-				btnTmp.removeAttr("disabled");
-				loading(false);
-				loadConf(thisConf);
-			});
+        $(this).attr("disabled", "disabled");
+        $.post("app/edit_conf.php", {
+            "oper": "set_conf",
+            "conf_file_name": thisConf,
+            "jsonData": JSON.stringify(jsonArray)
+        }, function(rdata) {
+            alert(rdata);
+            btnTmp.val(btnTmpVal);
+            btnTmp.removeAttr("disabled");
+            loading(false);
+            loadConf(thisConf);
+        });
 	});
 
 
 
 	$("#chkAllowHtml").click(function(){
 		if ($("#chkAllowHtml:checked").length > 0){
-		alert("HTML auf eigene Gefahr verwenden");
+            alert("HTML auf eigene Gefahr verwenden");
 		}
 	});
+
+
 	$("#btnUpdate").click(function() {
 		var text = $("#name-des-Webauftritts").val();
 		var desc = $("#kurzbeschreibung-zum-Webauftritt").val();
@@ -173,7 +172,7 @@ $(document).ready(function() {
 
 		if(confirm("Wollen Sie wirklich speichern?")) {
 			loading(true);
-			if(imgUrl != "") {
+			if(imgUrl !== "") {
 				img = "<img alt=\"" + imgAlt + "\" src=\"" + imgUrl + "\" width=\"" + imgW + "\" height=\"" + imgH + "\" border=\"0\" />";
 			}else{
 				img = "";
@@ -195,12 +194,12 @@ $(document).ready(function() {
 		}
 	});
 
-	$("#btnLoadLogo").click(function() {
-		$.getJSON("app/edit_logo.php?r=" + Math.random(), {
-			"json_oper": "get_content",
-			"template_name": $("#selTempl").val()
-		}, loadContentCallback);
-	});
+//	$("#btnLoadLogo").click(function() {
+//		$.getJSON("app/edit_logo.php?r=" + Math.random(), {
+//			"json_oper": "get_content",
+//			"template_name": $("#selTempl").val()
+//		}, loadContentCallback);
+//	});
 
 
 	$("#btnUpdateExisted").click(function() {
@@ -212,8 +211,9 @@ $(document).ready(function() {
 			var imgAlt = $("#logo-Alt").val();
 			var siteTitle = $("#titel-des-Webauftritts").val();
 			var img = '';
-			if(imgUrl != "") {
-				img = "<img alt=\"" + imgAlt + "\" src=\"" + imgUrl + "\" width=\"" + imgW + "\" height=\"" + imgH + "\" border=\"0\" />";
+			if(imgUrl !== "") {
+//				img = "<img alt=\"" + imgAlt + "\" src=\"" + imgUrl + "\" width=\"" + imgW + "\" height=\"" + imgH + "\" border=\"0\" />";
+                img = $('#imgPrev').html();
 			}
 			var templname = $("#selTempl").val();
 			var pdata = {
@@ -248,72 +248,72 @@ $(document).ready(function() {
 
 
 //wenn neue conf Dateien fehlen, die neu generieren.
-		<?php
-		if(!file_exists("../../".$ne_config_info['website_conf_filename']) || !file_exists("../../".$ne_config_info['variables_conf_filename'])){
-		?>
-			//only for loading /beginn------------
-			var loaded = new Object;
-			var website = "<?php echo $ne_config_info['website_conf_filename']; ?>";
-			var variables = "<?php echo $ne_config_info['variables_conf_filename']; ?>";
-			loaded[website] = false;
-			loaded[variables] = false;
-			$(document).ready(function() {
-				loading(true);
-			});
+<?php
+if(!file_exists("../../".$ne_config_info['website_conf_filename']) || !file_exists("../../".$ne_config_info['variables_conf_filename'])){
+?>
+    //only for loading /beginn------------
+    var loaded = new Object;
+    var website = "<?php echo $ne_config_info['website_conf_filename']; ?>";
+    var variables = "<?php echo $ne_config_info['variables_conf_filename']; ?>";
+    loaded[website] = false;
+    loaded[variables] = false;
+    $(document).ready(function() {
+        loading(true);
+    });
 
-			function loadingCheck(){
-				if (loaded[website] && loaded[variables]){
-					loading(false);
-					clearInterval(loadingAktive);
-					loadConf(thisConf);
-				}
-			}
-			var loadingAktive = setInterval("loadingCheck()", 500);
-			//only for loading /end--------------
+    function loadingCheck(){
+        if (loaded[website] && loaded[variables]){
+            loading(false);
+            clearInterval(loadingAktive);
+            loadConf(thisConf);
+        }
+    }
+    var loadingAktive = setInterval("loadingCheck()", 500);
+    //only for loading /end--------------
 
-			function create_conf(confName, confData){
-				$.post("app/create_conf.php", {
-						"oper": "create_conf",
-						"name": confName,
-						"jsonData": JSON.stringify(confData)
-				}, function(rdata) {
-						loaded[confName] = true;
-				});
-			}
+    function create_conf(confName, confData){
+        $.post("app/create_conf.php", {
+                "oper": "create_conf",
+                "name": confName,
+                "jsonData": JSON.stringify(confData)
+        }, function(rdata) {
+                loaded[confName] = true;
+        });
+    }
 
-				alert('Hinweis: Eine oder mehrere Konfigurationsdateien fehlen. Diese werden nun automatisch neu erstellt.');
-				var json_data = [];
-				//load kontakt daten von contactdata.conf save to json_data
-				$.get("app/load_osm.php", function(data) {
-					var arrValues = data.split('\\:\\');
-					var valueNames = new Array("name", "strasse", "plz", "ort", "kontakt1-name", "kontakt1-vorname", "telefon", "fax", "email");
-					for(i=0; i<11; i++){
-						var item = {
-						"opt_name": valueNames[i],
-						"opt_value": arrValues[i]
-						};
-						json_data.push(item);
-					}
-					//load logo daten von vorlage. save to json_data
-					$.getJSON("app/edit_logo.php?r=" + Math.random(), {
-					"json_oper": "get_content",
-					"template_name": "seitenvorlage.html"
-					}, function(data){
-						json_data.push({"opt_name": "name-des-Webauftritts","opt_value": data.content_text});
-						json_data.push({"opt_name": "titel-des-Webauftritts","opt_value": data.site_title_text});
-						json_data.push({"opt_name": "kurzbeschreibung-zum-Webauftritt","opt_value": data.content_desc});
-						json_data.push({"opt_name": "logo-URL","opt_value": data.content_img});
-						json_data.push({"opt_name": "logo-Alt","opt_value": data.content_img_alt});
-						json_data.push({"opt_name": "logo-Width","opt_value": ""});
-						json_data.push({"opt_name": "logo-Height","opt_value": ""});
-						create_conf(website, json_data);
-						create_conf(variables, "");
-					});
-				});
+    alert('Hinweis: Eine oder mehrere Konfigurationsdateien fehlen. Diese werden nun automatisch neu erstellt.');
+    var json_data = [];
+    //load kontakt daten von contactdata.conf save to json_data
+    $.get("app/load_osm.php", function(data) {
+        var arrValues = data.split('\\:\\');
+        var valueNames = new Array("name", "strasse", "plz", "ort", "kontakt1-name", "kontakt1-vorname", "telefon", "fax", "email");
+        for(i=0; i<11; i++){
+            var item = {
+            "opt_name": valueNames[i],
+            "opt_value": arrValues[i]
+            };
+            json_data.push(item);
+        }
+        //load logo daten von vorlage. save to json_data
+        $.getJSON("app/edit_logo.php?r=" + Math.random(), {
+            "json_oper": "get_content",
+            "template_name": "seitenvorlage.html"
+        }, function(data){
+            json_data.push({"opt_name": "name-des-Webauftritts","opt_value": data.content_text});
+            json_data.push({"opt_name": "titel-des-Webauftritts","opt_value": data.site_title_text});
+            json_data.push({"opt_name": "kurzbeschreibung-zum-Webauftritt","opt_value": data.content_desc});
+            json_data.push({"opt_name": "logo-URL","opt_value": data.content_img});
+            json_data.push({"opt_name": "logo-Alt","opt_value": data.content_img_alt});
+            json_data.push({"opt_name": "logo-Width","opt_value": ""});
+            json_data.push({"opt_name": "logo-Height","opt_value": ""});
+            create_conf(website, json_data);
+            create_conf(variables, "");
+        });
+    });
 
-		<?php
-		}
-		?>
+<?php
+}
+?>
 
 </script>
 </head>
@@ -354,7 +354,7 @@ $(document).ready(function() {
 
                                                     <div class="input-append">
                                                         <input type="text" id="titel-des-Webauftritts" name="titel-des-Webauftritts" size="40" />
-                                                        <input type="button" id="btnCopySiteName" class="btn" value="Aus Name Kopieren" />
+                                                        <a class="btn" id="btnCopySiteName">Aus Name Kopieren</a>
                                                     </div>
                                                 </div>
                                                 <div class="control-group">
@@ -364,7 +364,7 @@ $(document).ready(function() {
                                         </div>
                                     </div>
                                     <div class="span6">
-                                        <div class="content">
+                                        <div class="content" id="bildBlock">
                                             <div class="control-group">
                                                 <label>Bild f&uuml;r das Logo (Optional):</label>
                                                 <div class="input-append">
@@ -441,15 +441,16 @@ $(document).ready(function() {
                             });
                             -->
                         </script>
-                        <form action="" method="post" name="frmEdit" id="frmEdit">
+<!--                        <form action="" method="post" name="frmEdit" id="frmEdit">
                             <fieldset>
-                                <!--<legend>OpenStreetMap-Kontaktseite erstellen</legend>-->
+                                <legend>OpenStreetMap-Kontaktseite erstellen</legend>
                             </fieldset>
-                        </form>
+                        </form>-->
                         <form action="" method="" id="suche">
-                            <fieldset style="min-width:880px;">
+                            <div class="row">
+                            <fieldset class="content span" style="min-width:880px;">
                                 <legend>Kontaktdaten</legend>
-                                <div style="float:left;clear:none;">
+                                <div >
                                     <p>
                                         <label>Institut</label><br />
                                         <input type="text" id="name" name="inst" />
@@ -480,16 +481,13 @@ $(document).ready(function() {
                                         <label>Email</label><br />
                                         <input type="text" id="email" name="email" />
                                     </p>
-                                    <p>
-                                        <input id="save_osm" type="button" class="submit" name="submit" value="Kontaktseite erstellen" />
-                                    </p>
-                                    <br>
-                                        <p>
-                                            <input id="btnSaveall" type="button" class="submit" name="submit" value="Nur Variablen speichern" />
-                                        </p>
                                 </div>
-
                             </fieldset>
+                            <div class="form-footer span12">
+                                <input id="save_osm" type="button" class="submit btn btn-light btn-large btn-success span3" name="submit" value="Kontaktseite erstellen" />
+                                <input id="btnSaveall" type="button" class="submit btn btn-light btn-large btn-success span3" name="submit" value="Nur Variablen speichern" />
+                            </div>
+                            </div>
                         </form>
                     </div>
                 </div>
