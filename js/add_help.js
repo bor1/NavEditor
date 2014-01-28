@@ -98,7 +98,7 @@ $(function(){
          */
         this.setHelpPageName = function(sName){
             helpPageName = sName || getLocationHelpPageName();
-            $('#'+modalLabelId).html(helpPageName + ' - Hilfe');
+            $(helpPopoverHtml).find('#'+modalLabelId).html(helpPageName + ' - Hilfe');
         };
 
         /**
@@ -120,7 +120,8 @@ $(function(){
                 .append(newHelpLinkHtml);
 
         //on click on the new help link
-        helpMenue.on('click', '#'+dynHelpId, function(){
+//        helpMenue.on('click', '#'+dynHelpId, function(){
+        $(newHelpLinkHtml).click(function(){
             var content = self.getHelpContent();
             //load if no help content yet
             if (!content) {
