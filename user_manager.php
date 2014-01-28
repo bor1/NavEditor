@@ -2,12 +2,6 @@
 require_once('auth.php');
 //BAD CODE. TODO AngularJS ?
 
-// help
-function has_help_file() {
-	global $ne_config_info;
-	$help_file = $ne_config_info['help_path'] .'user_manager'. $ne_config_info['help_filesuffix'] ;
-	return file_exists($help_file);
-}
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
@@ -33,7 +27,6 @@ function has_help_file() {
 <script type="text/javascript">
 var admin_uname = "<?php echo(NavTools::getServerAdmin()); ?>";
 
-var helpText = "";
 var _user_data_array = [];
 var _currentValues = [];
 var _user_roles_array = $.parseJSON('<?php echo(json_encode($ne_user_roles)); ?>') ;
@@ -632,35 +625,6 @@ $(document).ready(function() {
         }
     });
 
-
-    // help
-    $("#show-help").click(function() {
-        var $this = $(this),
-            content = $this.siblings(".hover-popover").find(".content").html(),
-            showContent = function(content) {
-                $this.siblings(".hover-popover").show().find(".content").html(content);
-            };
-
-        if(content === undefined || content == "") {
-            $.get("app/get_help.php?r=" + Math.random(), {
-                "page_name": "user_manager"
-            }, showContent);
-        } else {
-            showContent(content);
-        }
-    });
-
-    $(".popover-container > a").click(function() {
-        var $this = $(this);
-
-        $this.siblings(".hover-popover").show();
-
-    });
-
-    $(".hover-popover .dismiss").click(function() {
-        $(this).closest(".hover-popover").hide();
-    });
-
     $(window).resize(function() {
         setPanelScroll();
     });
@@ -675,30 +639,6 @@ $(document).ready(function() {
     <div class="container">
         <div class="page-header">
             <h3 class="page-header">Benutzerverwaltung</h3>
-            <div class="pull-right">
-
-                 <?php
-                    // help
-                    if (has_help_file()) {
-                ?>
-                    <div class="popover-container">
-                        <a class="fetch btn btn btn-primary btn-light" href="javascript:void(0);"><i class="icon-white">?</i> Hilfe</a>
-                        <div class="hover-popover">
-                            <div class="header clearfix">
-                                <h4>Hilfe</h4>
-                                <div class="pull-right">
-                                    <a class="dismiss btn btn-black-white" href="javascript:void(0);">Ok</a>
-
-                                </div>
-                            </div>
-
-                            <div class="content"></div>
-                        </div>
-                    </div>
-                <?php
-                    }
-                ?>
-            </div>
         </div>
 
         <div  class="row padding-top" id="contentPanel1222">

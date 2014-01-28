@@ -20,12 +20,6 @@ if (!is_array($thiseditor)){
 }
 
 
-// help
-function has_help_file() {
-	global $ne_config_info, $thiseditor;
-	$help_file = $ne_config_info['help_path'] .$thiseditor['help_page_name']. $ne_config_info['help_filesuffix'] ;
-	return file_exists($help_file);
-}
 
 
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -47,7 +41,8 @@ function has_help_file() {
 <script type="text/javascript">
 var tinymceReady = false;
 
-var helpText = "";
+//show help anhaengig von editor parameter
+$(function(){NavHelp.setHelpPageName('<?php echo $thiseditor['help_page_name'];?>');});
 
 tinyMCE.init({
 	forced_root_block : '',
@@ -123,28 +118,6 @@ $(document).ready(function() {
 		}
 	});
 
-	// help
-	$(".help-container .fetch").click(function() {
-		var $this = $(this),
-			content = $this.siblings(".hover-popover").find("content").html(),
-			showContent = function(content) {
-				$this.siblings(".hover-popover").show().find(".content").html(content);
-			};
-
-		console.log(content);
-
-		if(content === undefined || content == "") {
-			$.get("app/get_help.php?r=" + Math.random(), {
-				"page_name": "<?php echo ($thiseditor['help_page_name']); ?>"
-			}, showContent);
-		} else {
-			showContent(content);
-		}
-	});
-
-	$(".hover-popover .dismiss").click(function() {
-		$(this).closest(".hover-popover").hide();
-    });
 });
 </script>
 </head>
@@ -161,27 +134,6 @@ $(document).ready(function() {
                 	<div class="page-header">
 	                    <h3 class="page-header"><?php echo ($thiseditor["title"]); ?> bearbeiten</h3>
 	                    <div class="pull-right">
-							 <?php
-				            	// help
-				            	if (has_help_file()) {
-				            ?>
-				            	<div class="popover-container">
-									<a class="fetch btn btn btn-primary btn-light" href="javascript:void(0);"><i class="icon-white">?</i> Hilfe</a>
-									<div class="hover-popover">
-										<div class="header clearfix">
-											<h4>Hilfe</h4>
-											<div class="pull-right">
-												<a class="dismiss btn btn-black-white" href="javascript:void(0);">Ok</a>
-
-											</div>
-										</div>
-
-										<div class="content"></div>
-									</div>
-								</div>
-							<?php
-				            	}
-				            ?>
 				            <a href="javascript:void(0);" class="btn btn-success btn-light" id="btnUpdate" name="btnUpdate" ><i class="icon-white icon-ok"></i> Speichern</a>
 				        </div>
                     </div>

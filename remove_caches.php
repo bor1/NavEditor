@@ -47,14 +47,6 @@ if(is_array($toRemovePaths) && count($toRemovePaths) > 0){
     }
 }
 
-
-// help
-function has_help_file() {
-	global $ne_config_info;
-	$help_file = $ne_config_info['help_path'] .'remove_caches'. $ne_config_info['help_filesuffix'] ;
-	return file_exists($help_file);
-}
-
 ?>
 
 
@@ -87,17 +79,6 @@ $(document).ready(function() {
 	</div>
 
     <div id="contentPanel1">
-        <?php
-        // help
-        if (has_help_file()) {
-        ?>
-            <div id="helpCont"></div>
-            <div id="helpHand"><a href="javascript:;">Hilfe</a></div>
-        <?php
-        }
-        ?>
-
-
         <?php
             function createEntity($text,$param){
                 $uri_parts = explode('?', $_SERVER['REQUEST_URI'], 2);

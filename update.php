@@ -1,13 +1,6 @@
 <?php
 require_once('auth.php');
 
-// help
-function has_help_file() {
-	global $ne_config_info;
-	$help_file = $ne_config_info['help_path'] .'update'. $ne_config_info['help_filesuffix'] ;
-	return file_exists($help_file);
-}
-
 if(!file_exists("../../".$ne_config_info['website_conf_filename']) || !file_exists("../../".$ne_config_info['variables_conf_filename'])){
 	header('Location: website_editor.php');
 }
@@ -24,8 +17,6 @@ if(!file_exists("../../".$ne_config_info['website_conf_filename']) || !file_exis
 	var sv = "";
 	var tv = "";
 	var goback = false;
-
-	var helpText = "";
 
 	function check() {
 		$("#imgLoading").show();
@@ -101,27 +92,6 @@ if(!file_exists("../../".$ne_config_info['website_conf_filename']) || !file_exis
 		$("#btnCheckUpdate").click(function() {
 			check();
 		});
-		// help
-		$(".help-container .fetch").click(function() {
-			var $this = $(this),
-				content = $this.siblings(".hover-popover").find("content").html(),
-				showContent = function(content) {
-					$this.siblings(".hover-popover").show().find(".content").html(content);
-				};
-
-			if(content === undefined || content == "") {
-				$.get("app/get_help.php?r=" + Math.random(), {
-					"page_name": "update"
-				}, showContent);
-			} else {
-				showContent(content);
-			}
-		});
-
-        $(".hover-popover .dismiss").click(function() {
-			$(this).closest(".hover-popover").hide();
-		});
-
 	});
 
 
@@ -138,27 +108,6 @@ if(!file_exists("../../".$ne_config_info['website_conf_filename']) || !file_exis
             <h2 class="page-header">Update <small>Aktualisieren Sie hier den NavEditor</small></h2>
             <div class="pull-right">
 				<input class="btn btn-inverse btn-rounded" type="button" id="btnUpdate" name="btnUpdate" value="Speichern" />
-				 <?php
-	            	// help
-	            	if (has_help_file()) {
-	            ?>
-	            	<div class="help-container">
-						<a class="fetch btn btn btn-primary btn-rounded" href="javascript:void(0);">Hilfe</a>
-						<div class="hover-popover">
-							<div class="header clearfix">
-								<h4>Hilfe</h4>
-								<div class="pull-right">
-									<a class="dismiss btn btn-black-white" href="javascript:void(0);">Ok</a>
-
-								</div>
-							</div>
-
-							<div class="content"></div>
-						</div>
-					</div>
-				<?php
-	            	}
-	            ?>
 	        </div>
         </div>
 

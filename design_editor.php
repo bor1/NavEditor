@@ -2,12 +2,6 @@
 require_once('auth.php');
 
 
-// help
-function has_help_file() {
-	global $ne_config_info;
-	$help_file = $ne_config_info['help_path'] .'design_editor'. $ne_config_info['help_filesuffix'] ;
-	return file_exists($help_file);
-}
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
@@ -19,8 +13,6 @@ function has_help_file() {
 
 <script type="text/javascript">
 var loadFileListDone = false;
-
-var helpText = "";
 
 function loadContentCallback(data) {
         if(!data){alert('no designs found');return;}
@@ -130,28 +122,6 @@ $(document).ready(function() {
                 }
 	});
 
-	// help
-	$(".help-container .fetch").click(function() {
-		var $this = $(this),
-			content = $this.siblings(".hover-popover").find("content").html(),
-			showContent = function(content) {
-				$this.siblings(".hover-popover").show().find(".content").html(content);
-			};
-
-		console.log(content);
-
-		if(content === undefined || content == "") {
-			$.get("app/get_help.php?r=" + Math.random(), {
-				"page_name": "design_editor"
-			}, showContent);
-		} else {
-			showContent(content);
-		}
-	});
-
-	$(".hover-popover .dismiss").click(function() {
-		$(this).closest(".hover-popover").hide();
-	});
 });
 </script>
 </head>
@@ -164,30 +134,6 @@ $(document).ready(function() {
 
         <div class="page-header">
             <h3 class="page-header">Design</h3>
-            <div class="pull-right">
-
-				 <?php
-	            	// help
-	            	if (has_help_file()) {
-	            ?>
-	            	<div class="help-container">
-						<a class="fetch btn btn btn-primary btn-rounded" href="javascript:void(0);">Hilfe</a>
-						<div class="hover-popover">
-							<div class="header clearfix">
-								<h4>Hilfe</h4>
-								<div class="pull-right">
-									<a class="dismiss btn btn-black-white" href="javascript:void(0);">Ok</a>
-
-								</div>
-							</div>
-
-							<div class="content"></div>
-						</div>
-					</div>
-				<?php
-	            	}
-	            ?>
-	        </div>
         </div>
 
         <div class="row">

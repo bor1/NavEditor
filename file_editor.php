@@ -2,13 +2,6 @@
 require_once('auth.php');
 
 
-// help
-function has_help_file() {
-    global $ne_config_info;
-    $help_file = $ne_config_info['help_path'] .'file_editor'. $ne_config_info['help_filesuffix'];
-    return file_exists($help_file);
-}
-
 ?>
 
 <!DOCTYPE html>
@@ -328,22 +321,7 @@ function has_help_file() {
                     //plugins: "safari,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template",
                 });
 
-                // help
-                $("#show-help").click(function() {
-                    var $this = $(this),
-                        content = $this.siblings(".hover-popover").find(".content").html(),
-                        showContent = function(content) {
-                            $this.siblings(".hover-popover").show().find(".content").html(content);
-                        };
 
-                    if(content === undefined || content === "") {
-                        $.get("app/get_help.php?r=" + Math.random(), {
-                            "page_name": "file_editor"
-                        }, showContent);
-                    } else {
-                        showContent(content);
-                    }
-                });
 
                 $(".popover-container > a").click(function() {
                     var $this = $(this);
@@ -734,27 +712,6 @@ function has_help_file() {
             <div class="page-header">
                 <h3 class="page-header">Bilder und Dateien verwalten</h3>
                 <div id="edit_buttons_block" class="pull-right">
-                    <?php
-                        // help
-                        if (has_help_file()) {
-                    ?>
-                        <div class="popover-container">
-                            <a id="show-help" class="fetch btn btn-primary btn-light" href="javascript:void(0);"><i class="icon-white">?</i> Hilfe</a>
-                            <div class="hover-popover">
-                                <div class="header clearfix">
-                                    <h4>Hilfe</h4>
-                                    <div class="pull-right">
-                                        <a class="dismiss btn btn-black-white" href="javascript:void(0);">Ok</a>
-
-                                    </div>
-                                </div>
-
-                                <div class="content"></div>
-                            </div>
-                        </div>
-                    <?php
-                        }
-                    ?>
 
                     <div class="popover-container">
                         <a id="delete-element" class="fetch btn btn-danger btn-light" href="javascript:void(0);"><i class="icon-white icon-remove"></i>L&ouml;schen</a>

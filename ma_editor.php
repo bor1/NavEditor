@@ -11,12 +11,6 @@ if($ne_config_info['custom_content_css_classes'] != '') {
 	$custom_css_classes = implode(';', $custom_css_classes);
 }
 
-// help
-function has_help_file() {
-	global $ne_config_info;
-	$help_file = $ne_config_info['help_path'] .'ma_editor'. $ne_config_info['help_filesuffix'] ;
-	return file_exists($help_file);
-}
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
@@ -154,8 +148,6 @@ tinyMCE.init({
 <!--
 var loadMAListDone = false;
 var currentFileName = "";
-
-var helpText = "";
 
 function ajaxFileUpload(maFileName) {
 	$("#ajaxWaiting")
@@ -406,21 +398,6 @@ $(document).ready(function() {
 			});
 		}
 	});
-
-	// help
-	$("#helpHand a").click(function() {
-		if(helpText == "") {
-			$.get("app/get_help.php?r=" + Math.random(), {
-				"page_name": "ma_editor"
-			}, function(rdata){
-				helpText = rdata;
-				$("#helpCont").html(helpText);
-				$("#helpCont").slideToggle("fast");
-			});
-		} else {
-			$("#helpCont").slideToggle("fast");
-		}
-	});
 });
 // -->
 </script>
@@ -446,15 +423,6 @@ $(document).ready(function() {
 	</div>
 
 	<div id="contentPanel2" class="span9">
-	<?php
-	// help
-	if(has_help_file()) {
-	?>
-		<div id="helpCont">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</div>
-		<div id="helpHand"><a href="javascript:;">Hilfe</a></div>
-	<?php
-	}
-	?>
         <form id="frmEdit" style="position:relative;" class="form-inline">
 			<fieldset id="fld_feedimport">
 				<legend>Mitarbeiter bearbeiten</legend>

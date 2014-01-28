@@ -1,12 +1,5 @@
 <?php
 	require_once('auth.php');
-
-	// help
-	function has_help_file() {
-		global $ne_config_info;
-		$help_file = $ne_config_info['help_path'] .'website_editor'. $ne_config_info['help_filesuffix'] ;
-		return file_exists($help_file);
-	}
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -36,24 +29,6 @@
 
 				var menue_source   = $("#menue-template").html(),
 			 		menue_template = Handlebars.compile(menue_source);
-
-				// help
-				$("#show-help").click(function() {
-
-					var $this = $(this),
-						content = $this.siblings(".hover-popover").find(".content").html(),
-						showContent = function(content) {
-							$this.siblings(".hover-popover").show().find(".content").html(content);
-						};
-
-					if(content === undefined || content == "") {
-						$.get("app/get_help.php?r=" + Math.random(), {
-							"page_name": "nav_editor"
-						}, showContent);
-					} else {
-						showContent(content);
-					}
-				});
 
 				$(".popover-container > a").click(function() {
 					var $this = $(this);
@@ -346,33 +321,6 @@
 
 		<div class="page-header padding-top">
 	        <h2 id="page-title" class="page-header">Seite und Navigation <small>Bearbeiten Sie hier Ihre Internetpresenz</h2>
-
-	        <div class="pull-right">
-
-				<?php
-	            	// help
-	            	if (has_help_file()) {
-	            ?>
-	            	<div class="popover-container">
-						<a id="show-help" class="fetch btn btn-primary btn-light" href="javascript:void(0);"><i class="icon-white">?</i> Hilfe</a>
-						<div class="hover-popover">
-							<div class="header clearfix">
-								<h4>Hilfe</h4>
-								<div class="pull-right">
-									<a class="dismiss btn btn-black-white" href="javascript:void(0);">Ok</a>
-
-								</div>
-							</div>
-
-							<div class="content"></div>
-						</div>
-					</div>
-
-
-				<?php
-	            	}
-	            ?>
-	        </div>
         </div>
         <!--=======================================================================================-->
         <!--================================== Conten ab hier =====================================-->
