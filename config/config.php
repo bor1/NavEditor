@@ -277,7 +277,8 @@ $ne_config_info['default_includes_js_css'] = Array(
     "bootstrap-responsive.css?, $default_include_date",
     "jquery-1.10.1.min.js",
     "loading.js",
-    "bootstrap.js"
+    "bootstrap.js",
+    "add_help.js"
 );
 
 
