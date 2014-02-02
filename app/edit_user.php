@@ -23,9 +23,9 @@ if($oper == 'create_user') {
     $new_user_name = NavTools::filterSymbols(Input::get_post('user'));//nicht erlaubte symbole filtern
     $params = json_decode(stripslashes(Input::get_post('params')), true);
     if(!$g_UserMgmt->AddUser($new_user_name, $params)) {
-        echo('Add user failed, maybe the username already exists!');
+        echo('Fehlgeschlagen, vielleicht existiert der Benutzername bereits!');
     } else {
-        echo('Add user ' . $new_user_name . ' done!');
+        echo('Benutzer ' . $new_user_name . ' erfolgreich hinzugefügt!');
     }
 }
 
@@ -40,22 +40,22 @@ if($oper == 'update_user') {
             //remove not editable values
             $userArray = array_diff_key($paramArray, get_ne_user_params_not_editable());
             if(!$g_UserMgmt->UpdateUser($user, $userArray)) {
-        echo('Update user failed!');
+        echo('Aktualisierung fehlgeschlagen!');
     } else {
-        echo('Update user ' . $user . ' done!');
+        echo('Benutzer: ' . $user . ' erfolgreich aktualisiert!');
     }
 }
 
 if($oper == 'remove_user') {
     $user_name = Input::get_post('user_name');
             if(NavTools::getServerAdmin() == $user_name){
-                echo('Can not remove admin!');
+                echo('Darf nicht den Admin löschen!'); //theoretisch sicherheitsluecke...
                 return;
             }
     if(!$g_UserMgmt->RemoveUser($user_name)) {
-        echo('Remove user failed!');
+        echo('Fehlgeschlagen!');
     } else {
-        echo('Remove user OK!');
+        echo('Benutzer: ' . $user_name . ' erfolgreich gelöscht!');
     }
 }
 
