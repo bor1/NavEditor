@@ -1,27 +1,18 @@
 <?php
 require_once('auth.php');
 
-// help
-function has_help_file() {
-	global $ne_config_info;
-	$help_file = $ne_config_info['help_path'] .'design_editor'. $ne_config_info['help_filesuffix'] ;
-	return file_exists($help_file);
-}
+
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Design wechseln - <?php echo($ne_config_info['app_titleplain']); ?></title>
-<link rel="stylesheet" type="text/css" href="css/styles.css?<?php echo date('Ymdis'); ?>" />
 
-<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
-<script type="text/javascript" src="js/json2.js"></script>
-<script type="text/javascript" src="js/loading.js"></script>
+<?php echo NavTools::includeHtml("default"); ?>
+
 <script type="text/javascript">
 var loadFileListDone = false;
-
-var helpText = "";
 
 function loadContentCallback(data) {
         if(!data){alert('no designs found');return;}
@@ -68,7 +59,15 @@ function loadChkboxes(design){
                             din_chkboxes_html = "no setting found";
                         }else{
                             for(var i = 0; i < rdata.length; i++){
-                                    din_chkboxes_html += "<input type='checkbox' id='"+ rdata[i].setting +"' value='" + rdata[i].setting +"' "+ (rdata[i].checked ? "checked='checked'" : "") +" /><label for='"+ rdata[i].setting +"'>  "+ decode_utf8(rdata[i].setting_descr) +"</label><br>";
+        						// <label class="checkbox">
+								//   <input type="checkbox" value="">
+								//   Option one is this and that—be sure to include why it's great
+								// </label>
+								din_chkboxes_html += '<label class="checkbox">';
+								din_chkboxes_html +=	'<input type="checkbox" id="' + rdata[i].setting + '" value="' + rdata[i].setting +'" '+ (rdata[i].checked ? 'checked="checked"': '') + ' />';
+								din_chkboxes_html += 	decode_utf8(rdata[i].setting_descr);
+								din_chkboxes_html += '</label>';
+                                // din_chkboxes_html += "<input type='checkbox' id='"+ rdata[i].setting +"' value='" + rdata[i].setting +"' "+ (rdata[i].checked ? "checked='checked'" : "") +" /><label for='"+ rdata[i].setting +"'>  "+ decode_utf8(rdata[i].setting_descr) +"</label><br>";
                             }
                         }
 			$('#settingsBlock').html(din_chkboxes_html);
@@ -112,6 +111,7 @@ $(document).ready(function() {
 					settings[$(checks[i]).val()] = false;
 				}
 			}
+			console.log(settings);
                         $.post("app/edit_design.php", {
                                 "oper": "set_settings",
                                 "head_file_name": $("#selDesigns").val(),
@@ -122,65 +122,49 @@ $(document).ready(function() {
                 }
 	});
 
-	// help
-	$("#helpHand a").click(function() {
-		if(helpText == "") {
-			$.get("app/get_help.php?r=" + Math.random(), {
-				"page_name": "design_editor"
-			}, function(rdata){
-				helpText = rdata;
-				$("#helpCont").html(helpText);
-				$("#helpCont").slideToggle("fast");
-			});
-		} else {
-			$("#helpCont").slideToggle("fast");
-		}
-	});
 });
 </script>
 </head>
 
 <body id="bd_Design">
-<div id="wrapper">
-	<h1 id="header"><?php echo($ne_config_info['app_title']); ?></h1>
-	<div id="navBar">
-		<?php require('common_nav_menu.php'); ?>
-	</div>
 
-	<div id="contentPanel1">
-	<?php
-	// help
-	if(has_help_file()) {
-	?>
-		<div id="helpCont">.</div>
-		<div id="helpHand"><a href="javascript:;">Hilfe</a></div>
-	<?php
-	}
-	?>
-		<form action="" method="post" name="frmEdit" id="frmEdit">
-			<fieldset>
-				<legend>Designs ausw&auml;hlen</legend>
-				<select id="selDesigns"></select>
-				<input type="button" id="btnUpdate" name="btnUpdate" value="Dieses Design aktivieren" class="button" />
-				<div id="previewImage" style="padding:0.25em 0 0 0;"></div>
-				<hr size="1" noshade="noshade" />
-			</fieldset>
-		</form>
+	<?php require('common_nav_menu.php'); ?>
 
-		<form id="frmKopf">
-			<fieldset>
-				<legend id="confDesignLegend">Design Konfigurieren</legend>
-				<div id="settingsBlock">
-				<!--<input type="checkbox" id="chkZielGrpNav" value="mitZiel" checked="checked" /> <label for="chkZielGrpNav">Zielgruppennavigation</label>
-				<input type="checkbox" id="chkSuche" value="mitSuche" checked="checked" /> <label for="chkSuche">Suche</label>-->
-				</div>
-				<input type="button" id="btnUpdKopf" name="btnUpdKopf" class="button" value="Einstellungen speichern" />
-			</fieldset>
-		</form>
+	<div class="container page" id="contentPanel1">
+
+        <div class="page-header">
+            <h3 class="page-header">Design</h3>
+        </div>
+
+        <div class="row">
+        	<div class="span6">
+        		<form action="" method="post" name="frmEdit" id="frmEdit">
+					<fieldset>
+						<legend>Designs ausw&auml;hlen</legend>
+						<select id="selDesigns"></select>
+						<input type="button" id="btnUpdate" name="btnUpdate" value="Dieses Design aktivieren" class="btn btn-rounded btn-inverse pull-right" />
+						<div id="previewImage" style="padding:0.25em 0 0 0;"></div>
+
+					</fieldset>
+				</form>
+        	</div>
+        	<div class="span6">
+        		<form id="frmKopf">
+					<fieldset>
+						<legend id="confDesignLegend">Design Konfigurieren</legend>
+						<div id="settingsBlock">
+						</div>
+						<input type="button" id="btnUpdKopf" name="btnUpdKopf" class="btn btn-rounded btn-inverse pull-right" value="Einstellungen speichern" />
+					</fieldset>
+				</form>
+        	</div>
+        </div>
+
+
 	</div>
 
 <?php require('common_footer.php'); ?>
-</div>
+
 </body>
 
 </html>

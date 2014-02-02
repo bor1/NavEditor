@@ -1,22 +1,20 @@
 <?php
 require_once('auth.php');
 
-// help
-function has_help_file() {
-	global $ne_config_info;
-	$help_file = $ne_config_info['help_path'] .'conf_editor'. $ne_config_info['help_filesuffix'] ;
-	return file_exists($help_file);
-}
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Konfigurationen bearbeiten - <?php echo($ne_config_info['app_titleplain']); ?></title>
-<link rel="stylesheet" type="text/css" href="css/styles.css?<?php echo date('Ymdis'); ?>" />
 
-<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
-<script type="text/javascript" src="js/json2.js"></script>
+<?php
+    echo NavTools::includeHtml(
+            "default",
+            "json2.js"
+          );
+?>
+
 <script type="text/javascript">
 <!--
 var loadFeedImportDone = false;
@@ -31,8 +29,6 @@ var loadConfDone = false;
 var loadConfListDone = false;
 
 var currentConfFileName = "";
-
-var helpText = "";
 
 function loadConfList() {
 	$.getJSON("app/edit_conf.php?r=" + Math.random(), {
@@ -693,21 +689,6 @@ $(document).ready(function() {
 		}
 	});
 
-	// help
-	$("#helpHand a").click(function() {
-		if(helpText == "") {
-			$.get("app/get_help.php?r=" + Math.random(), {
-				"page_name": "conf_editor"
-			}, function(rdata){
-				helpText = rdata;
-				$("#helpCont").html(helpText);
-				$("#helpCont").slideToggle("fast");
-			});
-		} else {
-			$("#helpCont").slideToggle("fast");
-		}
-	});
-
 	loadConfList();
 
 });
@@ -716,96 +697,94 @@ $(document).ready(function() {
 </head>
 
 <body id="bd_Conf">
-<div id="wrapper">
-	<h1 id="header"><?php echo($ne_config_info['app_title']); ?></h1>
-	<div id="navBar">
-		<?php require('common_nav_menu.php'); ?>
-	</div>
+	<?php require('common_nav_menu.php'); ?>
 
-	<div id="confList">
-		<fieldset>
-			<legend>Konfigurationsdatei</legend>
-			<ul></ul>
-		</fieldset>
-	</div>
+	<div class="container page" id="wrapper">
 
-	<div id="contentPanel2">
-	<?php
-	// help
-	if(has_help_file()) {
-	?>
-		<div id="helpCont">.</div>
-		<div id="helpHand"><a href="javascript:;">Hilfe</a></div>
-	<?php
-	}
-	?>
-		<form id="frmEdit">
-			<fieldset id="fld_feedimport">
-				<legend>feedimport.conf</legend>
-				<div id="feedimport">Loading...<div class="mi"></div></div>
-				<hr size="1" noshade="noshade" />
-				<div id="feedimportOpts"></div>
-				<div id="feedimportGenItems"><div class="mi"></div></div>
-				<hr size="1" noshade="noshade" />
-				<input type="button" id="btnAddFeedBox" value="Feed einf&uuml;gen" class="button" />
-				<input type="button" id="btnAddItemFeedImport" value="Konfig-Eintrag einf&uuml;gen" class="button" />
-				<input type="button" id="btnUpdFeedImport" value="Update" class="button" />
-			</fieldset>
+		<div class="page-header">
+            <h3 class="page-header">Konfigurationsdateien bearbeiten</h3>
+        </div>
 
-			<fieldset id="fld_website">
-				<legend></legend>
-				<div id="websiteContainer">Loading...</div>
-				<div id="genWebItemsContainer"><div class="mi"></div></div>
-				<hr size="1" noshade="noshade" />
-				<input type="button" id="btnWebAddConf" value="Eintrag einf&uuml;gen" class="button" />
-				<input type="button" id="btnWebUpdConf" value="Nur Variablen speichern" class="button" />
-				<br><br>
-				<input type="button" id="btnUpdate" name="btnUpdate" value="Vorlagen Aktualisieren" class="button" />
-				<input type="button" id="btnUpdateExisted" name="btnUpdateExisted" value="Existierte Seiten Aktualisieren" class="button" />
-				<input type="hidden" id="selTempl" name="selTempl" value="seitenvorlage.html">
-				<input id="save_osm" type="button" class="submit" name="submit" value="Kontaktseite erstellen" />
-			</fieldset>
+		<div class="row padding-top">
 
-			<fieldset id="fld_common">
-				<legend></legend>
-				<div id="container">Loading...</div>
-				<div id="genItemsContainer"><div class="mi"></div></div>
-				<hr size="1" noshade="noshade" />
-				<input type="button" id="btnAddConf" value="Eintrag einf&uuml;gen" class="button" />
-				<input type="button" id="btnUpdConf" value="Update" class="button" />
-			</fieldset>
+			<div class="span3" id="confList">
+				<fieldset>
+					<legend>Konfigurationsdateien</legend>
+					<ul></ul>
+				</fieldset>
+			</div>
 
-			<fieldset id="fld_vorlagen">
-				<legend>vorlagen.conf</legend>
-				<div id="vorlagen">Loading...</div>
-				<hr size="1" noshade="noshade" />
-				<input type="button" id="btnUpdVorlagen" value="Update" class="button" />
-			</fieldset>
+			<div class="span9" id="contentPanel2">
+				<form id="frmEdit">
+					<fieldset id="fld_feedimport">
+						<legend>feedimport.conf</legend>
+						<div id="feedimport">Loading...<div class="mi"></div></div>
+						<hr size="1" noshade="noshade" />
+						<div id="feedimportOpts"></div>
+						<div id="feedimportGenItems"><div class="mi"></div></div>
+						<hr size="1" noshade="noshade" />
+						<input type="button" id="btnAddFeedBox" value="Feed einf&uuml;gen" class="button" />
+						<input type="button" id="btnAddItemFeedImport" value="Konfig-Eintrag einf&uuml;gen" class="button" />
+						<input type="button" id="btnUpdFeedImport" value="Update" class="button" />
+					</fieldset>
 
-			<fieldset id="fld_htusers">
-				<legend>.htusers</legend>
-				<div id="htusers"></div>
-				<hr size="1" noshade="noshade" />
-				<label for="txtNewHtUserName">Username</label>
-				<input type="text" id="txtNewHtUserName" class="textBox" size="16" />
-				<label for="txtNewHtUserPass">Password</label>
-				<input type="password" id="txtNewHtUserPass" class="txtBox" size="16" />
-				<input type="button" id="btnAddNewHtUser" value="Add" class="button" />
-			</fieldset>
+					<fieldset id="fld_website">
+						<legend></legend>
+						<div id="websiteContainer">Loading...</div>
+						<div id="genWebItemsContainer"><div class="mi"></div></div>
+						<hr size="1" noshade="noshade" />
+						<input type="button" id="btnWebAddConf" value="Eintrag einf&uuml;gen" class="button" />
+						<input type="button" id="btnWebUpdConf" value="Nur Variablen speichern" class="button" />
+						<br><br>
+						<input type="button" id="btnUpdate" name="btnUpdate" value="Vorlagen Aktualisieren" class="button" />
+						<input type="button" id="btnUpdateExisted" name="btnUpdateExisted" value="Existierte Seiten Aktualisieren" class="button" />
+						<input type="hidden" id="selTempl" name="selTempl" value="seitenvorlage.html">
+						<input id="save_osm" type="button" class="submit" name="submit" value="Kontaktseite erstellen" />
+					</fieldset>
 
-			<fieldset id="fld_hthosts">
-				<legend>hthosts</legend>
-				<div id="hthosts"></div>
-				<hr size="1" noshade="noshade" />
-				<label for="txtNewHtHost">Domain/IP</label>
-				<input type="text" id="txtNewHtHost" class="textBox" size="16" />
-				<input type="button" id="btnAddNewHtHost" value="Add" class="button" />
-			</fieldset>
-		</form>
+					<fieldset id="fld_common">
+						<legend></legend>
+						<div id="container">Loading...</div>
+						<div id="genItemsContainer"><div class="mi"></div></div>
+						<hr size="1" noshade="noshade" />
+						<input type="button" id="btnAddConf" value="Eintrag einf&uuml;gen" class="button" />
+						<input type="button" id="btnUpdConf" value="Update" class="button" />
+					</fieldset>
+
+					<fieldset id="fld_vorlagen">
+						<legend>vorlagen.conf</legend>
+						<div id="vorlagen">Loading...</div>
+						<hr size="1" noshade="noshade" />
+						<input type="button" id="btnUpdVorlagen" value="Update" class="button" />
+					</fieldset>
+
+					<fieldset id="fld_htusers">
+						<legend>.htusers</legend>
+						<div id="htusers"></div>
+						<hr size="1" noshade="noshade" />
+						<label for="txtNewHtUserName">Username</label>
+						<input type="text" id="txtNewHtUserName" class="textBox" size="16" />
+						<label for="txtNewHtUserPass">Password</label>
+						<input type="password" id="txtNewHtUserPass" class="txtBox" size="16" />
+						<input type="button" id="btnAddNewHtUser" value="Add" class="button" />
+					</fieldset>
+
+					<fieldset id="fld_hthosts">
+						<legend>hthosts</legend>
+						<div id="hthosts"></div>
+						<hr size="1" noshade="noshade" />
+						<label for="txtNewHtHost">Domain/IP</label>
+						<input type="text" id="txtNewHtHost" class="textBox" size="16" />
+						<input type="button" id="btnAddNewHtHost" value="Add" class="button" />
+					</fieldset>
+				</form>
+			</div>
+		</div>
+
 	</div>
 
 <?php require('common_footer.php'); ?>
-</div>
+
 </body>
 
 </html>

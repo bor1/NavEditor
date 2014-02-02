@@ -1,12 +1,6 @@
 <?php
 require_once('auth.php');
 
-// help
-function has_help_file() {
-    global $ne_config_info;
-    $help_file = $ne_config_info['help_path'] . 'areas_manager' . $ne_config_info['help_filesuffix'];
-    return file_exists($help_file);
-}
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
@@ -93,8 +87,6 @@ function has_help_file() {
         </style>
 
         <script type="text/javascript">
-
-            var helpText = "";
 
             /**
              * array with data for current selected item. Will be dinamically created by item selection
@@ -551,21 +543,6 @@ function has_help_file() {
                     }
                 });
 
-                // help
-                $("#helpHand a").click(function() {
-                    if(helpText == "") {
-                        $.get("app/get_help.php?r=" + Math.random(), {
-                            "page_name": "bereich_manager"
-                        }, function(rdata){
-                            helpText = rdata;
-                            $("#helpCont").html(helpText);
-                            $("#helpCont").slideToggle("fast");
-                        });
-                    } else {
-                        $("#helpCont").slideToggle("fast");
-                    }
-                });
-
                 $(window).resize(function() {
                     setPanelScroll();
                 });
@@ -582,15 +559,6 @@ function has_help_file() {
             </div>
 
             <div id="content_bereich_manager">
-                <?php
-// help
-                if (has_help_file()) {
-                    ?>
-                    <div id="helpCont">.</div>
-                    <div id="helpHand"><a href="javascript:;">Hilfe</a></div>
-                    <?php
-                }
-                ?>
                 <div id="bereichmanager" >
                     <div id="bereichList"></div>
                     <div id="bereichSettings"></div>

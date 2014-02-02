@@ -128,7 +128,7 @@ $ne_user_modus= Array(
 
 
 
-//default permissions to access files (path relative to NavEditor2 folder). If not listed => access declined
+//default permissions to access files (path relative to NavEditor folder). If not listed => access declined
 //this works only by direct call of file. So includes will work indepentent of permissions!
 $ne_user_php_persmissions = array(
     //Public
@@ -189,7 +189,6 @@ $ne_user_php_persmissions = array(
     'app/classes/AreasManager.php'       => 'admin',//for ajax_handler
 
     //no need yet, but listed..
-    'app/classes/AreasEditor.php'       => 'admin',
     'app/classes/BackupManager.php'     => 'admin',
     'app/classes/ConfigFileManagerAbstract.php' => 'admin',
     'app/classes/ConfigFileManagerJSON.php' => 'admin',
@@ -200,7 +199,6 @@ $ne_user_php_persmissions = array(
     'app/classes/Input.php'             => 'admin',
     'app/classes/NavEditorAbstractClass.php' => 'admin',
     'app/classes/NavTools.php'          => 'admin',
-    'app/classes/SimpleLogger.php'      => 'admin',
     'app/classes/SimplePie.php'         => 'admin',
     'app/classes/Snoopy.php'            => 'admin',
     'app/classes/UserMgmt.php'          => 'admin',
@@ -214,6 +212,13 @@ $ne_user_php_persmissions = array(
     'common_nav_menu.php'       => 'admin',//include only
     'app/log_funcs.php'         => 'admin',//include only
     'app/sessions.php'          => 'admin',//include only
+
+    'file_editor_old.php'          => 'admin',//testing
+    'design_editor_old.php'          => 'admin',//testing
+    'nav_editor_old.php'          => 'admin',//testing
+    'osm_popover.php'          => 'admin',//testing
+    'file_editor_popover.php'          => 'admin',//testing
+
 );
 
 //public paths

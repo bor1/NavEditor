@@ -1,5 +1,6 @@
 <?php
 require_once('auth.php');
+global $g_Logger;
 
 function removeLockFiles($dir, $cur_user) {
     global $ne_config_info;
@@ -45,6 +46,8 @@ NavTools::unsetAllCookies();
 
 \sessions\unsetSession();
 
+$g_Logger->log('Logged out');
+
 header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -53,7 +56,7 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>Ausloggen - <?php echo($ne_config_info['app_titleplain']); ?></title>
-        <link rel="stylesheet" type="text/css" href="css/styles.css?<?php echo date('Ymdis'); ?>" />
+        <?php echo NavTools::includeHtml("default"); ?>
     </head>
 
     <body>

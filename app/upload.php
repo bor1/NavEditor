@@ -14,7 +14,11 @@ require_once('../auth.php');
 
 
 error_reporting(E_ALL | E_STRICT);
-
+/*
+ * TODO: replace with new blueimp php version.
+ * extend from NavEditorAbstractClass
+ * rewrite all.
+ */
 class UploadHandler
 {
 
@@ -24,15 +28,18 @@ class UploadHandler
 
     function __construct($options=null) {
 	global $ne_config_info;
-		$this->uploadDir = rawurldecode(isset($_REQUEST['folder']) ? $_REQUEST['folder'] : '/');
+		$this->uploadDir = rawurldecode((Input::post('folder')));
 		$this->rootDir = $ne_config_info['upload_dir'];
+
+        $uploadDirFullPath = NavTools::root_filter($this->rootDir.$this->uploadDir);
+
         $this->options = array(
             'script_url' => $this->getFullUrl().'/'.basename(__FILE__),
 			'thumbprefix' => 'thumb_',
             //'upload_dir' => dirname(__FILE__).'/files/',
             //'upload_url' => $this->getFullUrl().'/files/',
 			'upload_url' => $this->getFullUrl(true).$this->uploadDir,
-			'upload_dir' => $this->rootDir.$this->uploadDir,
+			'upload_dir' => NavTools::ifsetor($uploadDirFullPath, $this->rootDir.'/'),
 			'upload_dir_rel' => $this->uploadDir,
             'param_name' => 'files',
             // The php.ini settings upload_max_filesize and post_max_size

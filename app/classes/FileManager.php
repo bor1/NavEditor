@@ -3,7 +3,7 @@
 class FileManager {
 
     public function __construct() {
-        
+
     }
 
     private function formatBytes($bytes, $precision = 2) {
@@ -18,6 +18,11 @@ class FileManager {
         return round($bytes, $precision) . ' ' . $units[$pow];
     }
 
+    /**
+     * recursive remove directory $dir
+     * @param String $dir path to directory
+     * @return boolean success
+     */
     private function rrmdir($dir) {
         if (is_dir($dir)) {
             $objects = scandir($dir);
@@ -65,7 +70,7 @@ class FileManager {
         if ($is_root) {
             $dl = array_diff(scandir($path), array('.', '..', 'js', 'Smarty', 'univis', 'vkapp')); // here insert excluded folders
         } else {
-            $dl = array_diff(scandir($path), array('.', '..', 'NavEditor2')); // here insert excluded folders
+            $dl = array_diff(scandir($path), array('.', '..', 'NavEditor3')); // here insert excluded folders
         }
         foreach ($dl as $di) {
             if (is_dir($path . '/' . $di)) {
@@ -153,13 +158,26 @@ class FileManager {
         if (file_exists($thumb_path)) {
             @unlink($thumb_path);
         }
-        @unlink($file_path);
+        return @unlink($file_path);
     }
 
     public function deleteFolder($folder_path) {
         return $this->rrmdir($folder_path); //ddd
     }
 
+    /**
+     * rename file/folder<br/>
+     * if a thumb_ file exists, it will be renamed too.<br/>
+     * <pre>
+     * Example:
+     * renames /path/to/file.txt => /path/to/new_filename.txt
+     * <code>
+     * renameFile('/path/to/file.txt', 'new_filename');
+     * </code></pre>
+     * @param String $file_path full path to file
+     * @param String $new_name only the new name of folder or file without extension
+     * @return Boolean success
+     */
     public function renameFile($file_path, $new_name) {
         $info = pathinfo($file_path);
         $path = $info['dirname'];
@@ -187,13 +205,19 @@ class FileManager {
         }
     }
 
+    /**
+     * sets new content to file. Replaces '&lt;comment_ssi&gt;', '&lt;comment&gt;', '&lt;/comment&gt;'
+     * @param String $file_path full file path
+     * @param String $content new content to save
+     * @return Boolean success
+     */
     public function setFileContent($file_path, $content) {
         if (file_exists($file_path)) {
             if (get_magic_quotes_gpc()) {
                 $content = stripslashes($content);
             }
             $content = str_replace(array('<comment_ssi>', '<comment>', '</comment>'), array('<!-' . '-#', '<!--', '-->'), $content);
-            file_put_contents($file_path, $content);
+            return file_put_contents($file_path, $content);
         }
     }
 
@@ -211,7 +235,7 @@ class FileManager {
         }
         if (file_exists($file_path)) {
             if (filesize($file_path) == filesize($bak_file_path)) {
-                // Gleiche Datei, brauche nichts zu tun				
+                // Gleiche Datei, brauche nichts zu tun
                 return;
             } else {
                 // Neue Datei, also neue Konfigwerte

@@ -1,5 +1,6 @@
 <?php
 require_once('../auth.php');
+global $g_Logger;
 
 $publish_tree = $_POST['publishTree'];
 
@@ -16,10 +17,9 @@ if(get_magic_quotes_gpc()) {
 	$jsonArray = json_decode($jsonTreeData, TRUE);
 }
 
-$lgr = new SimpleLogger($ne_config_info['app_path'] . 'data/.htNavEditor.log');
 $fhr = new FileHandler();
 
-$fhr->setLogger($lgr);
+$fhr->setLogger($g_Logger);
 $fhr->setJSONArray($jsonArray);
 
 if($publish_tree == 'Ja') {

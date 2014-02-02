@@ -1,13 +1,6 @@
 <?php
 require_once('auth.php');
 
-// help
-function has_help_file() {
-	global $ne_config_info;
-	$help_file = $ne_config_info['help_path'] .'update'. $ne_config_info['help_filesuffix'] ;
-	return file_exists($help_file);
-}
-
 if(!file_exists("../../".$ne_config_info['website_conf_filename']) || !file_exists("../../".$ne_config_info['variables_conf_filename'])){
 	header('Location: website_editor.php');
 }
@@ -17,17 +10,13 @@ if(!file_exists("../../".$ne_config_info['website_conf_filename']) || !file_exis
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Live Update - <?php echo($ne_config_info['app_titleplain']); ?></title>
-<link rel="stylesheet" type="text/css" href="css/styles.css?<?php echo date('Ymdis'); ?>" />
 
-<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
-<script type="text/javascript" src="js/json2.js"></script>
+<?php echo NavTools::includeHtml("default"); ?>
 
 <script type="text/javascript">
 	var sv = "";
 	var tv = "";
 	var goback = false;
-
-	var helpText = "";
 
 	function check() {
 		$("#imgLoading").show();
@@ -103,21 +92,6 @@ if(!file_exists("../../".$ne_config_info['website_conf_filename']) || !file_exis
 		$("#btnCheckUpdate").click(function() {
 			check();
 		});
-		// help
-		$("#helpHand a").click(function() {
-			if(helpText == "") {
-				$.get("app/get_help.php?r=" + Math.random(), {
-					"page_name": "update"
-				}, function(rdata){
-					helpText = rdata;
-					$("#helpCont").html(helpText);
-					$("#helpCont").slideToggle("fast");
-				});
-			} else {
-				$("#helpCont").slideToggle("fast");
-			}
-		});
-
 	});
 
 
@@ -126,58 +100,67 @@ if(!file_exists("../../".$ne_config_info['website_conf_filename']) || !file_exis
 </head>
 
 <body id="bd_Update" onload="check();">
-<div id="wrapper">
-	<h1 id="header"><?php echo($ne_config_info['app_title']); ?></h1>
-	<div id="navBar">
-		<?php require('common_nav_menu.php'); ?>
-	</div>
-	<div id="textbereich">
+	<?php require('common_nav_menu.php'); ?>
 
-	<?php
-	// help
-	if(has_help_file()) {
-	?>
-		<div id="helpCont">.</div>
-		<div id="helpHand"><a href="javascript:;">Hilfe</a></div>
-	<?php
-	}
-	?>
+	<div class="update container page">
+
+        <div class="page-header">
+            <h2 class="page-header">Update <small>Aktualisieren Sie hier den NavEditor</small></h2>
+            <div class="pull-right">
+				<input class="btn btn-inverse btn-rounded" type="button" id="btnUpdate" name="btnUpdate" value="Speichern" />
+	        </div>
+        </div>
+
+
 		<div id="updateInfo">
 
-                    <h2>Update</h2>
-                    <table class="versionsinfo">
-                        <tr>
-                            <th>Aktuell verwendete Version:</th>
-                            <td><span id="cur_ver"><?php echo($ne_config_info['version']); ?></span></td>
-                            <td colspan="2">&nbsp;</td>
-                        </tr>
-                        <tr>
-                            <th>Letzte offizielle Testversion:</th>
-                            <td><span id="tst_ver"></span></td>
-                            <td><input type="button" id="btnDoTestUpdate" class="button" value="Diese Testversion installieren" disabled="true" /></td>
-                            <td><b>Letzte Änderungen:</b> <pre id="tst_changelog" class="changelog"></pre></td>
-                        </tr>
-                        <tr>
-                            <th>Stabile Version</th>
-                            <td><span id="stb_ver"></span></td>
-                            <td><input type="button" id="btnDoUpdate" class="button" value="Diese Version installieren" disabled="true" /></td>
-                            <td><b>Letzte Änderungen:</b>
-                                <pre id="stb_changelog" class="changelog"></pre></td>
+			<div class="row">
+				<div class="update-cat span3">
+					<span>Aktuell verwendete Version:</span>
+				</div>
+				<div class="span1">
+					<span id="cur_ver"><?php echo($ne_config_info['version']); ?></span>
+				</div>
+			</div>
 
-                        </tr>
-                    </table>
+			<div class="row">
+				<div class="update-cat span3">
+					<span>Letzte offizielle Testversion:</span>
+				</div>
+				<div class="span1">
+					<span id="tst_ver"></span>
+				</div>
+				<div class="span6">
+					<b>Letzte Änderungen:</b> <pre id="tst_changelog" class="changelog"></pre>
+				</div>
+				<div class="span2">
+					<input type="button" id="btnDoTestUpdate" class="btn" value="Diese Testversion installieren" disabled="true" />
+				</div>
+			</div>
 
+			<div class="row">
+				<div class="update-cat span3">
+					<span>Stabile Version:</span>
+				</div>
+				<div class="span1">
+					<span id="stb_ver"></span>
+				</div>
+				<div class="span6">
+					<b>Letzte Änderungen:</b><pre id="stb_changelog" class="changelog"></pre>
+				</div>
+				<div class="span2">
+					<input type="button" id="btnDoUpdate" class="btn" value="Diese Version installieren" disabled="true" />
+				</div>
 
+			</div>
 
 		</div>
-		<hr />
-		<input type="button" id="btnCheckUpdate" class="button" value="Check" />
+
 		<img id="imgLoading" src="ajax-loader.gif" border="0" width="16" height="16" style="display:none;" />
 		<div id="errorMsg" style="color:red;"></div>
 	</div>
 
-<?php require('common_footer.php'); ?>
-</div>
+	<?php require('common_footer.php'); ?>
 </body>
 
 </html>

@@ -16,16 +16,29 @@ function htpasswd($pwd) {
     return crypt(trim($pwd), base64_encode(CRYPT_STD_DES));
 }
 
+/**
+ * modify relative to absolute path.
+ * @param String $sPath relative path to modify
+ * @return String modified absolute path, or empty string if over root (e.g. $sPath = /../../)
+ */
+function modifyRelativePath($sPath){
+    //add slash if not exist
+    if($sPath[0] != '/'){ $sPath = '/'+$sPath;}
+    //make full path
+    $path = $_SERVER['DOCUMENT_ROOT'] . $sPath;
+    //return filtered
+    return NavTools::root_filter($path);
+}
 
 $service_type = Input::get_post('service');
 
 switch ($service_type) {
     case 'get_file_info':
-        $file_path = NavTools::root_filter(Input::get_post('file_path'));
+        $file_path = modifyRelativePath(Input::get_post('file_path'));
         echo(json_encode($fm->getFileInfo($file_path)));
         break;
     case 'create_subfolder':
-        $current_path = NavTools::root_filter(Input::get_post('current_path'));
+        $current_path = modifyRelativePath(Input::get_post('current_path'));
         $new_subfolder_name = NavTools::filterSymbols(Input::get_post('new_subfolder_name'));
         $succ = $fm->createSubFolder($current_path, $new_subfolder_name);
         if ($succ === FALSE) {
@@ -35,7 +48,7 @@ switch ($service_type) {
         }
         break;
     case 'create_new_file':
-        $current_path = NavTools::root_filter(Input::get_post('current_path'));
+        $current_path = modifyRelativePath(Input::get_post('current_path'));
         $new_file_name = NavTools::filterSymbols(Input::get_post('new_file_name'));
         $ext = Input::get_post('extension');
         $succ = $fm->createNewFile($current_path, $new_file_name, $ext);
@@ -46,32 +59,42 @@ switch ($service_type) {
         }
         break;
     case 'delete_file':
-        $fpath = NavTools::root_filter(Input::get_post('file_path'));
-        $fm->deleteFile($fpath);
-        break;
-    case 'rename':
-        $file_path = NavTools::root_filter(Input::get_post('current_path'));
-        $new_file_name = NavTools::filterSymbols(Input::get_post('new_name'));
-        $success = $fm->renameFile($file_path, $new_file_name);
+        $fpath = modifyRelativePath(Input::get_post('file_path'));
+        $success = $fm->deleteFile($fpath);
         if ($success === FALSE) {
             echo('0');
         } else {
             echo('1');
         }
         break;
+    case 'rename':
+        $file_path = modifyRelativePath(Input::get_post('current_path'));
+        //darf nicht root sein
+        if(realpath ($file_path) === realpath($_SERVER['DOCUMENT_ROOT'])){
+            echo('Sie duerfen nicht Root-Ordner umbenennen');
+            break;
+        }
+
+        $new_file_name = NavTools::filterSymbols(Input::get_post('new_name'));
+        $success = $fm->renameFile($file_path, $new_file_name);
+        if ($success === FALSE) {
+            echo("Umbenennen fehlgeschlagen\nfilepath:$file_path\nnew file name:$new_file_name");
+        } else {
+            echo('1');
+        }
+        break;
     case 'load_file_content':
-        $fpath = Input::get_post('file_path');
-        $fpath = $_SERVER['DOCUMENT_ROOT'] . $fpath;
+        $fpath = modifyRelativePath(Input::get_post('file_path'));
         echo($fm->getFileContent($fpath));
         break;
     case 'save_file_content':
-        $fpath = $_SERVER['DOCUMENT_ROOT'] . Input::get_post('file_path');
+        $fpath = modifyRelativePath(Input::get_post('file_path'));
         $content = Input::get_post('new_content');
-        $fm->setFileContent($fpath, $content);
-        echo("File updated!");
+        $success = $fm->setFileContent($fpath, $content);
+        echo(($success===FALSE)?'Fehlgeschlagen':'Aktualisiert!');
         break;
-    case 'check_dup_name':
-        $file_path = NavTools::root_filter(Input::get_post('file_path'));
+    case 'check_dup_name'://deprecated?
+        $file_path = modifyRelativePath(Input::get_post('file_path'));
         if (file_exists($file_path)) {
             echo('1');
         } else {
@@ -79,15 +102,16 @@ switch ($service_type) {
         }
         break;
     case 'delete_folder':
-        $folder = NavTools::root_filter(Input::get_post('folder'));
+        $folder = modifyRelativePath(Input::get_post('file_path'));
         $un_folders = $ne_config_info['important_folders']; //array('vkdaten', 'ssi', 'css', 'grafiken', 'img', 'js');
         if (is_dir($folder)) {
-            if (NavTools::endsWith($folder, 'websource') || NavTools::endsWith($folder, 'websource/')) { // root dir!
-                echo('Dieses Verzeichnis darf nicht entfernt werden!');
+            if(realpath ($folder) === realpath($_SERVER['DOCUMENT_ROOT'])){
+                echo('Root Verzeichnis darf nicht entfernt werden!');
                 return;
             }
+
             foreach ($un_folders as $uf) {
-                if (NavTools::endsWith($folder, $uf) || NavTools::endsWith($folder, $uf . '/')) {
+                if (NavTools::startsWith($folder, $_SERVER['DOCUMENT_ROOT'].'/'.$uf, FALSE)) {
                     echo('Dieses Verzeichnis darf nicht entfernt werden!');
                     return;
                 }
@@ -100,9 +124,9 @@ switch ($service_type) {
         }
 
         break;
-    case 'get_htusers':
+    case 'get_htusers'://deprecated?
         $ret = array();
-        $folder = NavTools::root_filter(Input::get_post('folder'));
+        $folder = modifyRelativePath(Input::get_post('folder'));
 
         // list all htusers
         if (file_exists($htusers_file)) {
@@ -137,8 +161,8 @@ switch ($service_type) {
         }
         echo(json_encode($ret));
         break;
-    case 'set_htusers':
-        $folder = NavTools::root_filter($_POST['folder']);
+    case 'set_htusers': //deprecated?
+        $folder = modifyRelativePath(Input::get_post('folder'));
         $htacc_file = $folder . '/.htaccess';
         $user_line = trim($_POST['users']);
         $host_line = trim($_POST['hosts']);
@@ -163,7 +187,7 @@ switch ($service_type) {
         }
         echo('Done!');
         break;
-    case 'add_htuser':
+    case 'add_htuser'://deprecated?
         $username = $_POST['username'];
         $password = $_POST['password'];
         $line = $username . ":" . htpasswd($password) . "\n";
@@ -181,7 +205,7 @@ switch ($service_type) {
             fclose($fh);
         }
         break;
-    case 'get_hthosts':
+    case 'get_hthosts'://deprecated?
         $ret = array();
         $folder = set_htusers(Input::get_post('folder'));
         // list all hosts

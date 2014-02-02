@@ -11,45 +11,106 @@ if($ne_config_info['custom_content_css_classes'] != '') {
 	$custom_css_classes = implode(';', $custom_css_classes);
 }
 
-// help
-function has_help_file() {
-	global $ne_config_info;
-	$help_file = $ne_config_info['help_path'] .'ma_editor'. $ne_config_info['help_filesuffix'] ;
-	return file_exists($help_file);
-}
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Mitarbeiter bearbeiten - <?php echo($ne_config_info['app_titleplain']); ?></title>
-<link rel="stylesheet" type="text/css" href="css/styles.css?<?php echo date('Ymdis'); ?>" />
+<?php
+echo NavTools::includeHtml(
+        'default',
+        'tinymce/tinymce.min.js',
+        'json2.js',
+        'ajaxfileupload.js'
+);
+?>
 
-<script type="text/javascript" src="tiny_mce/tiny_mce.js"></script>
 <script type="text/javascript">
+//tinyMCE.init({
+//	mode: "textareas",
+//	language: "de",
+//	theme: "advanced",
+//	skin: "o2k7",
+//	relative_urls: false,
+//	convert_urls: false,
+//	plugins: "safari,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template",
+//
+//	theme_advanced_buttons1: "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,formatselect,styleselect,|,bullist,numlist,outdent,indent,|,cut,copy,paste,pastetext,pasteword,|,undo,redo",
+//	theme_advanced_buttons2: "link,unlink,anchor,image,cleanup,|,charmap,emotions,iespell,|,ltr,rtl,|,fullscreen,help,code,|,addIB1,addIB2,addIB3",
+//	theme_advanced_buttons3: "",
+//
+//	theme_advanced_toolbar_location: "top",
+//	theme_advanced_toolbar_align: "left",
+//	theme_advanced_statusbar_location: "bottom",
+//	theme_advanced_blockformats: "p,address,pre,h2,h3,h4,h5,h6,blockquote,code",
+//	theme_advanced_styles: "<?php echo($custom_css_classes); ?>",
+//	setup: function(ed) {
+//		// add a custom button
+//		ed.addButton("addIB1", {
+//			title: "Inhaltsblock-1 einfügen",
+//			image: "<? echo NE_DIR_RELATIVE; ?>css/ib1.gif",
+//			onclick: function() {
+//				ed.focus();
+//				var divId = "custom" + Math.random();
+//				divId = divId.replace(/\./, "_");
+//				ed.selection.setContent("<h2><a href=\"javascript:anzeigen('" + divId + "')\">Titeltext</a></h2><div id=\"" + divId + "\" style=\"display: block;\"><ul><li>List-Item-1</li><li>List-Item-2</li></ul><p class=\"noprint\"><a href=\"javascript:anzeigen('" + divId + "')\">Schlie&szlig;en</a></p></div>");
+//			}
+//		});
+//		// add a custom button
+//		ed.addButton("addIB2", {
+//			title: "Inhaltsblock-2 einfügen",
+//			image: "<? echo NE_DIR_RELATIVE; ?>css/ib2.gif",
+//			onclick: function() {
+//				ed.focus();
+//				var divId = "custom" + Math.random();
+//				divId = divId.replace(/\./, "_");
+//				ed.selection.setContent("<h3><a href=\"javascript:anzeigen('" + divId + "')\">Titeltext</a></h3><div id=\"" + divId + "\" style=\"display: block;\"><ul><li>List-Item-1</li><li>List-Item-2</li></ul><p class=\"noprint\"><a href=\"javascript:anzeigen('" + divId + "')\">Schlie&szlig;en</a></p></div>");
+//			}
+//		});
+//		// add a custom button
+//		ed.addButton("addIB3", {
+//			title: "Inhaltsblock-3 einfügen",
+//			image: "<? echo NE_DIR_RELATIVE; ?>css/ib3.gif",
+//			onclick: function() {
+//				ed.focus();
+//				var divId = "custom" + Math.random();
+//				divId = divId.replace(/\./, "_");
+//				ed.selection.setContent("<h4><a href=\"javascript:anzeigen('" + divId + "')\">Titeltext</a></h4><div id=\"" + divId + "\" style=\"display: block;\"><ul><li>List-Item-1</li><li>List-Item-2</li></ul><p class=\"noprint\"><a href=\"javascript:anzeigen('" + divId + "')\">Schlie&szlig;en</a></p></div>");
+//			}
+//		});
+//	}
+//});
+
+
+
 tinyMCE.init({
+	forced_root_block : '',
 	mode: "textareas",
 	language: "de",
-	theme: "advanced",
-	skin: "o2k7",
+//	plugins: "image link code table preview mitarbeiter feedimport ssiInclude image_choose",
+	plugins: "pagebreak,layer,table,save,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,template",
+	menubar: false,
+//	toolbar1: "undo redo | cut copy paste | link image table | outdent indent | code | preview | mitarbeiter | feedimport",
+//	toolbar2: "fontselect fontsizeselect | styleselect | alignleft aligncenter alignright alignjustify | bold italic underline strikethrough | bullist numlist",
+	toolbar1: "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,formatselect,styleselect,|,bullist,numlist,outdent,indent,|,cut,copy,paste,pastetext,pasteword,|,undo,redo",
+	toolbar2: "link,unlink,anchor,image,cleanup,|,charmap,emotions,iespell,|,ltr,rtl,|,fullscreen,help,code,|,addIB1,addIB2,addIB3",
 	relative_urls: false,
 	convert_urls: false,
-	plugins: "safari,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template",
-
-	theme_advanced_buttons1: "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,formatselect,styleselect,|,bullist,numlist,outdent,indent,|,cut,copy,paste,pastetext,pasteword,|,undo,redo",
-	theme_advanced_buttons2: "link,unlink,anchor,image,cleanup,|,charmap,emotions,iespell,|,ltr,rtl,|,fullscreen,help,code,|,addIB1,addIB2,addIB3",
-	theme_advanced_buttons3: "",
-
+	//plugins: "safari,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template",
+	theme_advanced_styles: "infologo",
 	theme_advanced_toolbar_location: "top",
 	theme_advanced_toolbar_align: "left",
 	theme_advanced_statusbar_location: "bottom",
-	theme_advanced_blockformats: "p,address,pre,h2,h3,h4,h5,h6,blockquote,code",
-	theme_advanced_styles: "<?php echo($custom_css_classes); ?>",
-	setup: function(ed) {
+	oninit: function() {
+		tinymceReady = true;
+	},
+
+    setup: function(ed) {
 		// add a custom button
 		ed.addButton("addIB1", {
 			title: "Inhaltsblock-1 einfügen",
-			image: "/vkdaten/tools/NavEditor2/css/ib1.gif",
+			image: "<?php echo NE_DIR_RELATIVE; ?>css/ib1.gif",
 			onclick: function() {
 				ed.focus();
 				var divId = "custom" + Math.random();
@@ -60,7 +121,7 @@ tinyMCE.init({
 		// add a custom button
 		ed.addButton("addIB2", {
 			title: "Inhaltsblock-2 einfügen",
-			image: "/vkdaten/tools/NavEditor2/css/ib2.gif",
+			image: "<?php echo NE_DIR_RELATIVE; ?>css/ib2.gif",
 			onclick: function() {
 				ed.focus();
 				var divId = "custom" + Math.random();
@@ -71,7 +132,7 @@ tinyMCE.init({
 		// add a custom button
 		ed.addButton("addIB3", {
 			title: "Inhaltsblock-3 einfügen",
-			image: "/vkdaten/tools/NavEditor2/css/ib3.gif",
+			image: "<?php echo NE_DIR_RELATIVE; ?>css/ib3.gif",
 			onclick: function() {
 				ed.focus();
 				var divId = "custom" + Math.random();
@@ -83,15 +144,10 @@ tinyMCE.init({
 });
 </script>
 
-<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
-<script type="text/javascript" src="js/json2.js"></script>
-<script type="text/javascript" src="js/ajaxfileupload.js"></script>
 <script type="text/javascript">
 <!--
 var loadMAListDone = false;
 var currentFileName = "";
-
-var helpText = "";
 
 function ajaxFileUpload(maFileName) {
 	$("#ajaxWaiting")
@@ -342,75 +398,65 @@ $(document).ready(function() {
 			});
 		}
 	});
-
-	// help
-	$("#helpHand a").click(function() {
-		if(helpText == "") {
-			$.get("app/get_help.php?r=" + Math.random(), {
-				"page_name": "ma_editor"
-			}, function(rdata){
-				helpText = rdata;
-				$("#helpCont").html(helpText);
-				$("#helpCont").slideToggle("fast");
-			});
-		} else {
-			$("#helpCont").slideToggle("fast");
-		}
-	});
 });
 // -->
 </script>
 </head>
 
 <body id="bd_MA">
-<div id="wrapper">
-	<h1 id="header"><?php echo($ne_config_info['app_title']); ?></h1>
-	<div id="navBar">
-		<?php require('common_nav_menu.php'); ?>
-	</div>
+<?php require('common_nav_menu.php'); ?>
 
-	<div id="confList">
-		<fieldset>
-			<legend>UnivIS-ID</legend>
+    <div id="wrapper" class="container-fluid" style="padding-top: 30px">
+	<div id="confList" class="span3">
+
+        <fieldset>
+			<label>UnivIS-ID</label>
 			<input type="text" id="txtUnivISId" class="textBox" size="16" />
 			<input type="button" id="btnSetUnivISId" class="button" value="setzen" />
 		</fieldset>
 
-		<fieldset>
-			<legend>Die vorhandenen Zusatzinformationen<br />zu Personen</legend>
+        <fieldset>
+            <label class="help-block">Die vorhandenen Zusatzinformationen<br />zu Personen:</label>
 			<input type="button" id="btnAddNew" class="button" value="Neue(n) Mitarbeiter(in) anlegen" />
 			<ul></ul>
 		</fieldset>
 	</div>
 
-	<div id="contentPanel2">
-	<?php
-	// help
-	if(has_help_file()) {
-	?>
-		<div id="helpCont">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</div>
-		<div id="helpHand"><a href="javascript:;">Hilfe</a></div>
-	<?php
-	}
-	?>
-		<form id="frmEdit" style="position:relative;">
+	<div id="contentPanel2" class="span9">
+        <form id="frmEdit" style="position:relative;" class="form-inline">
 			<fieldset id="fld_feedimport">
 				<legend>Mitarbeiter bearbeiten</legend>
+                <p>
+                    <div class="controls-row">
+                        <div class="control-group span3">
+                            <label class="control-label" for="txtFirstName">Vorname:</label>
+                            <div class="controls">
+                                <input type="text" id="txtFirstName" name="txtFirstName" size="32" class="textBox" />
+                            </div>
+                        </div>
+                        <div class="control-group span3">
+                            <label class="control-label" for="txtLastName">Nachname:</label>
+                            <div class="controls">
+                                <input type="text" id="txtLastName" name="txtLastName" size="32" class="textBox" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group inline">
+                        <label class="control-label span" for="filAttachment">Foto:</label>
+                        <div class="controls span ">
+                            <input type="file" id="filAttachment" name="filAttachment" class="textBox" />
+                            <img id="ajaxWaiting" src="ajax-loader.gif" border="0" style="width:16px;height:16px;border:0;display:none;" />
+                        </div>
+                        <div class="controls span">
+                            <input type="button" id="btnUpload" name="btnUpload" class="button btn" value="hochladen" />
+                        </div>
+                    </div>
+
+                </p>
 				<p>
-					<label for="txtFirstName" style="text-align:right;">Vorname:</label>
-					<input type="text" id="txtFirstName" name="txtFirstName" size="32" class="textBox" />
-					<label for="txtLastName" style="text-align:right;">Nachname:</label>
-					<input type="text" id="txtLastName" name="txtLastName" size="32" class="textBox" />
-					<br />
-					<label for="filAttachment" style="text-align:right;">Foto:</label>
-					<input type="file" id="filAttachment" name="filAttachment" class="textBox" />
-					<input type="button" id="btnUpload" name="btnUpload" class="button" value="hochladen" />
-					<img id="ajaxWaiting" src="ajax-loader.gif" border="0" style="width:16px;height:16px;border:0;display:none;" />
+                    <a href="file_editor.php" target="_blank" class="row">Dateien in FileEditor hochladen</a>
 				</p>
-				<p>
-					<a href="file_editor.php" target="_blank">Dateien hochladen</a>
-				</p>
-				<textarea id="txtContent" name="txtContent" cols="120" rows="25" class="textBox"></textarea>
+				<textarea id="txtContent" name="txtContent" cols="120" rows="15" class="textBox"></textarea>
 				<img id="userPhoto" border="0" style="position:absolute;top:11px;right:2px;display:none;" />
 				<hr size="1" noshade="noshade" />
 				<input type="button" id="btnUpdate" name="btnUpdate" value="Update" class="button" />
@@ -418,8 +464,8 @@ $(document).ready(function() {
 		</form>
 	</div>
 
-<?php require('common_footer.php'); ?>
 </div>
+<?php require('common_footer.php'); ?>
 </body>
 
 </html>

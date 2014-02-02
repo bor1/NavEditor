@@ -1,941 +1,848 @@
 <?php
 require_once('auth.php');
 
-// help
-function has_help_file() {
-	global $ne_config_info;
-	$help_file = $ne_config_info['help_path'] .'file_editor'. $ne_config_info['help_filesuffix'];
-	return file_exists($help_file);
-}
-?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
 
-<head>
-<!--
-firebug lite any browser debug
-<script type="text/javascript" src="https://getfirebug.com/firebug-lite.js"></script>
-add <html xmlns="http://www.w3.org/1999/xhtml" debug="true">
--->
-
-
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Bilder/Daten verwalten - <?php echo($ne_config_info['app_titleplain']); ?></title>
-
-<!--<link href="css/jqueryFileTree.css" rel="stylesheet" type="text/css" media="screen" />-->
-
-<?php
-    echo NavTools::includeHtml("default",
-            "jqueryFileTree.css",
-            "jqueryFileTree.js",
-            "jquery-ui-1.8.18.custom.min.js",
-            "jqueryui/ne2-theme/jquery-ui-1.8.17.custom.css", /*, id='theme'> */
-            "jquery.fileupload-ui.css",
-            "upload/jquery.iframe-transport.js",
-            "upload/jquery.fileupload.js",
-            "upload/jquery.fileupload-ui.js",
-            "upload/jquery.tmpl.min.js",
-            "upload/jquery.image-gallery.js",
-            "upload/jquery.xdr-transport.js",
-            "jquery.ui.accordion.min.js",
-            "queryFolderImgPreview.js"
-            );
 ?>
 
-<script type="text/javascript">
-var folderTreeHtml = "";
-var currentPath = "";
-var gUserPermissionPath = "<?php echo($g_current_user_permission); ?>";
-var gUserPermissionsArray = gUserPermissionPath.split("|");
-var curFilePath = "";
-var maxFileSize = <?php echo((int)$ne_config_info['max_upload_filesize']); ?>;
-var helpText = "";
-var mainPath  = "<?php echo ($_SERVER['DOCUMENT_ROOT']); ?>";
-var fpath = "";
-var thisIsAFile = false;
-var dlg_path = "";
-var curRelation = ""; //aktuellste "rel" wert von ausgewaehltem element
-var folderImgPreviewObj = null; //instance for img preview
-//
-//global  var fileInfoArray from jqueryFileTree.js
-
-function getFileInfoCallback(resp) {
-	var fi = JSON.parse(resp);
-	if(fi.thumb_name != "") {
-//		var thumbHtml = "<img alt='' src='" + fi.thumb_name + "' style='border:0;' />";
-//		$("#thumbImage").html(thumbHtml);
-		$("#txtFileThumbUrl").val(fi.thumb_name);
-	} else {
-		$("#thumbImage").html("");
-		$("#txtFileThumbUrl").val("");
-	}
-	$("#fileNameTd").html(fi.file_name);
-	$("#fileSizeTd").html(fi.file_size + " Byte");
-	$("#fileLastModTd").html(fi.modified_time);
-	$("#txtFileUrl").val(fi.url);
-
-	if(fi.editable) {
-		var admin = <?php echo(($is_admin)? 1 : 0); ?>; //todo $is_admin -> test rights >= "admin" (1000)
-		var hideEditorMode = <?php echo(($ne_config_info['hide_sourceeditor'])? 1 : 0); ?>;
-		var extension = getExtension(fi.file_name);
-		var forb_folders = ['css/','grafiken/','img/','ssi/','js/','vkdaten/','univis/','vkapp/'];
-		if (admin || hideEditorMode == -1){
-			$("#btnQuickEdit").removeAttr("disabled");
-			$("#btnEditorEdit").removeAttr("disabled");
-		}else{
-			if (extension == "shtml" || extension == "html"){
-				$("#btnQuickEdit").attr("disabled", "true");
-				$("#btnEditorEdit").removeAttr("disabled");
-			}else if(hideEditorMode == 1){
-				$("#btnQuickEdit").attr("disabled", "true");
-				$("#btnEditorEdit").attr("disabled", "true");
-			}else if(hideEditorMode == 0){
-				$("#btnQuickEdit").removeAttr("disabled");
-				$("#btnEditorEdit").attr("disabled", "true");
-				for (var fold_tmp in forb_folders){
-					if (fi.url.indexOf(forb_folders[fold_tmp]) != -1 && fi.url.indexOf(forb_folders[fold_tmp]) < 2){
-						$("#btnQuickEdit").attr("disabled", "true");
-						break;
-					}
-				}
-
-			}
-		}
-	}else{
-		$("#btnQuickEdit").attr("disabled", "true");
-		$("#btnEditorEdit").attr("disabled", "true");
-	}
-}
-
-function getExtension(path){
-	var str = path + '';
-        var dotP = str.lastIndexOf('.') + 1;
-	return str.substr(dotP);
-}
-
-function nameWOextension(path){
-	var str = path + '';
-        var dotP = str.lastIndexOf('.');
-	return str.substr(0, dotP);
-}
-
-function verzeichnis(path){
-	var str = path + '';
-        var slash = str.lastIndexOf('/');
-	return str.substr(0, slash+1);
-}
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Bilder und Dateien</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-function dateiname(path){
-	var str = path + '';
-        var slash = str.lastIndexOf('/');
-	return str.substr(slash+1);
-}
+        <?php
+            echo NavTools::includeHtml("default",
+                "jquery.MultiFile.js",
+                "jqueryFileTree.css",
+                "jqueryFileTree.js",
+                "queryFolderImgPreview.js",
+                "handlebars.js",
+                "jquery-ui-1.8.18.custom.min.js",
+                "upload/jquery.iframe-transport.js",
+                "upload/jquery.fileupload.js",
+                "upload/jquery.fileupload-ui.js",
+                "upload/jquery.tmpl.min.js",
+                "upload/jquery.image-gallery.js",
+                "upload/jquery.xdr-transport.js",
+                "jquery.ui.accordion.min.js",
+                "tinymce/tinymce.min.js",
+                "upload/jquery.fileupload.js",
+                "nav_tools.js"
 
-function deleteCurFileVars(){
-	curFilePath = "";
-	fpath = "";
-	thisIsAFile = false;
-}
+            );
+        ?>
 
-//TODO setTimeout -> BAD. irgendwie von jqueryFileTree.js expandCallback und collapseCallback rausholen
-function tree_refresh(pfad, mode){
-	if (pfad != undefined && pfad != "/"){
-		var element = $("a[rel='"+ pfad +"']");
-		if (mode == "rename"){
-			if(element.parent().attr('class') == "directory expanded"){
-				element.click();
-				var funk = "$('a[rel=\""+ pfad +"\"]').click()";
-				setTimeout(funk,500);
-			}else{
-				fpath = mainPath + $('.selectedTreeElement').attr('rel');
-			}
-		}else{
-			if(element.parent().attr('class') == "directory expanded"){
-				element.click();
-			}
-			var funk = "$('a[rel=\""+ pfad +"\"]').click()";
-			setTimeout(funk,400);
-		}
-	}else{
-		$('.jqueryFileTree').unbind();
-		$('.jqueryFileTree').remove();
-		addFolderTree();
-		$('#fileupload .files tbody').html("");
-	}
-}
+        <script>
+            /* globals $, tinyMCE, Handlebars, NavTools, FileTree*/
 
-//nicht editierbare dateien mit einer farbe markieren
-//color_notallow - > farbe nicht erlaubte zugriff
-//color_someallow -> etwas erlaubt unter dem ordner
-//permissions -> array von erlaubten pfaden
-function treeMarkPermissions(permissions, color_notallow, color_someallow){
-//    alert(permissions);
-    var perm_type;
-    color_notallow = (color_notallow == null)?"<?php echo $ne_config_info['jquery_file_tree']['colors']['color_notallow'];?>":color_notallow;
-    color_someallow = (color_someallow == null)?"<?php echo $ne_config_info['jquery_file_tree']['colors']['color_someallow'];?>":color_someallow;
-    $(".jqueryFileTree").find("a").each(function(){
-        perm_type = allowPermission($(this).attr("rel"), permissions);
-        if (perm_type == 0){
-            $(this).css("color", color_notallow);
-        }else if(perm_type == 2){
-            $(this).css("color", color_someallow);
-        }
-    });
-}
+            /**
+             * Path to root dir.
+             * @type String
+             */
+            var root_path  = "<?php echo ($_SERVER['DOCUMENT_ROOT']); ?>";
 
-//pruefen ob zugriff auf datei erlaubt ist, abhaengig von permissions array
-//return 0 -> kein zugriff, 1->full zugriff, 2->unterordner/files erlaubt
-function allowPermission(path, permissions){
-    var retVal = 0;
+            /**
+             * FileTree Object
+             * @type FileTree
+             */
+            var FileTreeObj = null;
 
-    //pruefen ob path in permissions bzw obere element drin ist
-    $.each(permissions, function(){
-        if(path.substr(0,this.length).toLowerCase() == this.toLowerCase()){
-                retVal = 1;
-                return false;
-        }
-    });
+            /**
+             * Current selected path
+             * @type String
+             */
+            var current_path = "/";
 
-    //falls nichts gefunden
-    if (retVal == 0) {
-       //umgekehrt, pruefen ob irgendwas unter dem path erlaubt ist, dann return 2 (dateien unter dem ordner)
-        $.each(permissions, function(){
-            //falls path von ordner..
-            if(path.substr(-1,1) == "/"){
-                if(this.substr(0,path.length).toLowerCase() == path.toLowerCase()){
-                    retVal = 2;
-                    return false;
-                }
+            function getExtension(path){
+                var str = path + '',
+                    dotP = str.lastIndexOf('.') + 1;
+                return str.substr(dotP);
             }
-        });
-    }
-    return retVal;
-};
+
+            function nameWOextension(path){
+                var str = path + '',
+                    dotP = str.lastIndexOf('.');
+                return str.substr(0, dotP);
+            }
+
+            function verzeichnis(path){
+                var str = path + '',
+                    slash = str.lastIndexOf('/');
+                return str.substr(0, slash+1);
+            }
 
 
-function treeSelect(relation){
-	thisIsAFile = true;
-	if(!relation){relation = "/";}
-	if(relation.substr(relation.length-1, 1) == "/"){
-			thisIsAFile = false;
-	}
-        curRelation = relation;
-	if(thisIsAFile){curFilePath = relation;}
-	currentPath = mainPath;
-	clearFileInfo();
-	fpath = mainPath + relation;
-	if(thisIsAFile){loadFileInfo(fpath);}
-	currentPath = verzeichnis(fpath);
+            function dateiname(path){
+                var str = path + '',
+                    slash = str.lastIndexOf('/');
+                return str.substr(slash+1);
+            }
 
-        $('#txtQuickEdit').attr('disabled', 'true');
+            /**
+             * Created folder (ajax)
+             * @param {String} path relative! path where to create
+             * @param {String} folder_name folder name
+             * @param {Function} fnCallback callback function after create. Called with 1 arg: responce
+             */
+            function createFolder(path, folder_name, fnCallback){
 
-	$('#fileupload').fileupload({
-		url: 'app/upload.php'+'?folder='+encodeURIComponent(verzeichnis(relation))
-	});
+                $.post("app/file_manager.php", {
+                    "service": "create_subfolder",
+                    "current_path": path,
+                    "new_subfolder_name": folder_name
+                }, function(resp) {
+                    if(resp === "0") {
+                        alert("Fehler bei der Erstellung des Verzeichnises; Bitte versuchen Sie es noch einmal!");
+                    }
 
-	$('#fileupload .files tbody').html("");
+                    if(fnCallback) fnCallback(resp);
+                });
 
-	$('.selectedTreeElement').removeClass('selectedTreeElement');
-	$("a[rel='"+ relation +"']").addClass('selectedTreeElement');
+            }
 
-	$('.action_icons').remove();
-	$('.selectedTreeElement').after('<div class="action_icons"></div>');
-	if(!thisIsAFile){$('.action_icons').append('<img id="newfolder_icon" title="Unterverzeichnis erstellen" src="<?php echo $ne_config_info['jquery_file_tree']['icons']['newfolder_icon'];?>"/>');}
-	$('.action_icons').append('<img id="rename_icon"  title="Umbenennen" src="<?php echo $ne_config_info['jquery_file_tree']['icons']['rename_icon'];?>"/>');
-	$('.action_icons').append('<img id="delete_icon"  title="L&ouml;schen" src="<?php echo $ne_config_info['jquery_file_tree']['icons']['delete_icon'];?>"/>');
-        if(!thisIsAFile){$('.action_icons').append('<img id="create_new_icon"  title="Eine Datei erstellen" src="<?php echo $ne_config_info['jquery_file_tree']['icons']['create_new_icon'];?>"/>');}
-	$('.action_icons img').addClass('action_icon_img');
-
-
-    $('.action_icons img').each(function(){
-        $(this).hover(function(){
-            $(this).css('background-color', '#A8C7E6');
-        },
-        function(){
-            $(this).css('background-color', 'transparent');
-        });
-    });
-
-    //bilder vorschau aktualisieren
-    if(thisIsAFile) {
-        folderImgPreviewObj.loadOnePic(curRelation);
-    }else{
-        folderImgPreviewObj.loadByPath(verzeichnis(curRelation));
-    }
-
-
-}
-
-
-
-function loadFolderTree(whattodo, var1) {
-	folderTreeHtml = "";
-
-	var pfad = var1;
-	var rel = relFromFullPath(pfad);
-	if (whattodo == "delete"){
-		$('.selectedTreeElement').parent().remove();
-		$('.selectedTreeElement').removeClass('selectedTreeElement'); //no need?
-		if(thisIsAFile){
-			$("a[rel='"+ verzeichnis(rel) +"thumb_"+ dateiname(rel)+"']").parent().remove();
-		}else{
-			treeSelect(relFromFullPath(pfad.substr(0, pfad.length-1)));
-		}
-		clearFileInfo();
-		deleteCurFileVars();
-
-	}else if(whattodo == 'rename' && var1 != ''){
-		var newrel = "";
-		if (rel.substr(rel.length-1, 1) == "/"){ //einfacher check mit thisIsAFile?
-			//ist ein Ordner
-			var ordnername = dateiname(rel.substr(0, rel.length - 1));
-			$('.selectedTreeElement').text(ordnername);
-			newrel = verzeichnis(rel.substr(0, rel.length - 1))+ordnername+'/';
-			$('.selectedTreeElement').attr('rel', newrel);
-			tree_refresh(newrel, "rename");
-		}else{
-			//ist eine datei
-			$('.selectedTreeElement').text(dateiname(rel));
-			newrel = verzeichnis(rel)+dateiname(rel);
-			oldrel = $('.selectedTreeElement').attr('rel');
-			$('.selectedTreeElement').attr('rel', newrel);
-			$("a[rel='"+ verzeichnis(oldrel) +"thumb_"+ dateiname(oldrel)+"']")
-				.text('thumb_'+dateiname(rel))
-				.attr('rel', verzeichnis(rel)+'thumb_'+dateiname(rel));
-			treeSelect(rel);
-		}
-	}else if(whattodo == 'createSubFolder' && var1 != ''){
-		tree_refresh(pfad);
-	}else{
-		tree_refresh(relFromFullPath(currentPath));
-	}
-}
-
-function clearFileInfo() {
-	$("#thumbImage").html("");
-	$("#fileNameTd").html("");
-	$("#fileSizeTd").html("");
-	$("#fileLastModTd").html("");
-	$("#txtFileUrl").val("");
-	$("#txtFileThumbUrl").val("");
-	$("#btnQuickEdit").attr("disabled", "true");
-	$("#btnEditorEdit").attr("disabled", "true");
-	$("#txtQuickEdit").val("");
-	$("#btnQuickEditSubmit").attr("disabled", "true");
-}
-
-function clearVars(){
-	currentPath = "";
-	fpath = "";
-	curFilePath = "";
-
-}
-
-function setPanelScroll() {
-	var winHeight = $(window).height();
-	var panelHeight = winHeight - 208; //mb TODO
-	$("#folderTreePanel").css("max-height", panelHeight + "px");
-	$("#fileListPanel").css("max-height", panelHeight + "px");
-}
-
-function loadFileInfo(fpath){
-	var relfpath = relFromFullPath(fpath);
-	if(fileInfoArray[relfpath] == undefined || fileInfoArray[relfpath] == ''){
-		$.post("app/file_manager.php", {
-					"service": "get_file_info",
-					"file_path": fpath
-				}, function(data){
-					fileInfoArray[relfpath] = JSON.parse(data);
-					getFileInfoCallback(data)});
-	}else{
-		getFileInfoCallback(JSON.stringify(fileInfoArray[relfpath]));
-	}
-}
-
-function addFolderTree(){
-
-	$('#folderTreePanel').fileTree({ root: '/',
-            loadCallBack: function(){treeMarkPermissions(gUserPermissionsArray)},
-            checkPermFunc: function(relation){return allowPermission(relation, gUserPermissionsArray) == 0 ? false : true;}
-
-            },
-            function(file, folder) {
-		var rel = "";
-		if (file != null){
-			thisIsAFile = true;
-			rel = file;
-		}else if(folder != null){
-			thisIsAFile = false;
-			rel = folder;
-		}
-
-		treeSelect(rel);
-
-
-	});
-
-}
-
-function relFromFullPath(fullPath){
-	if(fullPath != undefined || fullPath != null){
-		var curPath = fullPath;
-		return curPath.substring(mainPath.length, curPath.length)
-	}
-}
-
-function createFolder(path){
-	var folderName = filterSymbols(prompt("Verzeichnisname?"));
-	if(folderName != "" && folderName != null) {
-		$.post("app/file_manager.php", {
-			"service": "create_subfolder",
-			"current_path": path,
-			"new_subfolder_name": folderName
-		}, function(resp) {
-			if(resp == "0") {
-				alert("Fehler bei der Erstellung des Verzeichnises; Bitte versuchen Sie es noch einmal!");
-			} else {
-				loadFolderTree('createSubFolder', relFromFullPath(path));
-			}
-		});
-	}
-}
-
-function createNewFile(path, file_name, file_ext){
-    if(file_ext != "" && file_ext != null && path != null) {
-        $.post("app/file_manager.php", {
-			"service": "create_new_file",
-			"current_path": path,
-			"new_file_name": file_name,
+            /**
+             * Creates file (ajax)
+             * @param {String} path relative! path of folder
+             * @param {String} file_name name of file to create
+             * @param {String} file_ext extension of file to create, without point.
+             * @param {Function} fnCallback callback function after create. Called with 1 arg: responce
+             */
+            function createNewFile(path, file_name, file_ext, fnCallback){
+                if(file_ext != "" && file_ext != null && path != null) {
+                    $.post("app/file_manager.php", {
+                        "service": "create_new_file",
+                        "current_path": path,
+                        "new_file_name": file_name,
                         "extension": file_ext
-		}, function(resp) {
-			if(resp == "0") {
-				alert("Fehler bei der Erstellung der Datei; Bitte versuchen Sie es noch einmal!");
-			}else if(resp == "1"){
-                            tree_refresh(relFromFullPath(path));
+                    }, function(resp) {
+                        if(resp === "0") {
+                            alert("Fehler bei der Erstellung der Datei; Bitte versuchen Sie es noch einmal!");
+                        }else if(resp === "1"){
+                            //tree_refresh(relFromFullPath(path));
                         } else {
                             alert(resp);
-			}
-		});
-    }
-}
+                        }
 
-function filterSymbols(string){
-    var filteredString = string;
-    var find = $.parseJSON('<?php echo(json_encode($ne_config_info['symbols_being_replaced'])); ?>');
-    var replace = $.parseJSON('<?php echo(json_encode($ne_config_info['symbols_replacement'])); ?>');
-    var regex;
-    for (var i = 0; i < find.length; i++) {
-        regex = new RegExp(find[i], "g");
-        filteredString = filteredString.replace(regex, replace[i]);
-    }
-    //regex = new RegExp('<?php echo($ne_config_info['regex_removed_symbols']); ?>', "g");
-    filteredString = filteredString.replace(<?php echo($ne_config_info['regex_removed_symbols']); ?>g, "");
-    return filteredString;
-}
+                        if(fnCallback) fnCallback(resp);
+                    });
+                }
+            }
 
-$(document).ready(function() {
 
-    //load fileUpload widget..
-    $('#fileupload').fileupload({
-    // limitMultiFileUploads: 1,
-    // sequentialUploads: true
-	})
-	.bind('fileuploadstop', function (e, data) {
-			alert('DONE');
-			loadFolderTree();
-			clearFileInfo();
-	});
+            /**
+             * test if path is a directory
+             * @param {String} path
+             * @returns {Boolean} true if is directory
+             */
+            function isDir(path){
+                return (path.substr(-1,1) === "/");
+            }
 
-    //load folder tree..
-	addFolderTree();
+//            //pruefen ob zugriff auf datei erlaubt ist, abhaengig von permissions array
+//            //return 0 -> kein zugriff, 1->full zugriff, 2->unterordner/files erlaubt
+//            function allowPermission(path, permissions){
+//                var retVal = 0;
+//
+//                //pruefen ob path in permissions bzw obere element drin ist
+//                $.each(permissions, function(){
+//                    if(path.substr(0,this.length).toLowerCase() == this.toLowerCase()){
+//                            retVal = 1;
+//                            return false;
+//                    }
+//                });
+//
+//                //falls nichts gefunden
+//                if (retVal == 0) {
+//                   //umgekehrt, pruefen ob irgendwas unter dem path erlaubt ist, dann return 2 (dateien unter dem ordner)
+//                    $.each(permissions, function(){
+//                        //falls path von ordner..
+//                        if(path.substr(-1,1) == "/"){
+//                            if(this.substr(0,path.length).toLowerCase() == path.toLowerCase()){
+//                                retVal = 2;
+//                                return false;
+//                            }
+//                        }
+//                    });
+//                }
+//                return retVal;
+//            }
 
-    //load image preview..
-    folderImgPreviewObj = new folderImgPreview({
-        loadMessage: "Loading...",
-        ImgPrevContainer: $("#folderImagesPreview"),
+            function deleteElement(path){
+                //loeschen nur falls volles zugriff
+//                if(allowPermission(path, gUserPermissionsArray) !== 1){
+//                    alert(unescape("Kein zugriff"));
+//                    return;
+//                }
 
-        loadedCallback: function(path){
-            //callback function test
-            var headcnt = this.headContainer;
-            var children = headcnt.children();
-            children.fadeOut(100, function(){
-                headcnt.find("h4").remove();
-                headcnt.prepend('<h4 style="text-align: center;">Pfad: "'+path+'"</h4>');
-                setTimeout(function(){
-                    headcnt.find("h4").fadeOut(100, function(){
-                    headcnt.find("h4").remove();
-                    children.fadeIn(300);
-                });}
-                , 200);
-            });
-        },
-        clickPicCallback: function(){
-//            alert($(this).find('IMG').attr('src'));
-            treeSelect($(this).find('IMG').attr('src'));
-        }
+                var sWarning; //warning message
+                var ajaxCommand; //ajax command for php backend
+                var dirToRefresh; //dir in tree to refresh
 
-    });
-
-    $("#newfolder_icon_main").bind('click', function(){
-        //neue ordner nur falls full zugriff
-        if(allowPermission("/", gUserPermissionsArray) != 1){
-            alert(unescape("Kein zugriff"));
-            return;
-        }
-		createFolder(mainPath+"/");
-	})
-
-    $("#create_new_icon_main").bind('click', function(){
-        if(allowPermission("/", gUserPermissionsArray) != 1){
-            alert(unescape("Kein zugriff"));
-            return;
-        }
-        dlg_path = "main";
-        $( "#dialog-form" ).dialog( "open" );
-	});
-
-	$("#newfolder_icon").live('click', function() {
-
-		if(currentPath == "" || fpath.substr(fpath.length-1, 1) != "/") {
-			alert("Bitte auf Zielverzeichnis klicken!");
-			return;
-		}
-                //neue ordner nur falls full zugriff
-                if(allowPermission(curRelation, gUserPermissionsArray) != 1){
-                    alert(unescape("Kein zugriff"));
-                    return;
+                if(isDir(path)){
+                    sWarning = 'CAUTION! Sind Sie sicher, dass Sie das GANZE Verzeichnis: "'+path+'" l%F6schen wollen?';
+                    ajaxCommand = 'delete_folder';
+                    dirToRefresh = verzeichnis(path.slice(0,-1));
+                }else{
+                    sWarning = 'Sind Sie sicher, dass Sie diese Datei: "'+path+'" l%F6schen wollen?';
+                    ajaxCommand = 'delete_file';
+                    dirToRefresh = verzeichnis(path);
                 }
 
-		createFolder(currentPath);
-
-
-	});
-
-
-
-	$("#rename_icon").live('click', function() {
-		if(currentPath == "") {
-			alert(unescape("Bitte eine Datei oder Verzeichnis w%E4hlen!"));
-			return;
-		}
-        //umbenennen nur falls full zugriff
-        if(allowPermission(curRelation, gUserPermissionsArray) != 1){
-            alert(unescape("Kein zugriff"));
-            return;
-        }
-		var curName = $('.selectedTreeElement').text();
-		var path_rename = "";
-		if(fpath.substr(fpath.length-1, 1) == "/"){
-			var newName = prompt("Neuer Name des Verzeichnises:", curName);
-			var ext = "/";
-			path_rename = fpath.substr(0, fpath.length-1);
-		}else{
-			var newName = prompt("Neuer Name der Datei (ohne Erweiterung!)", nameWOextension(curName));
-			var ext = '.'+getExtension(fpath);
-			path_rename = fpath;
-		}
-        //symbole filtern
-        newName = filterSymbols(newName);
-		if(newName != "" && newName != null) {
-			$.post("app/file_manager.php", {
-				"service": "rename",
-				"current_path": path_rename,
-				"new_name": newName
-			}, function(resp) {
-				if(resp == "0") {
-					alert("Fehler beim Umbenennen, versuchen Sie es noch einmal!");
-				} else {
-					loadFolderTree('rename', verzeichnis(path_rename)+newName+ext);
-
-				}
-			});
-		}
-	});
-
-	$("#delete_icon").live('click', function() {
-		if(currentPath == "") {
-			alert(unescape("Bitte eine Datei oder Verzeichnis w%E4hlen!"));
-			return;
-		}
-
-        //loeschen nur falls full zugriff
-        if(allowPermission(curRelation, gUserPermissionsArray) != 1){
-            alert(unescape("Kein zugriff"));
-            return;
-        }
-
-		if(fpath.substr(fpath.length-1, 1) == "/"){
-			if(confirm(unescape("CAUTION! Sind Sie wirklich sicher, das GANZE verzeichnis zu l%F6schen?"))) {
-				$.post("app/file_manager.php", {
-					"service": "delete_folder",
-					"folder": currentPath
-				}, function(resp) {
-					alert(resp);
-					loadFolderTree("delete", currentPath);
-				});
-			}
-		}else{
-			if(!window.confirm(unescape("Sind Sie sicher, diese Datei zu l%F6schen?"))) {
-				return;
-			}
-			$.post("app/file_manager.php", {
-				"service": "delete_file",
-				"file_path": fpath
-			}, function() {
-				clearFileInfo();
-				loadFolderTree("delete", fpath);
-			});
-		}
-	});
-
-    //dialog vorbereiten
-    $("#dialog-form #buttons").buttonset();
-    $( "#dialog-form" ).dialog({
-        show: 'drop',
-        hide: 'drop',
-        autoOpen: false,
-        height: 300,
-        width: 350,
-        modal: true,
-        buttons: {
-            "Ok": function() {
-                                (dlg_path != "main") ? dlg_path = currentPath : dlg_path = mainPath + "/";
-                                file_name = filterSymbols($("#dialog-form #dateinameinput").val());
-                                file_ext = $("#dialog-form input[name=buttons]:checked").attr('id');
-                                createNewFile(dlg_path, file_name, file_ext);
-                                $( this ).dialog( "close" );
-            },
-            Cancel: function() {
-                                $( this ).dialog( "close" );
+                if(confirm(unescape(sWarning))) {
+                    $.post('app/file_manager.php', {
+                        "service": ajaxCommand,
+                        "file_path": path
+                    }, function() {
+                        FileTreeObj.refreshPath(dirToRefresh); //parent dir.
+                    });
+               }
             }
-        },
-        close: function() {
-                        $(this).find("#dateinameinput").val('');
-        },
-        open: function() {
-                        $(this).find("input[name=buttons],:button").blur(); //firefox dont blur button ?
-        }
-    });
+
+            /**
+             * rename file/folder (ajax)
+             * @param {String} path relative path to element
+             * @param {String} newName new name of directory or file without extension
+             * @returns {boolean} false if not connected or some error by input data check
+             */
+            function renameElement(path, newName){
+                if(newName === "" && newName === undefined) {
+                    alert('Name darf nicht leer sein!');
+                    return false;
+                }
+
+                //symbole filtern
+                newName = filterSymbols(newName);
+
+                if (!confirm('Sind Sie sicher, dass Sie : "'+path+'" in "'+newName+'" umbenennen wollen?'))
+                    return false;
+
+                if(path === "/" || path === "" || path === "\\"){
+                    alert("Sie dürfen nicht Root-Ordner umbennen");
+                    return false;
+                }
+
+                var result = true;
+                $.post("app/file_manager.php", {
+                    "service": "rename",
+                    "current_path": path,
+                    "new_name": newName
+                }, function(resp) {
+                    if(resp !== '1') {
+                        alert("Fehler beim Umbenennen:\n"+resp);
+                    } else {
+                        var dirToRefresh = verzeichnis(path.slice(0,-1));
+                        FileTreeObj.refreshPath(dirToRefresh); //parent dir.
+                    }
+                })
+                .fail(function(){
+                    alert('Server connection error');
+                    result = false;
+                });
+
+                return result;
+
+            }
+
+            /**
+             * Ensure if any path is selected
+             * @returns {boolean} if selected
+             */
+            function ensureSelected(){
+                if(current_path === "" || current_path === undefined) {
+                    alert(unescape("Bitte eine Datei oder Verzeichnis w%E4hlen!"));
+                    return false;
+                }
+
+                return true;
+            }
+
+            /**
+             * Filter/replace symbols in string, to make accepted name
+             * @param {String} string string being filtered
+             * @returns {String} filtered string
+             */
+            function filterSymbols(string){
+                if(string === undefined || string.length === 0){
+                    return "";
+                }
+                var filteredString = string;
+                var find = $.parseJSON('<?php echo(json_encode($ne_config_info['symbols_being_replaced'])); ?>');
+                var replace = $.parseJSON('<?php echo(json_encode($ne_config_info['symbols_replacement'])); ?>');
+                var regex;
+                for (var i = 0; i < find.length; i++) {
+                    regex = new RegExp(find[i], "g");
+                    filteredString = filteredString.replace(regex, replace[i]);
+                }
+                filteredString = filteredString.replace(<?php echo($ne_config_info['regex_removed_symbols']); ?>g, "");
+                return filteredString;
+            }
+
+            /* ---------- Here comes jQuery: ---------- */
+            $(document).ready(function() {
+
+                var picture_exts = ["jpeg", "jpg", "png", "gif"], //todo load from config.
+                    html_exts = ["shtml", "html"],
+                    no_html_exts = ["htaccess", "txt", "conf"],
+                    editor_exts = no_html_exts.concat(html_exts),
+
+                    file_details_source   = $("#file-details-template").html(),
+                    file_details_template = Handlebars.compile(file_details_source),
+
+                    folder_details_source   = $("#folder-details-template").html(),
+                    folder_details_template = Handlebars.compile(folder_details_source),
+
+                    picture_preview_source   = $("#picture-preview-template").html(),
+                    picture_preview_template = Handlebars.compile(picture_preview_source),
+
+                    pictures_preview_source   = $("#pictures-preview-template").html(),
+                    pictures_preview_template = Handlebars.compile(pictures_preview_source);
 
 
-    $("#dialog-form input[name=buttons]").bind('click', function() {
-        if($("#dialog-form input[name=buttons]:checked").attr('id') == 'htaccess'){
-            $('#dialog-form #datei_name_input_field').fadeOut(300);
-        }else{
-            $('#dialog-form #datei_name_input_field').fadeIn(300);
-        }
-    });
-
-    $("#create_new_icon").live('click', function() {
-        if(currentPath == "") {
-            alert(unescape("Bitte eine Datei oder Verzeichnis w%E4hlen!"));
-            return;
-        }
-        //neue datei erstellen nur falls full zugriff
-        if(allowPermission(curRelation, gUserPermissionsArray) != 1){
-            alert(unescape("Kein zugriff"));
-            return;
-        }
-
-        $( "#dialog-form" ).dialog( "open" );
-
-	});
-
-	$("#txtFileUrl").mouseover(function() {
-		$(this).select();
-	});
-
-	$("#txtFileThumbUrl").mouseover(function() {
-		$(this).select();
-	});
-
-	$("#btnQuickEdit").click(function() {
-		if(currentPath == "") {
-			return;
-		}
-		var check = confirm(unescape("Achtung: Die Berabeitung im Quelltext erm%F6glicht Modifikationen an der Seitenstruktur.\nFehler k%F6nnen die Seite zerst%F6ren. Bitte benutzen Sie diese Option nur \nbei ausreichenden HTML-Kenntnissen auf eigene Gefahr."));
-		if (check == true){
-			$.post("app/file_manager.php", {
-				"service": "load_file_content",
-				"file_path": $("#txtFileUrl").val()
-			}, function(resp) {
-				var rdata = resp.replace(/<comment_ssi>/g, "<!-" + "-#");
-				rdata = rdata.replace(/<comment>/g, "<!-" + "-");
-				rdata = rdata.replace(/<\/comment>/g, "-" + "->");
-				$("#txtQuickEdit").val(rdata);
-				$("#btnQuickEditSubmit").removeAttr("disabled");
-                                $("#txtQuickEdit").removeAttr("disabled");
-			})
-		}
-	});
-
-	$("#btnEditorEdit").click(function() {
-		if(currentPath == "") {
-			return;
-		}
-		//alert("nav_editor.php?path="+escape(curFilePath));
-		window.location.href = "nav_editor.php?path="+escape(curFilePath);
-	});
-
-
-	$("#btnQuickEditSubmit").click(function() {
-		if(currentPath == "") {
-			return;
-		}
-		if(!confirm("Sind Sie sicher?")) {
-			return;
-		}
-		var cnt = $("#txtQuickEdit").val();
-		cnt = cnt.replace(new RegExp("<!-" + "-#", "g"), "<comment_ssi>");
-		cnt = cnt.replace(/<!--/g, "<comment>");
-		cnt = cnt.replace(/-->/g, "</comment>");
-		$.post("app/file_manager.php", {
-			"service": "save_file_content",
-			"file_path": $("#txtFileUrl").val(),
-			"new_content": cnt
-		}, function(resp) {
-			alert(resp);
-		});
-	});
-
-	$(window).resize(function() {
-		setPanelScroll();
-	});
-
-
-    $("#folderImagesPreview_accordion").accordion({
-        active: false,
-        collapsible: true,
-        navigation: true,
-        autoHeight: false
-//        icons: {
-//            'header': 'ui-icon-plus',
-//            'headerSelected': 'ui-icon-minus'
-//        }
-    });
+                tinyMCE.init({
+                    forced_root_block : '',
+                    selector: "#file-content-textarea",
+                    language: "de",
+                    theme: "modern",
+                    skin: "light",
+                    plugins: "image link code table preview mitarbeiter feedimport ssiInclude image_choose noneditable",
+                    menubar: false,
+                    toolbar1: "undo redo | cut copy paste | link image table | mitarbeiter | feedimport | code | preview",
+                    toolbar2: "fontselect fontsizeselect | styleselect | alignleft aligncenter alignright alignjustify | outdent indent | bold italic underline strikethrough | bullist numlist",
+                    relative_urls: false,
+                    convert_urls: false,
+                    height: 300
+                    //plugins: "safari,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template",
+                });
 
 
 
+                $(".popover-container > a").click(function() {
+                    var $this = $(this);
+
+                    $this.siblings(".hover-popover").show();
+
+                });
+
+                $(".hover-popover .dismiss").click(function() {
+                    $(this).closest(".hover-popover").hide();
+                });
 
 
-	// help
-	$("#helpHand a").click(function() {
-		if(helpText == "") {
-			$.get("app/get_help.php?r=" + Math.random(), {
-				"page_name": "file_editor"
-			}, function(rdata){
-				helpText = rdata;
-				$("#helpCont").html(helpText);
-				$("#helpCont").slideToggle("fast");
-			});
-		} else {
-			$("#helpCont").slideToggle("fast");
-		}
-	});
+                // File Tree
+                FileTreeObj = new FileTree($('#file-tree'), {
+                    root: '/',
+                    showRoot: true,
+                    multiFolder: false,
+                    expandCallBack: function() {
+                        if(current_path !== "") {
 
-	setPanelScroll();
-	clearFileInfo();
+                            var pictures = [],
+                            data = { pictures : [] };
+
+                            $.each(FileTreeObj.fileInfoArray, function(elem) {
+
+                                if(elem.indexOf(current_path) !== -1 && picture_exts.indexOf(getExtension(elem)) !== -1) {
+                                    pictures.push({ url: elem, titel: dateiname(elem) });
+                                }
+
+                            });
+
+                            data.pictures = pictures;
+
+                            if(pictures.length > 0) {
+                                $('#file-details-container a[href="#picture-preview"]').show();
+                            }
+
+                            $("#picture-preview").html(pictures_preview_template(data));
+                        }
+
+                        //no need?
+                        $("#file-tree a").click(function(evt) {
+                            $("#file-tree .active").removeClass("active");
+                            $(this).addClass("active");
+
+                        });
+                    },
+
+                    selectCallBack: function(sPath, isFile) {
+                        var context = {},
+                        html = "";
+
+                        $('#file-details-container .tabbable a').hide();
+
+                        $('#file-details-container a[href="#basis"]').show().tab('show');
+
+                        if(isFile) {
+                            context = FileTreeObj.fileInfoArray[sPath];
+                            html    = file_details_template(context);
+
+                            if(context.thumb_name === "") context.thumb_name = null;
 
 
-});
-</script>
-</head>
 
-<body id="bd_Bilder">
-    <div id="dialog-form" title="Create new file">
-        <p style="border: 1px solid transparent; padding: 0.3em; ">Bitte w&auml;hlen Sie den Typ der Datei aus:</p>
-        <form>
-            <div id="buttons">
-                <input type="radio" id="txt" value="txt" name="buttons" /><label for="txt">.txt</label>
-                <input type="radio" id="conf" value="conf" name="buttons" /><label for="conf">.conf</label>
-                <input type="radio" id="htaccess" value="htaccess" name="buttons" /><label for="htaccess">.htaccess</label>
-            </div>
-            <br/>
-            <fieldset id="datei_name_input_field">
-                <label for="dateiname">Dateiname (ohne Erweiterung):</label>
-                <input type="text" name="dateiname" id="dateinameinput" value="" class="text ui-widget-content ui-corner-all" />
-            </fieldset>
-        </form>
-    </div>
-<div id="wrapper">
-	<h1 id="header"><?php echo($ne_config_info['app_title']); ?></h1>
-	<div id="navBar">
-		<?php require('common_nav_menu.php'); ?>
-	</div>
+                            if(editor_exts.indexOf(getExtension(sPath)) !== -1) {
 
-	<div id="contentPanel1">
-	<?php
-	// help
-	if(has_help_file()) {
-	?>
-		<div id="helpCont">.</div>
-		<div id="helpHand"><a href="javascript:;">Hilfe</a></div>
-	<?php
-	}
-	?>
-        <!-- todo, zu viel DIVS? -->
-		<div id="newFM">
-			<div id="folderTreeWrapper">
-                <div id="folderOperArea">
 
-                    <div id ="mainfoldermenu" class="mainfolder_icons">
-                        <p>Funktionen f&uuml;r das Hauptverzeichnis: </p>
-                        <img id="newfolder_icon_main" class="action_icon_img" title="Neues Verz. im Hauptverz. erstellen" src="<?php echo $ne_config_info['jquery_file_tree']['icons']['newfolder_icon']; ?>"/>
-                        <img id="create_new_icon_main" class="action_icon_img" title="Eine Datei im Hauptverz. erstellen" src="<?php echo $ne_config_info['jquery_file_tree']['icons']['create_new_icon']; ?>"/>
+                                $('#file-details-container a[href="#file-content"]')
+                                        .unbind()
+                                        .show()
+                                        .on('click', function(){
+                                            $.post("app/file_manager.php", {
+                                                "service": "load_file_content",
+                                                "file_path": sPath
+                                            }, function(data) {
+                                                data = data.replace(/<comment_ssi>/g, "<!-" + "-#");
+                                                data = data.replace(/<comment>/g, "<!-" + "-");
+                                                data = data.replace(/<\/comment>/g, "-" + "->");
+                                                //falls ist kein html file, nur simple area text editor
+                                                if(no_html_exts.indexOf(getExtension(sPath)) !== -1){
+                                                    tinyMCE.activeEditor.hide();
+                                                    tinyMCE.activeEditor.getElement().value = data;
+                                                }
+                                                //falls html, tinyMCE einschalten
+                                                else{
+                                                    tinyMCE.activeEditor.show();
+                                                    tinyMCE.activeEditor.setContent(data);
+                                                }
 
-                    </div>
-                    <div style="clear: left"></div>
+                                            });
+                                        });
+                            }
+
+                            if(picture_exts.indexOf(getExtension(sPath)) !== -1) {
+                                context.titel = dateiname(sPath);
+                                //da nu thumb file name nicht vorhanden, generieren, fuer template
+                                context.thumb_file_name = dateiname(context.thumb_name);
+                                $("#picture-preview").html(picture_preview_template(context));
+                                $('#file-details-container a[href="#picture-preview"]').show();
+                            }
+
+                        }else {//is a folder
+                            context = { verzeichnis: verzeichnis(sPath)},
+                            html    = folder_details_template(context);
+
+                        }
+
+                        current_path = sPath;
+
+                        $("#file-title").html(sPath);
+
+
+                        $("#file-details").html(html);
+                    }
+
+                });
+
+
+                //fileupload, settings and functions
+                $('#fileupload').fileupload({
+                    url: 'app/upload.php',
+                    dataType: 'json',
+                    autoUpload: true,
+                    singleFileUploads: false,
+                    //extra info
+                    formData: function(form){
+                        return [
+                                {
+                                    name: 'folder',
+                                    value: current_path
+                                }
+                                ];
+                    },
+                   /**
+                    * Wenn irgendwas von dem Server-Upload-Script erhalten.
+                    * TODO bessere Fehlerbehandlung
+                    * @param {Object} e jQuery event
+                    * @param@param {Object} data result data
+                    */
+                    done: function (e, data) {
+                        var result;
+
+                        if(data.result.length === 0){
+                            result = 'Vielleicht Fehlerhaft hochgeladen, bitte alle hochgeladene Dateien überprüfen!';
+                        }
+
+                        //jedes result element nach "error" property suchen, error dateien sammeln
+                        $.each(data.result, function(i,element){
+                            if(element.error){
+                                if(!result){result = "Fehler beim Hochladen!\nNicht hochgeladene Dateien:";}
+                                result += '\n"'+ element.name + "\""
+                            }
+                        });
+
+
+                        //falls gab's fehler
+                        if(!result){
+                            result = "Hochgeladen!";
+                        }
+                        alert(result);
+                        FileTreeObj.refreshPath(current_path);
+                    },
+
+                    //wenn gar kein/falsche antwort von dem Server erhalten
+                    fail: function(e, data){
+                        alert('Fehler beim Hochladen (Server unereichbar?)');
+                    }
+                });
+
+                // File List
+                $("#file-list-add").click(function() {
+                    $("#fileupload").click();
+                });
+
+                //TODO one func create(path, fileOrFolder, callback)
+                //$this.closest(".hover-popover").hide() as func open() and close()
+
+                // Create New File
+                $("#buttonFileCreate").click(function() {
+                    var $this = $(this),
+                        path = verzeichnis(current_path),
+                        file_name = $("#inputFileCreateFileName").val(),
+                        file_ext = $("#inputFileCreateType").val().substr(1); //substr: .ext -> ext
+
+                    createNewFile(path, file_name, file_ext, function(){
+                        FileTreeObj.refreshPath(path);
+                        $this.closest(".hover-popover").hide();
+                    });
+                });
+
+                // Create New Folder
+                $("#buttonFolderCreate").click(function() {
+                    var $this = $(this),
+                        path = verzeichnis(current_path),
+                        folder_name = $("#inputFolderCreateFolderName").val();
+
+                    createFolder(path, folder_name, function(){
+                        FileTreeObj.refreshPath(path);
+                        $this.closest(".hover-popover").hide();
+                    });
+                });
+
+                // Delete File/Folder
+                $("#delete-element").click(function(){
+                    if(!ensureSelected()) return;
+
+                    deleteElement(current_path);
+                });
+
+                //Rename File/Folder
+                $("#rename-element").click(function(){
+                    if(!ensureSelected()) return;
+                    var newName = '';
+                    var oldName = NavTools.basename(current_path);
+                    if(isDir(current_path)){
+                        newName = prompt("Neuer Name des Verzeichnises:", oldName);
+                    }else{
+                        newName = prompt("Neuer Name der Datei (ohne Erweiterung!)", nameWOextension(oldName));
+                    }
+
+                    renameElement(current_path, newName);
+                });
+
+                //tyniMCE save content
+                $("#btnSaveEditedFile").click(function(){
+                    if(!confirm("Sind Sie sicher dass sie Inhalt speichern wollen?")) {
+                        return;
+                    }
+                    //mini workaround fuer text editor.
+                    //TODO class, mit ".getContent() .setContent() .isTiny(), .getTiny() .getArea()"
+                    //falls nur txt editor
+                    if($("#file-content-textarea").is(":visible")){
+                        var cnt = $("#file-content-textarea").val();
+                    }
+                    //falls html editor
+                    else{
+                        var cnt = tinyMCE.get('file-content-textarea').getContent();
+                    }
+
+                    cnt = cnt.replace(new RegExp("<!-" + "-#", "g"), "<comment_ssi>");
+                    cnt = cnt.replace(/<!--/g, "<comment>");
+                    cnt = cnt.replace(/-->/g, "</comment>");
+                    $.post("app/file_manager.php", {
+                        "service": "save_file_content",
+                        "file_path": current_path,
+                        "new_content": cnt
+                    }, function(resp) {
+                        alert(resp);
+                    });
+                });
+
+
+                //------------------DYNAMIC EVENT HANDLERS--------------------//
+                //dinamisch "umbennen" button laden, wenn name geaendert wird
+                $( document )
+                .on('keydown', '#inputFileName',function(eventObj){
+                    var input = $(eventObj.target);
+                    //falls noch kein button, erstellen
+                    if(input.parent().find("#buttonRename").length <= 0){
+                        var dynButtonHtml = '<button name="buttonRename" id="buttonRename" class="btn">umbenennen</button>';
+                        $(dynButtonHtml).insertAfter(input).hide().fadeIn('200');
+                    }
+                })
+
+                //event for "rename" button click
+                .on('click', '#buttonRename', function(eventObj){
+                    eventObj.preventDefault();
+                    if(!ensureSelected()) return;
+
+                    var newNamePath = $("#inputFileName").val();
+                    var newName = '';
+
+                    //basename
+                    if(isDir(current_path)){
+                        newName = NavTools.pathinfo(newNamePath,'PATHINFO_BASENAME');
+                    }else{
+                        newName = NavTools.pathinfo(newNamePath,'PATHINFO_FILENAME');
+                    }
+
+                    renameElement(current_path, newName);
+                });
+
+            });
+        </script>
+
+        <script id="file-details-template" type="text/x-handlebars-template">
+              <form class="form-horizontal">
+              <div class="control-group">
+                <label class="control-label" for="inputFileName">Dateiname</label>
+                <div class="controls">
+                  <input type="text" id="inputFileName" value="{{file_name}}">
                 </div>
-				<div id="folderTreePanel"></div>
-			</div>
-			<div id="filePanelWrapper">
-				<div id="fileListWrapper">
-						<div id="fileupload">
+              </div>
+              <div class="control-group">
+                <label class="control-label" for="inputFileSize">Dateigr&ouml;&szlig;e</label>
+                <div class="controls">
+                  <input id="inputFileSize" type="text" placeholder="{{file_size}} Byte" disabled>
+                </div>
+              </div>
+              <div class="control-group">
+                <label class="control-label" for="inputFileChanged">Ge&auml;ndert</label>
+                <div class="controls">
+                  <input id="inputFileChanged" type="text" placeholder="{{modified_time}}" disabled>
+                </div>
+              </div>
+              <div class="control-group">
+                <label class="control-label" for="inputFileUrl">URL</label>
+                <div class="controls">
+                  <input class="input-xxlarge" id="inputFileUrl" type="text" placeholder="{{url}}" disabled>
+                </div>
+              </div>
+              <div class="control-group">
+                <label class="control-label" for="inputFileThumb">Thumbnail</label>
+                <div class="controls">
+                  <input class="input-xxlarge" id="inputFileThumb" type="text" placeholder="{{thumb_name}}" disabled>
+                </div>
+              </div>
+            </form>
+        </script>
 
-							<form id="uploadForm" action="app/upload.php" method="POST" enctype="multipart/form-data">
-								<div class="fileupload-buttonbar">
-									<label class="fileinput-button">
-										<span>Add files...</span>
-										<input type="file" name="files[]" multiple>
-									</label>
-									<button type="submit" class="start">Start upload</button>
-									<button type="reset" class="cancel">Cancel upload</button>
-									<button type="button" class="delete">Delete files</button>
-								</div>
-							</form>
-							<div class="fileupload-content">
-								<table class="files"></table>
-								<div class="fileupload-progressbar"></div>
-							</div>
 
-						</div>
+        <script id="folder-details-template" type="text/x-handlebars-template">
+              <form class="form-horizontal">
+              <div class="control-group">
+                <label class="control-label" for="inputFileName">Verzeichnisname</label>
+                <div class="controls">
+                  <input type="text" id="inputFileName" value="{{verzeichnis}}">
+                </div>
+              </div>
+            </form>
+        </script>
 
-						<script id="template-upload" type="text/x-jquery-tmpl">
-							<tr class="template-upload{{if error}} ui-state-error{{/if}}">
-								<td class="preview"></td>
-								<td class="name">{{if name}}${name}{{else}}Untitled{{/if}}</td>
-								<td class="size">${sizef}</td>
-								{{if error}}
-									<td class="error" colspan="2">Error:
-										{{if error === 'maxFileSize'}}File is too big
-										{{else error === 'minFileSize'}}File is too small
-										{{else error === 'acceptFileTypes'}}Filetype not allowed
-										{{else error === 'maxNumberOfFiles'}}Max number of files exceeded
-										{{else}}${error}
-										{{/if}}
-									</td>
-								{{else}}
-									<td class="progress"><div></div></td>
-									<td class="start"><button>Start</button></td>
-								{{/if}}
-								<td class="cancel"><button>Cancel</button></td>
-							</tr>
-						</script>
-						<script id="template-download" type="text/x-jquery-tmpl">
-							<tr class="template-download{{if error}} ui-state-error{{/if}}">
-								{{if error}}
-									<td></td>
-									<td class="name">${name}</td>
-									<td class="size">${sizef}</td>
-									<td class="error" colspan="2">Error:
-										{{if error === 1}}File exceeds upload_max_filesize (php.ini directive)
-										{{else error === 2}}File exceeds MAX_FILE_SIZE (HTML form directive)
-										{{else error === 3}}File was only partially uploaded
-										{{else error === 4}}No File was uploaded
-										{{else error === 5}}Missing a temporary folder
-										{{else error === 6}}Failed to write file to disk
-										{{else error === 7}}File upload stopped by extension
-										{{else error === 'maxFileSize'}}File is too big
-										{{else error === 'minFileSize'}}File is too small
-										{{else error === 'acceptFileTypes'}}Filetype not allowed
-										{{else error === 'maxNumberOfFiles'}}Max number of files exceeded
-										{{else error === 'uploadedBytes'}}Uploaded bytes exceed file size
-										{{else error === 'emptyResult'}}Empty file upload result
-										{{else}}${error}
-										{{/if}}
-									</td>
-								{{else}}
-									<td class="preview">
-										{{if thumbnail_url}}
-											<a href="${url}" target="_blank"><img src="${thumbnail_url}"></a>
-										{{/if}}
-									</td>
-									<td class="name">
-										<a href="${url}"{{if thumbnail_url}} target="_blank"{{/if}}>${name}</a>
-									</td>
-									<td class="size">${sizef}</td>
-									<td colspan="2"></td>
-								{{/if}}
-								<td class="delete">
-									<button data-type="${delete_type}" data-url="${delete_url}">Delete</button>
-								</td>
-							</tr>
-						</script>
+        <script id="picture-preview-template" type="text/x-handlebars-template">
 
-				</div>
-				<div id="fileInfoDisplay">
-                    </br>
-                    <div id="folderImagesPreview_accordion">
-                        <p style="text-align: center; height: 30px;">Images Preview</p>
-                        <div id="folderImagesPreview">
-                            <H3 id="linkImgPreview">folder link ?</H3><br>
-                            <H3>Test Images Preview</H3><br><br>
-                            <H3>Test Images Preview</H3><br>
+              <div class="span3" style="height: 400px; margin-bottom: 60px;">
+                  <div class="thumbnail">
+                      <h5>{{titel}}</h5>
+                      <img src="{{url}}">
+                      <!--<div class="caption clearfix">
+                          <a href="javascript:void(0);" class="btn btn-danger btn-light pull-right">L&ouml;schen</a>
+                      </div>-->
+                  </div>
+              </div>
+
+              {{#if thumb_name}}
+              <div class="span3" style="height: 400px; margin-bottom: 60px;">
+                  <div class="thumbnail">
+                      <h5>{{thumb_file_name}}</h5>
+                      <img src="{{thumb_name}}">
+                      <!--<div class="caption clearfix">
+                          <a href="javascript:void(0);" class="btn btn-danger btn-light pull-right">L&ouml;schen</a>
+                      </div>-->
+                  </div>
+              </div>
+              {{/if}}
+
+
+        </script>
+
+        <script id="pictures-preview-template" type="text/x-handlebars-template">
+
+              {{#pictures}}
+                  <div class="span2" style="min-height: 200px; margin-bottom: 60px;">
+                      <div class="thumbnail">
+                          <h5>{{titel}}</h5>
+                          <img height="100px" src="{{url}}">
+                          <!--<div class="caption clearfix">
+                              <a href="javascript:void(0);" class="btn btn-danger btn-light pull-right">L&ouml;schen</a>
+                          </div>-->
+                      </div>
+                  </div>
+            {{/pictures}}
+
+        </script>
+
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <!-- Add your site or application content here -->
+        <?php require('common_nav_menu.php'); ?>
+
+        <div class="container" id="wrapper">
+
+            <div class="page-header">
+                <h3 class="page-header">Bilder und Dateien verwalten</h3>
+                <div id="edit_buttons_block" class="pull-right">
+
+                    <div class="popover-container">
+                        <a id="delete-element" class="fetch btn btn-danger btn-light" href="javascript:void(0);"><i class="icon-white icon-remove"></i>L&ouml;schen</a>
+                    </div>
+
+                    <div class="popover-container">
+                        <a id="rename-element" class="btn btn-warning btn-light" href="javascript:void(0);"><i class="icon-white icon-pencil"></i>Umbenennen</a>
+                    </div>
+
+
+
+                    <div class="popover-container">
+                        <a href="javascript:void(0);" class="btn btn-success btn-light" id="btnUpdate" name="btnUpdate" ><i class="icon-white icon-plus-sign"></i> Hinzuf&uuml;gen</a>
+                        <div class="hover-popover">
+                            <div class="header clearfix">
+                                <h4>Hinzuf&uuml;gen</h4>
+                                <div class="pull-right">
+                                    <a class="dismiss btn btn-black-white" href="javascript:void(0);">Abbrechen</a>
+                                </div>
+                            </div>
+
+                            <div class="content">
+                                <div class="tabbable"> <!-- Only required for left/right tabs -->
+                                  <ul class="nav nav-tabs nav-tabs-custom-dark">
+                                    <li class="active"><a href="#upload" data-toggle="tab">Hochladen</a></li>
+                                    <li><a href="#createFile" data-toggle="tab">Neue Datei</a></li>
+                                    <li><a href="#createFolder" data-toggle="tab">Neuer Ordner</a></li>
+                                    <li><a href="#archive" data-toggle="tab">Archiv</a></li>
+                                  </ul>
+                                  <div class="tab-content">
+                                    <div class="tab-pane active" id="upload">
+                                        <a id="file-list-add" style="float: none;margin: 10px 30px;" class="span3 btn btn-large btn-black-white" href="javascript:void(0);">Datei ausw&auml;hlen</a>
+                                        <!--hidden input field for file upload -->
+                                        <input id="fileupload" type="file" multiple="" name="files[]" style="display: none">
+                                    </div>
+                                    <div class="tab-pane" id="createFile">
+                                        <form class="form-horizontal">
+                                            <div class="control-group">
+                                                <label class="control-label" for="inputFileCreateType">Typ</label>
+                                                <div class="controls">
+                                                      <select class="input-small" id="inputFileCreateType">
+                                                      <option>.txt</option>
+                                                      <option>.conf</option>
+                                                      <option>.htaccess</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="control-group">
+                                                <label class="control-label" for="inputFileCreateFileName">Dateiname</label>
+                                                <div class="controls">
+                                                      <input type="text" class="input-medium" id="inputFileCreateFileName">
+                                                </div>
+                                            </div>
+                                            <div class="control-group">
+                                                <div class="controls">
+                                                      <a id="buttonFileCreate" class="btn pull-left btn-black-white" href="javascript:void(0);">Erstellen</a>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="tab-pane" id="createFolder">
+                                        <form class="form-horizontal">
+                                            <div class="control-group">
+                                                <label class="control-label" for="inputFolderCreateFolderName">Verzeichnisname</label>
+                                                <div class="controls">
+                                                      <input type="text" class="input-medium" id="inputFolderCreateFolderName">
+                                                </div>
+                                            </div>
+                                            <a id="buttonFolderCreate" class="btn btn-black-white" href="javascript:void(0);">Erstellen</a>
+                                        </form>
+                                    </div>
+                                  </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-					<div id="fileInfoPrompt">
-						F&uuml;r die Einbindung der Bilder/Dateien in die Webseite:
-						<ol>
-							<li>Klicken Sie auf die Datei.</li>
-							<li>Kopieren Sie die Adresse der Datei aus dem Feld &quot;URL&quot;</li>
-							<li>F&uuml;gen Sie diese Adresse an der entsprechenden Stelle in die Webseite ein.</li>
-						</ol>
-					</div>
 
-					<div id="thumbImage"></div>
-					<table cellspacing="1" border="0">
-						<tr>
-							<th>Dateiname:</th>
-							<td id="fileNameTd">k.A.</td>
-						</tr>
-						<tr>
-							<th>Dateigr&ouml;&szlig;e:</th>
-							<td id="fileSizeTd">k.A.</td>
-						</tr>
-						<tr>
-							<th>Ge&auml;ndert:</th>
-							<td id="fileLastModTd">k.A.</td>
-						</tr>
-						<tr>
-							<th>URL:</th>
-							<td><input type="text" id="txtFileUrl" class="textBox" size="12" readonly="readonly" /></td>
-						</tr>
-						<tr>
-							<th>Thumb:</th>
-							<td><input type="text" id="txtFileThumbUrl" class="textBox" size="12" readonly="readonly" /></td>
-						</tr>
-						<tr>
-							<th>Oper.:</th>
-							<td>
-								<input type="button" id="btnQuickEdit" class="button" value="Im Quellcode bearbeiten" disabled="true" /><br>
-								<input type="button" id="btnEditorEdit" class="button" value="Im Editor bearbeiten" disabled="true" />
-							</td>
-						</tr>
-						<tr>
-							<td colspan="2">
-								<textarea id="txtQuickEdit" class="textBox" cols="20" rows="10" style="width:98%;" disabled="true"></textarea>
-								<br />
-								<input type="button" id="btnQuickEditSubmit" class="button" value="Speichern" />
-							</td>
-						</tr>
-					</table>
-				</div>
-			</div>
-			<div class="z"></div>
-		</div>
+                </div>
+            </div>  <!-- Page Header End -->
 
-<?php require('common_footer.php'); ?>
-</div>
-</body>
+            <div class="row">
 
+                    <div id="file-tree-container" class="span3">
+                        <h4 class="page-header">Ordnerstruktur</h4>
+                        <div id="file-tree"></div>
+                    </div>
+
+                    <div id="file-details-container" class="span9 page">
+
+                         <div class="page-header">
+                            <h4 id="file-title" class="page-header"></h4>
+                        </div>
+
+                        <div class="tabbable"> <!-- Only required for left/right tabs -->
+                            <ul class="nav nav-tabs nav-tabs-custom">
+                                <li class="active"><a href="#basis" data-toggle="tab">Basisinformationen</a></li>
+                                <li><a href="#file-content" data-toggle="tab">Inhalt bearbeiten</a></li>
+                                <li><a href="#picture-preview" data-toggle="tab">Bilder Vorschau</a></li>
+                              </ul>
+                              <div class="tab-content">
+                                <div class="tab-pane active" id="basis">
+                                    <div id="file-details">
+                                        <form class="form-horizontal">
+
+
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane" id="file-content">
+                                  <textarea id="file-content-textarea" class="padding-top input-block-level" name="file-content-textarea" cols="160" rows="20" class="textBox"></textarea>
+                                  <button id="btnSaveEditedFile" class="btn btn-light btn-success"><i class="icon-white icon-ok"></i>Speichern</button>
+                                </div>
+
+                                <div class="tab-pane" id="picture-preview">
+
+                                </div>
+                              </div>
+                        </div>
+
+                    </div>
+
+
+            </div>
+
+        </div>
+
+
+        <?php require('common_footer.php'); ?>
+
+
+
+    </body>
 </html>

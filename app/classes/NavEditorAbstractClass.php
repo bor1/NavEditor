@@ -1,6 +1,7 @@
 <?php
 /**
- * Class, to extend for NavEditor Classes
+ * Class, to extend for NavEditor Classes<br />
+ * has some useful for NE methods
  *
  * @uses auth.php for variables and constants
  * @author Dmitry Gorelenkov
@@ -12,6 +13,11 @@ class NavEditorAbstractClass {
     protected static function getNESetting($sSettingName, $sDefaultValue = NULL) {
         global $ne_config_info;
         return NavTools::ifsetor($ne_config_info[$sSettingName],$sDefaultValue);
+    }
+
+    protected static function getCurrentUser() {
+        global $g_current_user_name;
+        return ($g_current_user_name)?:'';
     }
 }
 

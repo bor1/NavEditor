@@ -12,21 +12,25 @@ class LoggerCSV extends NE_Logger {
     protected $_separator;
     protected $_format;
     protected $_headers;
+    protected $_currentUserName;
+    protected $_fileHandle;
 
     protected static $_unknownDataText = 'unknown';
 
 
 
     /**
-     * Constructor
+     * Constructor<br />
+     * all arguments have default values!
      *
-     * @param string $sLogFilePath
-     * @param string $sSeparator
-     * @param string $sFormat
-     * @param int $bitErrorsFlags
-     * @param int $iMaxFileSizeInBytes
-     * @param int $iMaxLogHistoryInSeconds
-     * @param bool $bActivated
+     * @param string $sLogFilePath [Optional]
+     * @param string $sSeparator [Optional]
+     * @param string $sFormat [Optional]
+     * @param int $bitErrorsFlags [Optional]
+     * @param int $iMaxFileSizeInBytes [Optional]
+     * @param int $iMaxLogHistoryInSeconds [Optional]
+     * @param bool $bActivated [Optional]
+     * @param string $sUserName [Optional]
      */
     public function __construct($sLogFilePath = NULL,
                                 $sSeparator = NULL,
@@ -34,15 +38,23 @@ class LoggerCSV extends NE_Logger {
                                 $bitErrorsFlags = NULL,
                                 $iMaxFileSizeInBytes = NULL,
                                 $iMaxLogHistoryInSeconds = NULL,
-                                $bActivated = NULL) {
+                                $bActivated = NULL,
+                                $sUserName = NULL) {
         $this->setSeparator($sSeparator);
         $this->setFormat($sFormat);
-        $this->setErrorFlags($bitErrorsFlags);
-        $this->setLogFilePath($sLogFilePath);
-        $this->setMaxFileSize($iMaxFileSizeInBytes);
-        $this->setMaxLogHistory($iMaxLogHistoryInSeconds);
-        $this->setActivated($bActivated);
+        parent::setErrorFlags($bitErrorsFlags);
+        parent::setLogFilePath($sLogFilePath);
+        parent::setMaxFileSize($iMaxFileSizeInBytes);
+        parent::setMaxLogHistory($iMaxLogHistoryInSeconds);
+        parent::setActivated($bActivated);
+        $this->setCurrentUserName($sUserName);
 
+    }
+
+    public function __destruct() {
+        if(is_resource($this->_fileHandle)){
+            fclose($this->_fileHandle);
+        }
     }
 
     /**
@@ -62,17 +74,18 @@ class LoggerCSV extends NE_Logger {
 
 		if (!file_exists($this->_logFilePath)) {
             $this->createLogFile($this->_logFilePath);
-		}else{
-            $this->applyFilterOnLogFile();
-        }
+		}
 
-		$fd = fopen($this->_logFilePath, 'a');
+		$this->_fileHandle = @fopen($this->_logFilePath, 'a+');
+        if(!$this->_fileHandle){return false;}
+
+        $this->applyFilterOnLogFile();
 
         $rowDataToSave = $this->getRowDataArray($message,$errorLevel);
 
-		fputcsv($fd, $rowDataToSave, $this->_separator);
+		fputcsv($this->_fileHandle, $rowDataToSave, $this->_separator);
 
-		fclose($fd);
+		fclose($this->_fileHandle);
 
         return true;
     }
@@ -84,6 +97,9 @@ class LoggerCSV extends NE_Logger {
      * @return array
      */
     public function getLogArray() {
+        if (!file_exists($this->_logFilePath)) {
+            $this->createLogFile($this->_logFilePath);
+		}
         return \NavTools::csv_to_array($this->_logFilePath, $this->_separator);
     }
 
@@ -103,7 +119,18 @@ class LoggerCSV extends NE_Logger {
      */
     public function setFormat($sFormat) {
         $this->_format = \NavTools::ifsetor($sFormat,
-                parent::getNESetting('log_csv_format', 'timestamp|date-time|errorlevel|ip|host|referrer|file|line|message'));
+                parent::getNESetting('log_csv_format', 'timestamp|date-time|errorlevel|username|ip|host|referrer|file|line|message'));
+        //set headers
+        $headersArray = explode('|',$this->_format);
+        $this->_headers = implode($this->_separator, $headersArray);
+    }
+
+    /**
+     * Set $_currentUserName
+     * @param string $sFormat
+     */
+    public function setCurrentUserName($sCurrentUserName) {
+        $this->_currentUserName = \NavTools::ifsetor($sCurrentUserName, parent::getCurrentUser());
     }
 
 
@@ -154,11 +181,14 @@ class LoggerCSV extends NE_Logger {
                     $debugBacktrace = ($debugBacktrace)?:debug_backtrace();//performance
                     $newValue = \NavTools::ifsetor($debugBacktrace[1]['file'],self::$_unknownDataText);
                     break;
+                case 'username':
+                    $newValue = $this->_currentUserName;
+                    break;
                 default:
-                    $newValue = 'Can not parse the Format: '.$field;
+                    $newValue = 'Can not parse the format: '.$field;
             }
 
-            $returnRowArray[$field] = $newValue;
+            $returnRowArray[$field] = \NavTools::ifsetor($newValue,self::$_unknownDataText);
         }
         unset($debugBacktrace);
 
@@ -167,15 +197,28 @@ class LoggerCSV extends NE_Logger {
 
     /**
      * creates or resets log file with current headers
-     * @param string $sLogFilePath [Optional]
+     * @param string $sLogFilePath [Optional] path to log file
+     * @return bool success
      */
     public function createLogFile($sLogFilePath = NULL) {
         $sLogFilePath = ($sLogFilePath)?:$this->_logFilePath;
-        //set headers
-        $headersArray = explode('|',$this->_format);
-        $this->_headers = implode($this->_separator, $headersArray);
-        //put them to file
-        file_put_contents($sLogFilePath, $this->_headers."\n");
+        if(!($fd = @fopen($sLogFilePath, 'w+'))){return false;}
+
+        if(!$this->resetLog($fd)){return false;}
+
+        return fclose($fd);
+    }
+
+    /**
+     * resets headers and content of file
+     * @param resource $fdFileHandle
+     * @return bool success
+     */
+    public function resetLog($fdFileHandle = NULL) {
+        $fdFileHandle = ($fdFileHandle)?:$this->_fileHandle;
+        //put headers and return
+        return (ftruncate($fdFileHandle, 0) &&
+               (fwrite($fdFileHandle, $this->_headers."\n") !== FALSE));
     }
 
 
@@ -187,8 +230,8 @@ class LoggerCSV extends NE_Logger {
      * @return int number of removed lines
      */
     public function applyFilterOnLogFile($iMaxFileSize = NULL, $iMaxHistory = NULL) {
-        $iMaxFileSize = is_null($iMaxFileSize)?$this->_maxFileSize:$iMaxFileSize;
-        $iMaxHistory = is_null($iMaxHistory)?$this->_maxLogHistory:$iMaxHistory;
+        $iMaxFileSize   = ($iMaxFileSize)   ?   :$this->_maxFileSize;
+        $iMaxHistory    = ($iMaxHistory)    ?   :$this->_maxLogHistory;
 
         $dataArray = $this->getLogArray();
         $countAtBegin = count($dataArray);
@@ -216,16 +259,12 @@ class LoggerCSV extends NE_Logger {
         //if something changed
         if($newArraySize != $countAtBegin){
             //empty log file
-            $this->createLogFile();
-
-            $logfd = fopen($this->_logFilePath, 'a');
+            if(!$this->resetLog()){return false;}
 
             //bad performance, todo array_to_csv ?
             foreach ($dataArray as $dataRow) {
-                fputcsv($logfd, $dataRow, $this->_separator);
+                fputcsv($this->_fileHandle, $dataRow, $this->_separator);
             }
-
-            fclose($logfd);
         }
 
         return $countAtBegin - $newArraySize;

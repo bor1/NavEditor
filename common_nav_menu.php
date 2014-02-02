@@ -13,83 +13,84 @@ function createSubMenu($num)   {
 
     $link = '';
 	foreach ($ne_menu as $i => $v) {
-    		$class = '';
-    		$attribute = '';
-    		$desc = '';
-    		$key = $v['id'];
+        $class = '';
+        $attribute = '';
+        $desc = '';
+        $key = $v['id'];
 
-    		if ($num == $v['up']) {
-                        if($g_UserMgmt->isAllowAccessMenu($v['id'], $g_current_user_name)){
-				if ($actualPageName == $v['link']) {
-					$class .= 'current';
-				}
-				if (isset($v['addclass'])) {
-					$class .= ' '.$v['addclass'];
-				}
-				if ($v['sub'] == 1) {
-					$class .=  ' sf-with-ul';
-				}
-				if (isset($v['attribut'])) {
-					$attribute = $v['attribut'];
-				}
-				if (isset($v['desc']) && ($v['desc'])) {
-						$desc = 'title="'.$v['desc'].'"';
-				}
+        if ($num == $v['up']) {
+            if ($g_UserMgmt->isAllowAccessMenu($v['id'], $g_current_user_name)) {
+                if ($actualPageName == $v['link']) {
+                    $class .= 'active';
+                }
+                if (isset($v["sub"]) && $v['sub'] == 1) {
+                    $class .= ' dropdown';
+                }
+                if (isset($v['addclass'])) {
+                    $class .= ' ' . $v['addclass'];
 
-				$link .= '<li';
-				if ($class) {
-					$link .= " class=\"$class\"";
-				}
-				$link .= ">";
-	//			if ($actualPageName != $v['link']) {
-						$link .= '<a '.$desc.' '.$attribute.'  href="'.$v['link'].'">';
-	//			}
-				$link .= $v['title'];
-			      if ($v['sub'] == 1) {
-					$link .= '<span class="sf-sub-indicator"> &#187;</span>';
-				}
-//				if ($actualPageName != $v['link']) {
-						$link .= '</a>';
-//				}
-			      if ($v['sub'] == 1) {
-			      	$link .= "<ul class=\"submenu\">\n";
-			      	$link .= createSubMenu($key);
-			      	$link .= "</ul>\n";
+                    if ($v['addclass'] == "logout") {
+                        break;
+                    }
+                }
 
-				}
 
-	   		      $link .= "</li>\n";
 
-			}
-		}
+                if (isset($v['attribut'])) {
+                    $attribute = $v['attribut'];
+                }
+                if (isset($v['desc']) && ($v['desc'])) {
+                    $desc = 'title="' . $v['desc'] . '"';
+                }
+
+                $link .= '<li';
+                if ($class) {
+                    $link .= " class=\"$class\"";
+                }
+                $link .= ">";
+
+                if ($v['sub'] == 1) {
+                    $link .= '<a class="dropdown-toggle" data-toggle="dropdown" ' . $desc . ' ' . $attribute . '  href="' . $v['link'] . '">';
+                } else {
+                    $link .= '<a ' . $desc . ' ' . $attribute . '  href="' . $v['link'] . '">';
+                }
+
+                $link .= $v['title'];
+
+                if ($v['sub'] == 1) {
+                    $link .= '<b class="caret"></b>';
+                }
+
+                $link .= '</a>';
+
+
+                if ($v['sub'] == 1) {
+                    $link .= "<ul class=\"dropdown-menu\">\n";
+                    $link .= createSubMenu($key);
+                    $link .= "</ul>\n";
+                }
+
+                $link .= "</li>\n";
+            }
+        }
     }
     return $link;
 
 }
 
-
 ?>
 
+<nav class="navbar navbar-inverse navbar-fixed-top">
+	<div class="navbar-inner">
+		<div class="container">
+			<a class="brand" href="./index.php"><?php echo($ne_config_info['app_title']); ?></a>
+			<ul class="nav">
+				<?php echo createSubMenu(0);?>
+			</ul>
 
-
-<script src="js/jquery.hoverIntent.minified.js"></script>
-<script src="js/superfish.js"></script>
-
-<script>
-
- $(document).ready(function(){
-        $("ul.sf-menu").superfish({
-            delay: 10,
-            speed: 'fast'
-        });
-    });
-
-</script>
-<nav id="mainnav">
-	<ul class=" sf-menu">
-		<?php echo createSubMenu(0);    ?>
-	</ul>
+			<ul class="nav pull-right">
+				<li><a href="logout.php">Abmelden</a></li>
+			</ul>
+		</div>
+	</div>
 </nav>
-<div class="sitelink">
-	<a id="returnToSite" href="/" target="_blank">Zur&uuml;ck zur Website</a>
-</div>

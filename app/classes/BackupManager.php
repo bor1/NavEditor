@@ -57,7 +57,7 @@ class BackupManager {
 
 
 
-		if(is_dir($path)) {
+		if(is_dir($path) && strlen($file_path) > 0) {
 			if($dh = opendir($path)) {
 				while(($file = readdir($dh)) !== FALSE) {
 					if($file != '.' && $file != '..') {
