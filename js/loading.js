@@ -20,7 +20,7 @@ var MyLoadingAjaxOverlay = new function (){
     var _loadingImgSrc = "ajax-loader2.gif";
     var _closeImgSrcSrc = "ajax-loading-close.gif";
     var _loading_opacity = 70;
-
+    var _appended = false;
 
     /**
      * loading image
@@ -55,7 +55,7 @@ var MyLoadingAjaxOverlay = new function (){
             //'class': 'tmpCloseLoadingImg',
             'src': _closeImgSrcSrc,
             'css': {
-                'z-index' : 1002,
+                'z-index' : 1100,
                 'position' : 'fixed',
                 'left' : '100%',
                 'top' : '0%',
@@ -84,7 +84,7 @@ var MyLoadingAjaxOverlay = new function (){
      */
     var divLoadingOverlay = $( '<div/>', {
         //'class': 'tmpLoadingOverlay',
-        'loaded': false,
+        'loading': false,
         'css': {
             'z-index' : 1000,
             'position' : 'fixed',
@@ -117,14 +117,16 @@ var MyLoadingAjaxOverlay = new function (){
             //show overlay
 
             //append to body if not created yet
-            if(!divLoadingOverlay.loaded){
+            if(!_appended){
                 $('body').append(divLoadingOverlay);
-                divLoadingOverlay.loaded = true;
+                _appended = true;
             }
+
+            divLoadingOverlay.attr('loading',true);
             divLoadingOverlay.fadeIn(100);
         }else{
             //hide overlay
-            divLoadingOverlay.fadeOut(100);
+            divLoadingOverlay.fadeOut(100,function(){divLoadingOverlay.attr('loading',false);});
         }
     };
 
