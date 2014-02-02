@@ -739,7 +739,7 @@ require_once('auth.php');
                                     <li class="active"><a href="#upload" data-toggle="tab">Hochladen</a></li>
                                     <li><a href="#createFile" data-toggle="tab">Neue Datei</a></li>
                                     <li><a href="#createFolder" data-toggle="tab">Neuer Ordner</a></li>
-                                    <li><a href="#archive" data-toggle="tab">Archiv</a></li>
+                                   <li><a href="#archive" data-toggle="tab">Archiv</a></li>
                                   </ul>
                                   <div class="tab-content">
                                     <div class="tab-pane active" id="upload">
@@ -783,6 +783,7 @@ require_once('auth.php');
                                             <a id="buttonFolderCreate" class="btn btn-black-white" href="javascript:void(0);">Erstellen</a>
                                         </form>
                                     </div>
+                                      <div class="tab-pane" id="archive">Vor&uuml;bergehend deaktiviert</div>
                                   </div>
                                 </div>
                             </div>
@@ -807,9 +808,9 @@ require_once('auth.php');
 
                         <div class="tabbable"> <!-- Only required for left/right tabs -->
                             <ul class="nav nav-tabs nav-tabs-custom">
-                                <li class="active"><a href="#basis" data-toggle="tab">Basisinformationen</a></li>
+                                <li class="active"><a href="#basis" data-toggle="tab">Informationen</a></li>
                                 <li><a href="#file-content" data-toggle="tab">Inhalt bearbeiten</a></li>
-                                <li><a href="#picture-preview" data-toggle="tab">Bilder Vorschau</a></li>
+                                <li><a href="#picture-preview" data-toggle="tab">Bildervorschau</a></li>
                               </ul>
                               <div class="tab-content">
                                 <div class="tab-pane active" id="basis">
