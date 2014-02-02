@@ -15,7 +15,6 @@ require_once('auth.php');
             "jqueryui/ne2-theme/jquery-ui-1.8.17.custom.css",
             "jquery-ui.min.js",
             "json2.js",
-            "naveditor2.js",
             "jquery.md5.js",
             "livevalidation_standalone.compressed.js",
             "jqueryFileTree.js",
@@ -127,7 +126,7 @@ function loadContentCallback(data) {
             .append($('<i class="icon-plus-sign">'))
             .append($('<a href="javascript:void(0);">')
                         .addClass("user_button")
-                        .html('Add new user')
+                        .html('Benutzer hinzufügen')
                     )
              );
 
@@ -144,6 +143,9 @@ function loadFilePermTree(){
 }
 
 function addFolderTree(){
+    //nicht noch mal laden
+    if(FileTreeObj) return;
+
     FileTreeObj = new FileTree($('#userPermission'), {
         root: '/',
         permissions: '1',
@@ -172,7 +174,7 @@ function loadCheckBoxes(){
 
 //dynamische form daten pro benutzer
 function fillFieldsWithData(dataArray){
-    var html = "";
+    var $form = $('<container>');
     for(var element in dataArray){
         switch (element) {
                 case "permission":
@@ -181,14 +183,16 @@ function fillFieldsWithData(dataArray){
                     fillPermissionSubCheckBox();
                     break;
                 case "password_hash":
-                    html += createOptionHtml(_user_params_full[element].name, "password_hash", "", 0, "password");
-                    html += createOptionHtml(_user_params_full[element].name+" wiederholen", "password_hash2", "", 0, "password");
+                    $form.append(createOptionHtml(_user_params_full[element].name, "password_hash", "", 0, "password"));
+                    $form.append(createOptionHtml(_user_params_full[element].name+" wiederholen", "password_hash2", "", 0, "password"));
                     break;
                 case "rolle":
-                    html += createDropBoxOptionHtml(_user_params_full[element].name, element, _user_roles_array, dataArray[element]);
+                    $form.append(createDropBoxOptionHtml(_user_params_full[element].name, element, _user_roles_array, dataArray[element]));
                     break;
                 case "bedienermodus":
-                    html += createDropBoxOptionHtml(_user_params_full[element].name, element, _user_modus_array, dataArray[element]);
+                    //noch nicht funktionsfaehig -> zuerst nicht anzeigen
+                    $form.append(createDropBoxOptionHtml(_user_params_full[element].name, element, _user_modus_array, dataArray[element])
+                            .hide());
                     break;
                 case "letzter_login": case "erstellungsdatum":  case "ablaufdatum":
                     if(dataArray[element] > 0){
@@ -198,25 +202,29 @@ function fillFieldsWithData(dataArray){
                     }else{
                         var datumString = "";
                     }
-                    html += createOptionHtml(_user_params_full[element].name, element, datumString);
+                    $form.append(createOptionHtml(_user_params_full[element].name, element, datumString));
                     break;
                 case "zusatzrechte":
                     break;
                 default:
-                    html += createOptionHtml(_user_params_full[element].name, element, dataArray[element]);
+                    $form.append(createOptionHtml(_user_params_full[element].name, element, dataArray[element]));
                     break;
             }
     }
-    html += "<br><hr/>";
 
-    $('#userOptions').html(html);
+    //select set of elements
+    var $elementsToAppend = $form.children();
 
     //make not editable READONLY, or disabled?
-    $.each($('#userOptions :input'), function(i, obj){
+    $.each($elementsToAppend.find(':input'), function(i, obj){
         if($(obj).attr('name') in _not_editable_user_params_array){
             $(obj).attr('disabled', true);
         }
     });
+
+    $('#userOptions').html($elementsToAppend);
+
+
 
 
     //set datepicker for some of elements.  Bugged. need to dynamically recreate on focus.
@@ -228,17 +236,52 @@ function fillFieldsWithData(dataArray){
     });
 }
 
-function addContentToElement(div, content){
-    var tmpHtmlUO = div.html();
-    tmpHtmlUO += content;
-    div.html(tmpHtmlUO);
+/**
+ * creates template for some input
+ * @param {String} optionName name of input
+ * @param {jQuery} $input jQuery input element to put in template
+ * @returns {jQuery} created full elment
+ */
+function createOption(optionName, $input){
+    var controlGroupDiv,
+        label,
+        divControls;
+    controlGroupDiv = $('<div>').attr('class','control-group');
+    label = $('<label>').attr('class','control-label').html(optionName);
+    divControls = $('<div>').attr('class','controls');
+
+    //add input
+    divControls.append($input);
+    //add set together, and return
+    return controlGroupDiv.append(label).append(divControls);
 }
 
+/**
+ * genrates html for input field
+ * @param {String} optionName input description
+ * @param {String} htmlNameParam ID and NAME of option
+ * @param {String} wert value
+ * @param {String} disParam 0, null or false if not disabled
+ * @param {String} type type of input
+ * @returns {jQuery}  created element
+ */
 function createOptionHtml(optionName, htmlNameParam, wert, disParam, type){
-    var disabled = (disParam == null || !disParam)? "" : "disabled";
-    var htmlName = (htmlNameParam == null)? optionName: htmlNameParam;
-    var type = (type == null)? "text" : type;
-    return '<p><label>'+optionName+'</label><input class="userOptionsElement" '+disabled+' type="'+ type +'" id="'+htmlName+'" name="'+htmlName+'" value="'+wert+'"></p>';
+    var htmlName = (htmlNameParam === null)? optionName: htmlNameParam;
+    type = (!type)? 'text' : type;
+
+    var $input;
+    //create input
+    $input = $('<input>').attr({
+                'class' :'userOptionsElement',
+                'type'  :type,
+                'id'    :htmlName,
+                'name'  :htmlName,
+                'value' :wert
+            })
+            .prop('disabled',!!disParam);
+
+    //create full option with the input and return it
+    return createOption(optionName, $input);
 }
 
 //args: optionName - label name
@@ -247,22 +290,34 @@ function createOptionHtml(optionName, htmlNameParam, wert, disParam, type){
 //selectedElem - selected element (name)
 function createDropBoxOptionHtml(optionName, optionHtmlNameParam, listArray, selectedElem){
     var optionHtmlName = (optionHtmlNameParam == null) ? optionName : optionHtmlNameParam;
-    var html = '<p><label>'+optionName+'</label>';
     var value = "";
     var selected = "";
-    html += '<select name="'+ optionHtmlName +'" class="userOptionsElement" size="1">';
+    var name = "";
+    var $option, $select;
+    //create select element
+    $select = $('<select>').attr({'name':optionHtmlName, 'class':'userOptionsElement', 'size':'1'});
+    //fill with options
     for(var elem in listArray){
         value = listArray[elem]['value'];
-        selected = (value != selectedElem)?'':'selected="true"';
-        html += '<option '+ selected +' value="'+value+'">'+ listArray[elem]['name']+'</option>';
+        name = listArray[elem]['name'];
+        //true if selected. Compare int with text maybe
+        selected = (''+value === ''+selectedElem);
+        //create opton
+        $option = $('<option>')
+                .attr('value', value)
+                .html(name);
+        //add selected if needed
+        if(selected){$option.attr('selected','true');}
+        //add to $select
+        $select.append($option);
     }
-    html += '</select></p>';
-    return html;
+    //create full option and return it
+    return createOption(optionName, $select);
 }
 
 function createButtonHtml(buttonName, label){
-    var html = '<button class="temp_buttons btn" id='+buttonName+'>'+ label +'</button>';
-    return html;
+//    var html = '<button class="temp_buttons btn" id='+buttonName+'>'+ label +'</button>';
+    return $('<button>').attr({'class':"temp_buttons btn btn-primary",'id':buttonName, 'style':'margin:5px'}).html(label);
 }
 function clearTempButtons(){
     $('.temp_buttons').remove();
@@ -333,17 +388,17 @@ function fillPermissionSubCheckBox(pfad, checked){
 
 function removeUserCallback(data) {
 	alert(data);
-	location.reload();
+    reloadForm(_currentValues['user']);
 }
 
 function updateUserCallback(data) {
 	alert(data);
-	location.reload();
+	reloadForm();
 }
 
 function createUserCallback(data) {
 	alert(data);
-	location.reload();
+	reloadForm();
 }
 
 function setPanelScroll() {
@@ -503,21 +558,52 @@ function saveChkBoxStatus(value, chkYesNo){
         if(_check_boxes_status.length == 0){
             _check_boxes_status.push("");
         }else if(_check_boxes_status.length > 1 ){
-//            _check_boxes_status = $.grep(_check_boxes_status, function(elem) {
-//                return elem != "";
-//            });
-            _check_boxes_status.splice(_check_boxes_status.indexOf(""),1);
+            _check_boxes_status = $.grep(_check_boxes_status, function(elem) {
+                return elem != "";
+            });
         }
     }
 
+/**
+ * loads/reloads dynamically form data
+ * @param {String} selectUserAfterLoading user to select, after form loaded
+ */
+function reloadForm(selectUserAfterLoading){
+    //felder verstecken, "select user" anzeigen
+    $('#content').hide();
+    $('#userOptions').html('');
+    $('#user_name_in_haeder').html('Wählen Sie einen Benutzer aus der Liste aus.');
 
+    //entweder uebergabeparameter, oder daten von dem field username, oder ''
+    var currentUser = selectUserAfterLoading || $('#user_name').val() || '';
+
+    $.getJSON("app/edit_user.php?r=" + Math.random(), {
+        "json_oper": "get_users"
+    }, function(data){
+        loadContentCallback(data);
+        //falls ein user muss ausgewaehlt werden
+        if(currentUser.length > 0){
+            selectUser(currentUser);
+        }
+    });
+}
+
+/**
+ * selects user from menu
+ * @param {String} userName user name to select
+ */
+function selectUser(userName){
+    _somethingChanged = false;
+    $('a.user_button').filter(function(){
+        return $(this).text() === userName;
+    })
+    .first().click();
+}
 
 /* ---------- Here comes jQuery: ---------- */
 $(document).ready(function() {
     //daten per ajax laden
-    $.getJSON("app/edit_user.php?r=" + Math.random(), {
-        "json_oper": "get_users"
-    }, loadContentCallback);
+    reloadForm();
 
     //rechten checkbox's fuellen wenn noetig
     $(document).on('change', "#userPermission input", function(){
@@ -539,32 +625,43 @@ $(document).ready(function() {
 
     //on select some user, or click "add user" menu
     $(document).on('click', "#userList li", function(){
+        //wenn first user select
+        $('#content').show();
+        //test for change
         if(checkInputChange()){return;}
+        //variables
         var $this = $(this),
             userArray = _empty_user_data_array,
             userName = '',
-            addButtonsHtml = '';
+            $addButtonsHtml = '',
+            headDescription = '';
 
-            //visuelle "angeklickt"
-            $this.addClass("active");
-            $this.siblings().removeClass("active");
+        //visuelle "angeklickt"
+        $this.addClass("active");
+        $this.siblings().removeClass("active");
 
+        //set default tab
+        $("a[href='#options']").tab('show');
+
+        //user selected
         if($this.attr('id') !== 'addNewUser'){
             userArray = _user_data_array[$this.attr("id")];
             userName= userArray['user_name'];
-            addButtonsHtml = createButtonHtml('updateUser', 'Save') + createButtonHtml('removeUser', 'Delete User');
+            $addButtonsHtml = createButtonHtml('updateUser', 'Benutzer aktualisiren').add(createButtonHtml('removeUser', 'Benutzer löschen'));
+            headDescription = userName;
         }
-        //add new user element
+        //add new user selected
         else{
             //empty values
             //and new buttons
-            addButtonsHtml = createButtonHtml('createUser', 'Save New User');
+            $addButtonsHtml = createButtonHtml('createUser', 'Hinzufügen');
+            headDescription = 'Neuer Benutzer'
         }
-        $('#user_name_in_haeder').html((userName) ? userName: 'Neuer Benutzer');
+        $('#user_name_in_haeder').html(headDescription);
         fillFieldsWithData(userArray);
         _currentValues['user'] = userName;
         //ui bug ? ..
-        addContentToElement($('#userOptions'), addButtonsHtml);
+        $('#operButtons').html($addButtonsHtml);
         checkInputChange(false);
 
     });
@@ -615,7 +712,7 @@ $(document).ready(function() {
         var userName = _currentValues['user'];
         if(confirm(unescape('Den Benutzer: \"'+ userName + '" l%F6schen?'))){
               if(admin_uname == userName) {
-                alert("You cannot remove SERVER_ADMIN!");
+                alert("Sie dürfen nicht den SERVER-ADMININSTRATOR entfernen!");
                 return;
             }
             $.post("app/edit_user.php", {
@@ -644,7 +741,7 @@ $(document).ready(function() {
         <div  class="row padding-top" id="contentPanel1222">
             <div id="usermanager" >
                 <div class="span3">
-                    <h4>Nutzerliste</h4>
+                    <h4>Benutzer</h4>
 
                     <div id="userList" class="user-list"> </div>
                 </div>
@@ -659,20 +756,23 @@ $(document).ready(function() {
                         </div>-->
                     </div>
 
-                    <div class="tabbable"> <!-- Only required for left/right tabs -->
+                    <div id="content" class="tabbable"> <!-- Only required for left/right tabs -->
                       <ul class="nav nav-tabs nav-tabs-custom">
-                        <li class="active"><a href="#options" data-toggle="tab">Details Bearbeiten</a></li>
-                        <li><a href="#permissions" data-toggle="tab">Berechtigungen Einstellen</a></li>
+                        <li class="active"><a href="#options" data-toggle="tab">Details bearbeiten</a></li>
+                        <li><a href="#permissions" data-toggle="tab">Berechtigungen einstellen</a></li>
                       </ul>
                       <div class="tab-content">
                         <div class="tab-pane active" id="options">
-                            <div id="userOptions"></div>
+                            <div id="userOptions" class="form-horizontal"></div>
                         </div>
                         <div class="tab-pane" id="permissions">
                             <div id="userPermission"></div>
                         </div>
+                        <hr/>
+                        <div class="span btn-group" id="operButtons"></div>
 
                       </div>
+
                     </div>
 
                 </div>
