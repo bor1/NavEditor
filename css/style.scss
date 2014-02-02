@@ -161,8 +161,8 @@ div.page-header {
 			top: 100%;
 			right: 0px;
 			width: 400px;
-			background: black;
-			color: white;
+			background: #333333;
+			color: #D5D5D5;
 			border-radius: 5px;
 			padding: 4px 10px;
 			margin-top: 4px;
@@ -185,7 +185,7 @@ div.page-header {
 				padding: 0 4px;
 
 				.nav-tabs-custom-dark .active a {
-					border-bottom: solid 1px black;
+					border-bottom: solid 1px #333333;
 				}
 
 				h5 {
@@ -199,10 +199,10 @@ div.page-header {
 
 			a {
 				margin-top: 6px;
-				background: black;
+				background: #333333;
 				border: solid 1px #AAA;
 				box-shadow: none;
-				color: white;
+				color: #D5D5D5;
 				text-shadow: none;
 			}
 		}
