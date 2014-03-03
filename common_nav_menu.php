@@ -1,6 +1,6 @@
 <?php
 require_once('auth.php');
-\auth\no_direct_call(__FILE__);
+\auth\no_direct_call();
 
 function createSubMenu($num)   {
     global $ne_menu;

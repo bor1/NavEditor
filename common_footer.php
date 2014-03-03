@@ -1,6 +1,6 @@
 <?php
 require_once('auth.php');
-\auth\no_direct_call(__FILE__);
+\auth\no_direct_call();
 ?>
 
 <div class="footer">

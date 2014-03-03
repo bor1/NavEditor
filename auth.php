@@ -11,7 +11,7 @@
 namespace auth;
 
 //if called directly, exit.
-no_direct_call(__FILE__);
+no_direct_call();
 
 require_once('config/config.php');
 
@@ -85,12 +85,13 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 
 /**
  * Stop script if this file called directly.<br />
- * Example: \auth\no_direct_call(__FILE__);
- * @param string $__FILE__ must be __FILE__ parameter
  * @todo implement with traits, with no parameter passed. Make sure php_5.4 supported
  */
-function no_direct_call($__FILE__) {
-    if (strcmp(realpath($__FILE__), realpath($_SERVER['DOCUMENT_ROOT'] . $_SERVER['PHP_SELF'])) === 0) {
+function no_direct_call() {
+    $backtrace = debug_backtrace();
+    if(!isset($backtrace[0]) || !isset($backtrace[0]['file'])){return;}
+    $caller_file_path = $backtrace[0]['file'];
+    if (strcmp(realpath($caller_file_path), realpath($_SERVER['DOCUMENT_ROOT'] . $_SERVER['PHP_SELF'])) === 0) {
         die("Direct access forbidden");
     }
 }
