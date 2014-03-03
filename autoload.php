@@ -4,7 +4,7 @@
  * Autoload
  *
  * @author Dmitry Gorelenkov
- * @internal note: learning PHP -> probably low quality code, sorry :/
+ * @uses NE_DIR_CLASSES from config file
  */
 if (strcmp(realpath(__FILE__), realpath($_SERVER['DOCUMENT_ROOT'] . $_SERVER['PHP_SELF'])) === 0) {
     die("Direct access forbidden");
@@ -12,14 +12,15 @@ if (strcmp(realpath(__FILE__), realpath($_SERVER['DOCUMENT_ROOT'] . $_SERVER['PH
 
 spl_autoload_register(function($className) {
 
-            //namespaces
-            if ($className[0] === '\\') {
-                $className = substr($className, 1);
-            }
+    //namespaces
+    if ($className[0] === '\\') {
+        $className = substr($className, 1);
+    }
 
-            $filePath = NE_DIR_CLASSES . str_replace("\\","/",$className) . '.php';
+    $filePath = NE_DIR_CLASSES . str_replace("\\", "/", $className) . '.php';
 
-            if (is_file($filePath))
-                require_once $filePath;
-        });
+    if (is_file($filePath)) {
+        require_once $filePath;
+    }
+});
 ?>
