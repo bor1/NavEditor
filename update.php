@@ -107,7 +107,7 @@ if(!file_exists("../../".$ne_config_info['website_conf_filename']) || !file_exis
         <div class="page-header">
             <h2 class="page-header">Update <small>Aktualisieren Sie hier den NavEditor</small></h2>
             <div class="pull-right">
-				<input class="btn btn-inverse btn-rounded" type="button" id="btnUpdate" name="btnUpdate" value="Speichern" />
+				<input class="btn btn-primary btn-light" type="button" id="btnUpdate" name="btnUpdate" value="Speichern" />
 	        </div>
         </div>
 
@@ -115,48 +115,83 @@ if(!file_exists("../../".$ne_config_info['website_conf_filename']) || !file_exis
 		<div id="updateInfo">
 
 			<div class="row">
-				<div class="update-cat span3">
+				<div class="update-cat col-md-3">
 					<span>Aktuell verwendete Version:</span>
 				</div>
-				<div class="span1">
+				<div class="col-md-1">
 					<span id="cur_ver"><?php echo($ne_config_info['version']); ?></span>
 				</div>
 			</div>
 
 			<div class="row">
-				<div class="update-cat span3">
+				<div class="update-cat col-md-3">
 					<span>Letzte offizielle Testversion:</span>
 				</div>
-				<div class="span1">
+				<div class="col-md-1">
 					<span id="tst_ver"></span>
 				</div>
-				<div class="span6">
+				<div class="col-md-6">
 					<b>Letzte Änderungen:</b> <pre id="tst_changelog" class="changelog"></pre>
 				</div>
-				<div class="span2">
-					<input type="button" id="btnDoTestUpdate" class="btn" value="Diese Testversion installieren" disabled="true" />
+				<div class="col-md-2">
+					<input type="button" id="btnDoTestUpdate" class="btn btn-warning btn-light" value="Diese Testversion installieren" disabled="true" />
 				</div>
 			</div>
 
 			<div class="row">
-				<div class="update-cat span3">
+				<div class="update-cat col-md-3">
 					<span>Stabile Version:</span>
 				</div>
-				<div class="span1">
+				<div class="col-md-1">
 					<span id="stb_ver"></span>
 				</div>
-				<div class="span6">
+				<div class="col-md-6">
 					<b>Letzte Änderungen:</b><pre id="stb_changelog" class="changelog"></pre>
 				</div>
-				<div class="span2">
-					<input type="button" id="btnDoUpdate" class="btn" value="Diese Version installieren" disabled="true" />
+				<div class="col-md-2">
+					<input type="button" id="btnDoUpdate" class="btn btn-success btn-light" value="Diese Version installieren" disabled="true" />
 				</div>
-
 			</div>
 
+			<h3>Alternativer Layout-Vorschlag (funktioniert aber noch nicht)</h3>
+
+			<div class="panel panel-info">
+				<div class="panel-heading"><h3 class="panel-title">Aktuell verwendete Version: <span id="cur_ver"><?php echo($ne_config_info['version']); ?></span></h3></div>
+				<div class="panel-body">
+					<input class="btn btn-primary btn-light" type="button" id="btnCheckUpdate" name="btnCheckUpdate" value="Informationen aktualisieren" />
+				</div>
+			</div>
+
+			<div class="panel panel-success">
+				<div class="panel-heading">
+					<h3 class="panel-title">Stabile Version: <span id="stb_ver"></span></h3>
+				</div>
+				<div class="panel-body">
+					<div class="col-md-6">
+						<b>Letzte Änderungen:</b><pre id="stb_changelog" class="changelog"></pre>
+					</div>
+					<div class="col-md-2">
+						<input type="button" id="btnDoUpdate" class="btn btn-success btn-light" value="Diese Version installieren" disabled="true" />
+					</div>
+				</div>
+			</div>
+
+			<div class="panel panel-warning">
+				<div class="panel-heading">
+					<h3 class="panel-title">Letzte offizielle Testversion: <span id="tst_ver"></span></h3>
+				</div>
+				<div class="panel-body">
+					<div class="col-md-6">
+						<b>Letzte Änderungen:</b><pre id="tst_changelog" class="changelog"></pre>
+					</div>
+					<div class="col-md-2">
+						<input type="button" id="btnDoTestUpdate" class="btn btn-warning btn-light" value="Diese Testversion installieren" disabled="true" />
+					</div>
+				</div>
+			</div>
 		</div>
 
-		<img id="imgLoading" src="ajax-loader.gif" border="0" width="16" height="16" style="display:none;" />
+		<img webdi="imgLoading" src="ajax-loader.gif" border="0" width="16" height="16" style="display:none;" />
 		<div id="errorMsg" style="color:red;"></div>
 	</div>
 
