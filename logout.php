@@ -60,13 +60,15 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
     </head>
 
     <body>
-        <div id="wrapper">
-            <h1 id="header">Sie haben sich abgemeldet!</h1>
-
-            <div id="contentPanel1">
-                <p>Klicken Sie bitte auf <a href="login.php">diesen Link</a> um sich wieder anzumelden.</p>
-            </div>
-        </div>
-    </body>
-
+        <div class="container page">
+			<div class="page-header">
+				 <h2 id="header" class="page-header clearfix">Sie haben sich abgemeldet!</h2>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<p>Klicken Sie bitte auf <a href="login.php">diesen Link</a> um sich wieder anzumelden.</p>
+				</div>
+			</div>
+		</div>
+	</body>
 </html>

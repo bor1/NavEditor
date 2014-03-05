@@ -272,9 +272,9 @@ $ne_config_info['regex_removed_symbols']    = '/[^a-zA-Z0-9\-_\s]/';
 //default html includes for every file
 $default_include_date = date('Ymdis');
 $ne_config_info['default_includes_js_css'] = Array(
-    "style.css?, $default_include_date",
     "bootstrap.css?, $default_include_date",
     "bootstrap-responsive.css?, $default_include_date",
+    "style.css?, $default_include_date",
     "jquery-1.10.1.min.js",
     "loading.js",
     "bootstrap.js",

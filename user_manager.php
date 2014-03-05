@@ -114,7 +114,7 @@ function loadContentCallback(data) {
 
     $.each(data, function (index, value) {
         var li = $("<li>").attr('id', index),
-            icon = $('<i class="icon-user">'),
+            icon = $('<i class="glyphicon glyphicon-user">'),
             a = $('<a href="javascript:void(0);">').addClass("user_button").html(value.user_name);
 
         li.html(new Array(icon, a));
@@ -123,7 +123,7 @@ function loadContentCallback(data) {
 
     //add new button
     users.push($("<li>").attr('id', 'addNewUser')
-            .append($('<i class="icon-plus-sign">'))
+            .append($('<i class="glyphicon glyphicon-plus-sign">'))
             .append($('<a href="javascript:void(0);">')
                         .addClass("user_button")
                         .html('Benutzer hinzufügen')
@@ -246,9 +246,9 @@ function createOption(optionName, $input){
     var controlGroupDiv,
         label,
         divControls;
-    controlGroupDiv = $('<div>').attr('class','control-group');
-    label = $('<label>').attr('class','control-label').html(optionName);
-    divControls = $('<div>').attr('class','controls');
+    controlGroupDiv = $('<div>').attr('class','form-group');
+    label = $('<label>').attr('class','control-label col-md-3').html(optionName);
+    divControls = $('<div>').attr('class','controls col-md-9');
 
     //add input
     divControls.append($input);
@@ -272,7 +272,7 @@ function createOptionHtml(optionName, htmlNameParam, wert, disParam, type){
     var $input;
     //create input
     $input = $('<input>').attr({
-                'class' :'userOptionsElement',
+                'class' :'userOptionsElement form-control',
                 'type'  :type,
                 'id'    :htmlName,
                 'name'  :htmlName,
@@ -295,7 +295,7 @@ function createDropBoxOptionHtml(optionName, optionHtmlNameParam, listArray, sel
     var name = "";
     var $option, $select;
     //create select element
-    $select = $('<select>').attr({'name':optionHtmlName, 'class':'userOptionsElement', 'size':'1'});
+    $select = $('<select>').attr({'name':optionHtmlName, 'class':'userOptionsElement form-control', 'size':'1'});
     //fill with options
     for(var elem in listArray){
         value = listArray[elem]['value'];
@@ -317,8 +317,14 @@ function createDropBoxOptionHtml(optionName, optionHtmlNameParam, listArray, sel
 
 function createButtonHtml(buttonName, label){
 //    var html = '<button class="temp_buttons btn" id='+buttonName+'>'+ label +'</button>';
-    return $('<button>').attr({'class':"temp_buttons btn btn-primary",'id':buttonName, 'style':'margin:5px'}).html(label);
+	if (buttonName == "removeUser") {
+		return $('<button>').attr({'class':"temp_buttons btn btn-danger btn-light",'id':buttonName, 'style':'margin:5px'}).html(label);}
+	else if (buttonName == "updateUser") {
+		return $('<button>').attr({'class':"temp_buttons btn btn-success btn-light",'id':buttonName, 'style':'margin:5px'}).html(label);}
+	else {
+		return $('<button>').attr({'class':"temp_buttons btn btn-primary btn-light",'id':buttonName, 'style':'margin:5px'}).html(label);}
 }
+
 function clearTempButtons(){
     $('.temp_buttons').remove();
 }
@@ -647,7 +653,7 @@ $(document).ready(function() {
         if($this.attr('id') !== 'addNewUser'){
             userArray = _user_data_array[$this.attr("id")];
             userName= userArray['user_name'];
-            $addButtonsHtml = createButtonHtml('updateUser', 'Benutzer aktualisiren').add(createButtonHtml('removeUser', 'Benutzer löschen'));
+            $addButtonsHtml = createButtonHtml('updateUser', 'Benutzer aktualisieren').add(createButtonHtml('removeUser', 'Benutzer löschen'));
             headDescription = userName;
         }
         //add new user selected
@@ -690,7 +696,7 @@ $(document).ready(function() {
         }
         var userName = _currentValues['user'];
 
-        if(confirm(unescape('Den Benutzer: \"'+ userName + '" aktualisieren?'))){
+        if(confirm(unescape('Den Benutzer \"'+ userName + '" aktualisieren?'))){
             var params = readInput();
             if(params['password_hash'] == ""){
                 delete params['password_hash'];
@@ -710,7 +716,7 @@ $(document).ready(function() {
     //on click remove user
     $(document).on('click', "#usermanager #removeUser", function() {
         var userName = _currentValues['user'];
-        if(confirm(unescape('Den Benutzer: \"'+ userName + '" l%F6schen?'))){
+        if(confirm(unescape('Den Benutzer \"'+ userName + '" l%F6schen?'))){
               if(admin_uname == userName) {
                 alert("Sie dürfen nicht den SERVER-ADMININSTRATOR entfernen!");
                 return;
@@ -735,17 +741,17 @@ $(document).ready(function() {
 
     <div class="container">
         <div class="page-header">
-            <h3 class="page-header">Benutzerverwaltung</h3>
+            <h3>Benutzerverwaltung</h3>
         </div>
 
-        <div  class="row padding-top" id="contentPanel1222">
+        <div  class="row" id="contentPanel1222">
             <div id="usermanager" >
-                <div class="span3">
+                <div class="col-md-3">
                     <h4>Benutzer</h4>
 
                     <div id="userList" class="user-list"> </div>
                 </div>
-                <div class="span9 page" id="userDetails">
+                <div class="col-md-9 page" id="userDetails">
 
                     <div class="page-header">
                         <h4 id='user_name_in_haeder' class="page-header"></h4>

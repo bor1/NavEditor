@@ -54,7 +54,7 @@ $sp->handle_content_type();
 				</div>
 
 
-			<div class="row padding-top">
+			<div class="row">
 				<?php foreach($sp->get_items() as $item) { ?>
 					<div class="card span12" >
 						<div class="header clearfix">

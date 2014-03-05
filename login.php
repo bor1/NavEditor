@@ -46,41 +46,43 @@ if (isset($_POST['btnLogin']) && $toWait <= 0) {
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Einloggen - <?php echo($ne_config_info['app_titleplain']); ?></title>
-    
-    <?php
-        echo NavTools::includeHtml("default", "json2.js");
-    ?>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>Einloggen - <?php echo($ne_config_info['app_titleplain']); ?></title>
 
-</head>
+		<?php
+			echo NavTools::includeHtml("default", "json2.js");
+		?>
+	</head>
 
-<body>
+	<body>
 
-<div id="wrapper">
-
-	<div class="container">
-
-		<div class="row">
-
-			<div class="span6 offset3">
-
-				<div class="page">
-
-					<h3 class="page-header clearfix"><span class="offset1 span4">Bitte melden Sie sich an!</span></h3>
-
-					<div id="contentPanel1">
-						<form id="frmLogin" name="frmLogin" action="login.php" method="post" style="width:100%;text-align:center;"><br>
+		<div class="container page">
+			<div class="page-header">
+				<h3 class="">Bitte melden Sie sich an!</h3>
+			</div>
+			<div class="row">
+				<div class="col-md-4 col-md-offset-4">
+					<form id="frmLogin" name="frmLogin" action="login.php" method="post" class="form-horizontal"><br>
 
 						<?php
 						if ($toWait <= 0) {
 						?>
-								<label for="txtUserName" style="width:8em;display:inline-block;">Username:</label>
-								<input type="text" id="txtUserName" name="txtUserName" size="16" class="textBox" /><br>
-								<label for="txtPassword" style="width:8em;display:inline-block;">Passwort:</label>
-								<input type="password" id="txtPassword" name="txtPassword" size="16" class="textBox" /><br><br>
-								<input type="submit" id="btnLogin" name="btnLogin" class="btn" value="Einloggen" />
+							<div class="form-group">
+								<label for="txtUserName" class="col-sm-4 control-label">Benutzername:</label>
+								<div class="col-sm-8">
+									<input type="text" id="txtUserName" name="txtUserName" class="textBox form-control" />
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="txtPassword" class="col-sm-4 control-label">Passwort:</label>
+								<div class="col-sm-8">
+									<input type="password" id="txtPassword" name="txtPassword" class="textBox form-control" />
+								</div>
+							</div>
+							<br />
+							<input type="submit" id="btnLogin" name="btnLogin" class="btn btn-primary btn-light center-block" value="Einloggen" />
+
 						<?php
 						}else{
 						?>
@@ -125,21 +127,22 @@ if (isset($_POST['btnLogin']) && $toWait <= 0) {
                                             });
 
                                         </script>
-						<p style='text-align:center;font-size:large;'>Zu viele Versuche, bitte warten Sie noch <div id='timeBlock' name='timeBlock' style='color: red;text-align:center;font-size:x-large;'></div><p><br>
+						<p class="alert alert-danger" style="padding:15px;">
+							Zu viele Versuche, bitte warten Sie noch: <span id="timeBlock" name="timeBlock" style="font-weight:bold;"></span> bis zum n&auml;chsten Login-Versuch.
+						</p>
+						<br />
 						<?php
 						}
 						?>
-						<br><br><a href="pwrecovery.php">Passwort vergessen</a>
+						<br />
+						<p style="text-align: center"><a href="pwrecovery.php">Passwort vergessen</a></p>
 					</form>
 				</div>
 			</div>
 		</div>
-	</div>
 
-</div>
+		<?php require('common_footer.php'); ?>
 
-
-	<?php require('common_footer.php'); ?>
-</body>
+	</body>
 
 </html>

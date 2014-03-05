@@ -282,9 +282,9 @@ function loadFeedImportCallback(rdata) {
 	feedHtml = "";
 	for(var i = 0; i < rdata.feeds.length; i++) {
 		var feedId = rdata.feeds[i].id;
-		var feedIdLabel = "<p><label>Feed-" + feedId + "</label> ";
-		var feedTitle = "<input type='text' id='txtFeedTitle_" + feedId + "' class='textBox' size='32' value='" + rdata.feeds[i].title + "' /> ";
-		var feedUrl = "<input type='text' id='txtFeedUrl_" + feedId + "' class='textBox' size='48' value='" + rdata.feeds[i].url + "' /> [<a href='javascript:;'>X</a>]</p>";
+		var feedIdLabel = "<div class='form-group'><label class='control-label col-md-1'>Feed-" + feedId + "</label> ";
+		var feedTitle = "<div class='controls col-md-3'><input type='text' id='txtFeedTitle_" + feedId + "' class='textBox form-control' value='" + rdata.feeds[i].title + "' /></div> ";
+		var feedUrl = "<div class='controls col-md-5'><input type='text' id='txtFeedUrl_" + feedId + "' class='textBox form-control' value='" + rdata.feeds[i].url + "' /></div><div class='col-md-1'>[<a href='javascript:;'>X</a>]</div></div>";
 		feedHtml += (feedIdLabel + feedTitle + feedUrl);
 		feedCounter++;
 	}
@@ -293,16 +293,16 @@ function loadFeedImportCallback(rdata) {
 	feedOptHtml = "";
 	for(var j = 0; j < rdata.options.length; j++) {
 		var feedOptName = rdata.options[j].opt_name;
-		var feedOptNameLabel = "<p><label>" + feedOptName + "</label> ";
-		var feedOptValue = "<input type='text' class='textBox' size='32' value='" + rdata.options[j].opt_value + "' /> ";
+		var feedOptNameLabel = "<div class='form-group'><label class='control-label col-md-2'>" + feedOptName + "</label> ";
+		var feedOptValue = "<div class='controls col-md-5'><input type='text' class='textBox form-control' value='" + rdata.options[j].opt_value + "' /></div></div>";
 		feedOptHtml += (feedOptNameLabel + feedOptValue);
 	}
 	$("#feedimportOpts").html(feedOptHtml);
 
 	// add event for removing
-	$("#feedimport p a").click(function() {
-		if(confirm("Sure to remove this item?")) {
-			$(this).parent().remove();
+	$("#feedimport div a").click(function() {
+		if(confirm("Möchten Sie diesen Eintrag wirklich entfernen?")) {
+			$(this).closest('div.form-group').remove();
 		}
 	});
 
@@ -337,7 +337,7 @@ $(document).ready(function() {
 			}
 		}
 
-		if(confirm("Are you sure to save?")) {
+		if(confirm("Möchten Sie die Daten wirklich speichern?")) {
 			if(imgUrl != "") {
 				img = "<img alt=\"" + imgAlt + "\" src=\"" + imgUrl + "\" width=\"" + imgW + "\" height=\"" + imgH + "\" border=\"0\" />";
 			}
@@ -474,7 +474,7 @@ $(document).ready(function() {
 			poData.push(gcItem);
 		});
 //		alert(JSON.stringify(poData));
-		if(confirm("Are you sure to update?")) {
+		if(confirm("Möchten Sie wirklich speichern?")) {
 			$(this).val("Moment...");
 			$(this).attr("disabled", "disabled");
 			$.post("app/edit_conf.php", {
@@ -500,7 +500,7 @@ $(document).ready(function() {
 			return;
 		}
 
-		if(confirm("Are you sure to save?")) {
+		if(confirm("Möchten Sie die Daten wirklich speichern?")) {
 			$.post("app/edit_conf.php", {
 				"oper": "set_vorlagen",
 				"json_data": buildJSONVorlagen(),
@@ -514,15 +514,15 @@ $(document).ready(function() {
 	$("#btnAddFeedBox").click(function() {
 		if(loadFeedImportDone) {
 			feedCounter++;
-			var newFeedBoxHtml = "<p><label>Feed-" + feedCounter + "</label> ";
-			newFeedBoxHtml += "<input type='text' id='txtFeedTitle_" + feedCounter + "' class='textBox' size='32' /> ";
-			newFeedBoxHtml += "<input type='text' id='txtFeedUrl_" + feedCounter + "' class='textBox' size='48' /> [<a href='javascript:;'>X</a>]</p>";
+			var newFeedBoxHtml = "<div class='form-group'><label class='control-label col-md-1'>Feed-" + feedCounter + "</label> ";
+			newFeedBoxHtml += "<div class='controls col-md-3'><input type='text' id='txtFeedTitle_" + feedCounter + "' class='textBox form-control' /></div> ";
+			newFeedBoxHtml += "<div class='controls col-md-5'><input type='text' id='txtFeedUrl_" + feedCounter + "' class='textBox form-control' /></div> <div class='col-md-1'>[<a href='javascript:;'>X</a>]</div></div>";
 			$("#feedimport .mi").replaceWith(newFeedBoxHtml + "<div class='mi'></div>");
 
 			// add event for removing
-			$("#feedimport p a").click(function() {
-				if(confirm("Sure to remove this item?")) {
-					$(this).parent().remove();
+			$("#feedimport div a").click(function() {
+				if(confirm("Möchten Sie diesen Eintrag wirklich entfernen?")) {
+					$(this).closest('div.form-group').remove();
 				}
 			});
 		}
@@ -531,14 +531,14 @@ $(document).ready(function() {
 	$("#btnAddItemFeedImport").click(function() {
 		var genItemHtml = "";
 //		genItemHtml += $("#feedimportGenItems").html();
-		var newItemHtml = "<p><input type='text' name='txtGenItemFI_Name' class='textBox' style='width:7.75em;' />";
-		newItemHtml += " <input type='text' name='txtGenItemFI_Val' class='textBox' style='width:9.75em;' /> [<a href='javascript:;'>X</a>]</p>";
+		var newItemHtml = "<div class='form-group'><div class='controls col-md-3'><input type='text' name='txtGenItemFI_Name' class='textBox form-control' /></div>";
+		newItemHtml += " <div class='controls col-md-6'><input type='text' name='txtGenItemFI_Val' class='textBox form-control' /></div> <div class='col-md-1'> [<a href='javascript:;'>X</a>]</div></div>";
 		$("#feedimportGenItems .mi").replaceWith(genItemHtml + newItemHtml + "<div class='mi'></div>");
 
 		// for removing
-		$("#feedimportGenItems p a").click(function() {
-			if(confirm("Sure to remove?")) {
-				$(this).parent().remove();
+		$("#feedimportGenItems div a").click(function() {
+			if(confirm("Möchten Sie diesen Eintrag wirklich entfernen?")) {
+				$(this).closest('div.form-group').remove();
 			}
 		});
 	});
@@ -553,11 +553,11 @@ $(document).ready(function() {
 			"options": [],
 			"general_items": []
 		};
-		$("#feedimport p").each(function() {
+		$("#feedimport div").each(function() {
 			var feedIdStr = $(this).find("label").text();
 			var feedId = feedIdStr.split("-")[1];
-			var feedTitle = $(this).find("input").get(0).value;
-			var feedUrl = $(this).find("input").get(1).value;
+			var feedTitle = $(this).find("div").find("input").get(0).value;
+			var feedUrl = $(this).find("div").find("input").get(1).value;
 			var feedItem = {
 				"id": feedId,
 				"title": feedTitle,
@@ -565,25 +565,25 @@ $(document).ready(function() {
 			};
 			postData.feeds.push(feedItem);
 		});
-		$("#feedimportOpts p").each(function() {
+		$("#feedimportOpts div").each(function() {
 			var foName = $(this).find("label").text();
-			var foValue = $(this).find("input").val();
+			var foValue = $(this).find("div").find("input").val();
 			var foItem = {
 				"opt_name": foName,
 				"opt_value": foValue
 			}
 			postData.options.push(foItem);
 		});
-		$("#feedimportGenItems p").each(function() {
-			var fgName = $(this).find("input[name=txtGenItemFI_Name]").val();
-			var fgValue = $(this).find("input[name=txtGenItemFI_Val]").val();
+		$("#feedimportGenItems div").each(function() {
+			var fgName = $(this).find("div").find("input[name=txtGenItemFI_Name]").val();
+			var fgValue = $(this).find("div").find("input[name=txtGenItemFI_Val]").val();
 			var fgItem = {
 				"gi_name": fgName,
 				"gi_value": fgValue
 			};
 			postData.general_items.push(fgItem);
 		});
-		if(confirm("Are you sure to update?")) {
+		if(confirm("Möchten Sie wirklich speichern?")) {
 			$(this).val("Moment...");
 			$(this).attr("disabled", "disabled");
 			$.post("app/edit_conf.php", {
@@ -592,7 +592,7 @@ $(document).ready(function() {
 				"jsonData": JSON.stringify(postData)
 			}, function(rdata) {
 				alert(rdata);
-				$("#btnUpdFeedImport").val("Update");
+				$("#btnUpdFeedImport").val("Speichern");
 				$("#btnUpdFeedImport").removeAttr("disabled");
 				location.reload();
 			});
@@ -638,7 +638,7 @@ $(document).ready(function() {
 			poData.push(gcItem);
 		});
 //		alert(JSON.stringify(poData));
-		if(confirm("Are you sure to update?")) {
+		if(confirm("Möchten Sie wirklich speichern?")) {
 			$(this).val("Moment...");
 			$(this).attr("disabled", "disabled");
 			$.post("app/edit_conf.php", {
@@ -647,7 +647,7 @@ $(document).ready(function() {
 				"jsonData": JSON.stringify(poData)
 			}, function(rdata) {
 				alert(rdata);
-				$("#btnUpdConf").val("Update");
+				$("#btnUpdConf").val("Speichern");
 				$("#btnUpdConf").removeAttr("disabled");
 				$("#genItemsContainer").html("<div class='mi'></div>");
 				loadConf(currentConfFileName);
@@ -702,20 +702,18 @@ $(document).ready(function() {
 	<div class="container page" id="wrapper">
 
 		<div class="page-header">
-            <h3 class="page-header">Konfigurationsdateien bearbeiten</h3>
+            <h2 class="page-header">Konfigurationsdateien bearbeiten</h2>
         </div>
 
-		<div class="row padding-top">
+		<div class="row">
 
-			<div class="span3" id="confList">
-				<fieldset>
-					<legend>Konfigurationsdateien</legend>
+			<div class="col-md-3" id="confList">
+				<h4>Konfigurationsdateien</h4>
 					<ul></ul>
-				</fieldset>
 			</div>
 
-			<div class="span9" id="contentPanel2">
-				<form id="frmEdit">
+			<div class="col-md-9" id="contentPanel2">
+				<form id="frmEdit" class="form-horizontal">
 					<fieldset id="fld_feedimport">
 						<legend>feedimport.conf</legend>
 						<div id="feedimport">Loading...<div class="mi"></div></div>
@@ -723,23 +721,23 @@ $(document).ready(function() {
 						<div id="feedimportOpts"></div>
 						<div id="feedimportGenItems"><div class="mi"></div></div>
 						<hr size="1" noshade="noshade" />
-						<input type="button" id="btnAddFeedBox" value="Feed einf&uuml;gen" class="button" />
-						<input type="button" id="btnAddItemFeedImport" value="Konfig-Eintrag einf&uuml;gen" class="button" />
-						<input type="button" id="btnUpdFeedImport" value="Update" class="button" />
+						<input type="button" id="btnAddFeedBox" value="Feed einf&uuml;gen" class="btn btn-primary btn-light" />
+						<input type="button" id="btnAddItemFeedImport" value="Konfig-Eintrag einf&uuml;gen" class="btn btn-primary btn-light" />
+						<input type="button" id="btnUpdFeedImport" value="Speichern" class="btn btn-success btn-light" />
 					</fieldset>
 
 					<fieldset id="fld_website">
-						<legend></legend>
+						<legend>website.conf</legend>
 						<div id="websiteContainer">Loading...</div>
 						<div id="genWebItemsContainer"><div class="mi"></div></div>
 						<hr size="1" noshade="noshade" />
-						<input type="button" id="btnWebAddConf" value="Eintrag einf&uuml;gen" class="button" />
-						<input type="button" id="btnWebUpdConf" value="Nur Variablen speichern" class="button" />
+						<input type="button" id="btnWebAddConf" value="Eintrag einf&uuml;gen" class="btn btn-primary btn-light" />
+						<input type="button" id="btnWebUpdConf" value="Nur Variablen speichern" class="btn btn-warning btn-light" />
 						<br><br>
-						<input type="button" id="btnUpdate" name="btnUpdate" value="Vorlagen Aktualisieren" class="button" />
-						<input type="button" id="btnUpdateExisted" name="btnUpdateExisted" value="Existierte Seiten Aktualisieren" class="button" />
+						<input type="button" id="btnUpdate" name="btnUpdate" value="Vorlagen aktualisieren" class="btn btn-success btn-light" />
+						<input type="button" id="btnUpdateExisted" name="btnUpdateExisted" value="Existierende Seiten aktualisieren" class="btn btn-success btn-light" />
 						<input type="hidden" id="selTempl" name="selTempl" value="seitenvorlage.html">
-						<input id="save_osm" type="button" class="submit" name="submit" value="Kontaktseite erstellen" />
+						<input id="save_osm" type="button" class="btn btn-primary btn-light" name="submit" value="Kontaktseite erstellen" />
 					</fieldset>
 
 					<fieldset id="fld_common">
@@ -747,15 +745,15 @@ $(document).ready(function() {
 						<div id="container">Loading...</div>
 						<div id="genItemsContainer"><div class="mi"></div></div>
 						<hr size="1" noshade="noshade" />
-						<input type="button" id="btnAddConf" value="Eintrag einf&uuml;gen" class="button" />
-						<input type="button" id="btnUpdConf" value="Update" class="button" />
+						<input type="button" id="btnAddConf" value="Eintrag einf&uuml;gen" class="btn btn-primary btn-light" />
+						<input type="button" id="btnUpdConf" value="Speichern" class="btn btn-success btn-light" />
 					</fieldset>
 
 					<fieldset id="fld_vorlagen">
 						<legend>vorlagen.conf</legend>
 						<div id="vorlagen">Loading...</div>
 						<hr size="1" noshade="noshade" />
-						<input type="button" id="btnUpdVorlagen" value="Update" class="button" />
+						<input type="button" id="btnUpdVorlagen" value="Speichern" class="btn btn-success btn-light" />
 					</fieldset>
 
 					<fieldset id="fld_htusers">
@@ -766,7 +764,7 @@ $(document).ready(function() {
 						<input type="text" id="txtNewHtUserName" class="textBox" size="16" />
 						<label for="txtNewHtUserPass">Password</label>
 						<input type="password" id="txtNewHtUserPass" class="txtBox" size="16" />
-						<input type="button" id="btnAddNewHtUser" value="Add" class="button" />
+						<input type="button" id="btnAddNewHtUser" value="Hinzufügen" class="btn btn-success btn-light" />
 					</fieldset>
 
 					<fieldset id="fld_hthosts">
@@ -775,7 +773,7 @@ $(document).ready(function() {
 						<hr size="1" noshade="noshade" />
 						<label for="txtNewHtHost">Domain/IP</label>
 						<input type="text" id="txtNewHtHost" class="textBox" size="16" />
-						<input type="button" id="btnAddNewHtHost" value="Add" class="button" />
+						<input type="button" id="btnAddNewHtHost" value="Hinzufügen" class="btn btn-success btn-light" />
 					</fieldset>
 				</form>
 			</div>
