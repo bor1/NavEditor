@@ -173,20 +173,33 @@ $_SESSION['rndZahl'] = (string) (rand(10000, 99999));
 
     </script>
     <body>
-        <div id="wrapper">
-            <h1 id="header" style="text-align: center">Passwort vergessen</h1>
+        <div class="container page">
+			<div class="page-header">
+				<h3 id="header">Passwort vergessen</h3>
+			</div>
+
             <?php
             if (strcmp($oper, "mailsend") == 0) {
-                echo "<p style='text-align:center;font-size:large;'>Mail mit dem Aktivierungslink wurde versendet</p>";
+                echo "<p class='alert alert-success'>Eine Mail mit dem Aktivierungslink wurde versendet.</p>";
             } elseif (strcmp($oper, "wrongnum") == 0 || strcmp($oper, "pwvergessen") == 0) {
                 ?>
                 <div id="contentPanel1">
-                    <form id="frmLogin" name="frmLogin" action="pwrecovery.php" method="post" style="width: 100%;text-align: center;"><br /><br />
-                        <label for="txtUserName" style="width:16em;display:inline-block;">Benutzerkennung:</label>
-                        <input type="text" id="txtUserName" name="txtUserName" size="16" class="textBox" /><br /><br />
-                        <label for="txtCheck" style="width:16em;display:inline-block;">Bitte die Zahl eingeben: <b><?php echo $_SESSION['rndZahl'] ?></b></label>
-                        <input type="text" id="txtCheck" name="txtCheck" size="16" class="textBox" /><br /><br />
-                        <input type="submit" id="btnReset" name="btnReset" class="button" value="Passwort Zur&uuml;cksetzen" />
+                    <form id="frmLogin" name="frmLogin" action="pwrecovery.php" method="post" class="col-md-6 col-md-offset-3 form-horizontal">
+						<div class="form-group">
+							<label for="txtUserName" class="control-label col-md-6">Benutzerkennung:</label>
+							<div class="col-md-4">
+								<input type="text" id="txtUserName" name="txtUserName" class="form-control textBox" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="txtCheck" class="control-label col-md-6">Bitte die Zahl eingeben: <b><?php echo $_SESSION['rndZahl'] ?></b></label>
+							<div class="col-md-4">
+								<input type="text" id="txtCheck" name="txtCheck" class="form-control textBox" />
+							</div>
+						</div>
+						<br />
+                        <input type="submit" id="btnReset" name="btnReset" class="btn btn-primary btn-light center-block" value="Passwort zur&uuml;cksetzen" />
+						<br/>
                     </form>
                 </div>
                 <?php
@@ -194,22 +207,32 @@ $_SESSION['rndZahl'] = (string) (rand(10000, 99999));
 
             switch ($oper) {
                 case 'wrongnum':
-                    echo "<script type='text/javascript'>alert('Die Zahl oder der Loginname ist falsch, bitte versuchen Sie noch ein mal.');</script>";
+                    echo "<script type='text/javascript'>alert('Die Zahl oder der Loginname ist falsch. Bitte versuchen Sie es noch ein mal.');</script>";
                     break;
 
                 case 'nomail':
-                    echo "<script type='text/javascript'>alert('Mail bei dem User nicht gefunden');</script>";
+                    echo "<script type='text/javascript'>alert('Dieser Benutzer hat keine E-Mail-Adresse angegeben. Bitte wenden Sie sich an Ihren Webmaster.');</script>";
                     break;
 
                 case 'resetpw':
                     ?>
                     <div id="contentPanel1">
-                        <form id="frmPw" name="frmPw" action="pwrecovery.php" method="post" style="width: 100%;text-align: center;"><br /><br />
-                            <label for="txtPw" style="width:20em;display:inline-block;">Neues Passwort:</label>
-                            <input type="password" id="txtPw" name="txtPw" size="16" class="textBox" /><br /><br />
-                            <label for="txtPwRe"style="width:20em;display:inline-block;">Best&auml;tigung des Passworts:</label>
-                            <input type="password" id="txtPwRe" name="txtPwRe" size="16" class="textBox" /><br /><br />
-                            <input type="submit" id="btnPwSet" name="btnPwSet" class="button" value="Passwort speichern" />
+                        <form id="frmPw" name="frmPw" action="pwrecovery.php" method="post" class="col-md-6 col-md-offset-3 form-horizontal">
+							<div class="form-group">
+								<label for="txtPw" class="control-label col-md-6">Neues Passwort:</label>
+								<div class="col-md-4">
+									<input type="password" id="txtPw" name="txtPw" class="form-control textBox" />
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="txtPwRe" class="control-label col-md-6">Best&auml;tigung des Passworts:</label>
+								<div class="col-md-4">
+									<input type="password" id="txtPwRe" name="txtPwRe" class="form-control textBox" />
+								</div>
+							</div>
+							<br />
+                            <input type="submit" id="btnPwSet" name="btnPwSet" class="btn btn-primary btn-light center-block" value="Passwort speichern" />
+							<br />
                             <input type="hidden" id="key" name="key" value="<?php echo $_GET['key'] ?>" />
                             <input type="hidden" id="user" name="user" value="<?php echo $_GET['user'] ?>" />
                         </form>
@@ -218,12 +241,12 @@ $_SESSION['rndZahl'] = (string) (rand(10000, 99999));
                     break;
 
                 case 'wrongkey':
-                    echo "<p style='color:red;text-align:center;'>Das Link ist veraltet oder existiert nicht<br />\n";
-                    echo "<a href='login.php'>Zur&uuml;ck zur Login</a><p>";
+                    echo "<p class='alert alert-danger' style='padding:15px;'>Der Link ist veraltet oder existiert nicht.</p>";
+                    echo "<p style='text-align: center'><a href='login.php'>Zur&uuml;ck zum Login</a><p>";
                     break;
 
                 case 'wait':
-                    echo "<p style='text-align:center;font-size:large;'>Zu viele Versuche, bitte warten Sie noch <div id='timeBlock' name='timeBlock' style='color: red;text-align:center;font-size:x-large;'></div><p><br />\n";
+                    echo "<p class='alert alert-danger' style='padding:15px;'>Zu viele Versuche, bitte warten Sie noch <span id='timeBlock' name='timeBlock' style='font-weight:bold;'></span> bis zum n&auml;chsten Login-Versuch.</p>\n";
                     break;
 
                 case 'changed':
@@ -235,8 +258,9 @@ $_SESSION['rndZahl'] = (string) (rand(10000, 99999));
                     break;
             }
             ?>
+		</div>
 
-            <?php require('common_footer.php'); ?>
-        </div>
+		<?php require('common_footer.php'); ?>
+
     </body>
 </html>

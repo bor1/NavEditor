@@ -15,7 +15,7 @@ require_once('auth.php');
 var loadFileListDone = false;
 
 function loadContentCallback(data) {
-        if(!data){alert('no designs found');return;}
+        if(!data){alert('Keine Designs gefunden!');return;}
 	var curr = data.current_design;
 	var optHtml = "";
 	for(var i = 0; i < data.designs.length; i++) {
@@ -81,7 +81,7 @@ $(document).ready(function() {
 	}, loadContentCallback); // load tree data
 
 	$("#btnUpdate").click(function() {
-		if(confirm("Are you sure to change the Design?")) {
+		if(confirm("Möchten Sie das Design wirklich ändern?")) {
 			$.post("app/edit_design.php", {
 				"oper": "set_head_file",
 				"new_head_file": $("#selDesigns").val()
@@ -137,24 +137,25 @@ $(document).ready(function() {
         </div>
 
         <div class="row">
-        	<div class="span6">
+        	<div class="col-md-6">
         		<form action="" method="post" name="frmEdit" id="frmEdit">
 					<fieldset>
-						<legend>Designs ausw&auml;hlen</legend>
-						<select id="selDesigns"></select>
-						<input type="button" id="btnUpdate" name="btnUpdate" value="Dieses Design aktivieren" class="btn btn-rounded btn-inverse pull-right" />
-						<div id="previewImage" style="padding:0.25em 0 0 0;"></div>
+						<legend>Design ausw&auml;hlen</legend>
+						<select id="selDesigns" class="form-control form-group"></select>
+
+						<div id="previewImage" class="form-group"></div>
+						<input type="button" id="btnUpdate" name="btnUpdate" value="Dieses Design aktivieren" class="btn btn-primary btn-light" />
 
 					</fieldset>
 				</form>
         	</div>
-        	<div class="span6">
+        	<div class="col-md-6">
         		<form id="frmKopf">
 					<fieldset>
 						<legend id="confDesignLegend">Design Konfigurieren</legend>
-						<div id="settingsBlock">
+						<div id="settingsBlock" class="form-group">
 						</div>
-						<input type="button" id="btnUpdKopf" name="btnUpdKopf" class="btn btn-rounded btn-inverse pull-right" value="Einstellungen speichern" />
+						<input type="button" id="btnUpdKopf" name="btnUpdKopf" class="btn btn-success btn-light" value="Einstellungen speichern" />
 					</fieldset>
 				</form>
         	</div>
