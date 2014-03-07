@@ -273,7 +273,7 @@ $ne_config_info['regex_removed_symbols']    = '/[^a-zA-Z0-9\-_\s]/';
 $default_include_date = date('Ymdis');
 $ne_config_info['default_includes_js_css'] = Array(
     "bootstrap.css?, $default_include_date",
-    "bootstrap-responsive.css?, $default_include_date",
+    //"bootstrap-responsive.css?, $default_include_date",
     "style.css?, $default_include_date",
     "jquery-1.10.1.min.js",
     "loading.js",
@@ -308,7 +308,7 @@ $ne_menu = array(
 		'role'	=> 'user',
 		'sub'	=> 1,
 		'up'	=> 0,
-		'desc'	=> 'Seiten und Struktur erstellen und &auml;ndern',
+		'desc'	=> 'Seiten, Navigation und Dateien bearbeiten',
 	),
 	11 => array(
 		'id'		=> 11,
@@ -335,7 +335,7 @@ $ne_menu = array(
 		'role'	=> 'redaktor',
 		'sub'	=> 1,
 		'up'	=> 0,
-		'desc'	=> 'Allgemeine Information von jeder Seiten bearbeiten',
+		'desc'	=> 'Allgemeine Bereiche bearbeiten',
 	),
 //	21...3x loaded from config_areaeditor
 
@@ -355,7 +355,7 @@ $ne_menu = array(
 		'role'	=> 'user',
 		'sub'	=> 0,
 		'up'	=> 40,
-		'desc'	=> 'Zielgruppemmenu und Umgebung (Kopfteil der Seite)',
+		'desc'	=> 'Mitarbeiter-Zusatzinformationen hochladen',
 	),
     42 => array(
 		'id'		=> 41,
@@ -364,7 +364,7 @@ $ne_menu = array(
 		'role'	=> 'admin',
 		'sub'	=> 0,
 		'up'	=> 40,
-		'desc'	=> 'Caches l&ouml;eschen',
+		'desc'	=> 'Caches leeren',
 	),
 
 	50 => array(

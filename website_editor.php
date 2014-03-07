@@ -354,19 +354,19 @@ if(!file_exists("../../".$ne_config_info['website_conf_filename']) || !file_exis
 							</div>
 
 							<div class="form-group">
-								<label class="col-sm-3 control-label" for="titel-des-Webauftritts">Titel des Webauftritts (erscheint im Browser-Tab):</label>
-								<div class="input-append col-sm-7">
+								<label class="col-sm-3 control-label" for="titel-des-Webauftritts">Titel des Webauftritts:<br />(erscheint im Browser-Tab)</label>
+								<div class="input-append col-sm-6">
 									<input type="text" id="titel-des-Webauftritts" class="form-control" name="titel-des-Webauftritts" size="40" />
 								</div>
-								<div class="col-sm-2">
-									<a class="btn btn-primary" id="btnCopySiteName">Aus Name kopieren</a>
+								<div class="col-sm-3">
+									<a class="btn btn-primary btn-light" id="btnCopySiteName">Aus Name kopieren</a>
 								</div>
 							</div>
 
 							<div class="form-group">
 								<label class="col-sm-3 control-label" for="kurzbeschreibung-zum-Webauftritt">Kurzbeschreibung zum Webauftritt:</label>
 								<div class="col-sm-9">
-									<input type="text" id="kurzbeschreibung-zum-Webauftritt" name="kurzbeschreibung-zum-Webauftritt" size="60" />
+									<input type="text" id="kurzbeschreibung-zum-Webauftritt" class="form-control" name="kurzbeschreibung-zum-Webauftritt" size="60" />
 								</div>
 							</div>
 
@@ -374,11 +374,11 @@ if(!file_exists("../../".$ne_config_info['website_conf_filename']) || !file_exis
 							<div id="bildBlock">
 								<div class="form-group">
 									<label class="col-sm-3 control-label"for="logo-URL">Bild f&uuml;r das Logo (Optional):</label>
-									<div class="input-append col-sm-7">
+									<div class="input-append col-sm-6">
 										<input type="text" id="logo-URL" class="form-control" name="logo-URL" size="40" />
 									</div>
-									<div class="col-sm-2">
-										<a class="btn btn-primary" href="file_editor.php" target="_blank">Bild hochladen</a>
+									<div class="col-sm-3">
+										<a class="btn btn-primary btn-light" href="file_editor.php" target="_blank">Bild hochladen</a>
 									</div>
 									<div class="col-sm-9 col-sm-offset-3">
 										<div id="imgPrev"></div>
