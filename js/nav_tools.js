@@ -6,7 +6,7 @@
  * @returns {NavTools}
  */
 var NavTools = new function(){
-    if(!jQuery){return {};}
+    if(typeof jQuery === 'undefined'){return {};}
     var $ = jQuery; //ensure for $ == jQuery
 
     /**
