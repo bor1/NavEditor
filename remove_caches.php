@@ -59,7 +59,7 @@ if(is_array($toRemovePaths) && count($toRemovePaths) > 0){
 
 <?php
     echo NavTools::includeHtml("default",
-                    "jqueryui/ne2-theme/jquery-ui-1.8.17.custom.css",
+//                    "jqueryui/ne2-theme/jquery-ui-1.8.17.custom.css",
                     "jquery-ui-1.8.18.custom.min.js");
 ?>
 
@@ -72,27 +72,28 @@ $(document).ready(function() {
 </head>
 
 <body id="bd_removeCaches">
-<div id="wrapper">
-	<h1 id="header"><?php echo($ne_config_info['app_title']); ?></h1>
-	<div id="navBar">
-		<?php require('common_nav_menu.php'); ?>
-	</div>
+<?php require('common_nav_menu.php'); ?>
+	<div class="container page" id="wrapper">
+		<div class="page-header">
+			<h2 id="header">Caches l&ouml;schen</h2>
+		</div>
 
-    <div id="contentPanel1">
+
+		<div id="contentPanel1" class="well" style="max-width: 300px;">
         <?php
             function createEntity($text,$param){
                 $uri_parts = explode('?', $_SERVER['REQUEST_URI'], 2);
                 $port = ($_SERVER["SERVER_PORT"] == "80") ? "":":".$_SERVER["SERVER_PORT"];
                 $linkToOpen = $_SERVER["SERVER_NAME"].$port.$uri_parts[0].'?'.$param;
 //                echo "<p>".$text."</p>\n";
-                echo "<button type='submit' style='width: 250px;' class='delete_cache_btn' onclick ='window.location = \"http://".$linkToOpen."\"'>".$text."</button><br><br>\n";
+                echo "<button type='submit' class='btn btn-primary btn-block delete_cache_btn btn-light' style='margin-bottom: 20px;' onclick ='window.location = \"http://".$linkToOpen."\"'>".$text."</button>\n";
             }
 
             foreach($caches as $cacheName => $cacheValues){
-                createEntity($cacheName." Cache l&ouml;schen", $cacheName);
+                createEntity($cacheName."-Cache l&ouml;schen", $cacheName);
             }
 
-            createEntity('Alle l&ouml;schen', 'all');
+            createEntity('Alle Caches l&ouml;schen', 'all');
 
 
         ?>

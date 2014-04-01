@@ -11,7 +11,7 @@ require_once('auth.php');
 
         <?php
         echo NavTools::includeHtml('default',
-                'jquery-ui-1.8.18.custom.min.js',
+                'jquery-ui-1.8.2.custom.min.js',
                 'jqueryui/ne2-theme/jquery-ui-1.8.17.custom.css',
                 'naveditor2.js',
                 'jquery.md5.js',
@@ -454,7 +454,7 @@ require_once('auth.php');
                 loadContentCallback);
 
                 //all buttons to pick
-                $("#bereichList .bereich_button").live('click', function(){
+                $("#bereichList .bereich_button").on('click', function(){
                     //ask by changes, prevent if needed
                     if(checkInputChange()){$(this).blur();return;}
 
@@ -472,7 +472,7 @@ require_once('auth.php');
 
 
                 //btn create new
-                $("#bereichList #addNewBereich").live('click',function() {
+                $("#bereichList #addNewBereich").on('click',function() {
                     //ask by changes, prevent if needed
                     if(checkInputChange()){$(this).blur();return;}
 
@@ -485,7 +485,7 @@ require_once('auth.php');
                 });
 
                 //btn save bei new
-                $("#bereichmanager #createBereich").live('click',function() {
+                $("#bereichmanager #createBereich").on('click',function() {
                     if(!checkForm(true)){
                         return;
                     }
@@ -502,7 +502,7 @@ require_once('auth.php');
                 });
 
                 //btn save
-                $("#bereichmanager #updateBereich").live('click',function() {
+                $("#bereichmanager #updateBereich").on('click',function() {
                     if(!checkForm()){
                         return;
                     }
@@ -523,7 +523,7 @@ require_once('auth.php');
                 });
 
                 //button delete bereich
-                $("#bereichmanager #removeBereich").live('click',function() {
+                $("#bereichmanager #removeBereich").on('click',function() {
                     var areaName = _currentValues['area'];
                     if(confirm(unescape('Den Bereich: \"'+ areaName + '" l%F6schen?'))){
                         NavTools.call_php('app/classes/AreasManager.php', 'deleteAreaSettings',
@@ -535,7 +535,7 @@ require_once('auth.php');
                 });
 
                 //bind event 'change' to every input, to catch any changes, for checkInputChange() function
-                $('#bereichmanager').find(':input').live('change', function(){
+                $('#bereichmanager').find(':input').on('change', function(){
                     if(_currentValues['area'] != null){
                         if( _currentValues['area'].length > 0){
                             _somethingChanged = true;

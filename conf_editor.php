@@ -95,12 +95,12 @@ function loadHtUsers() {
 	}, function(rdata) {
 		var huHtml = "";
 		for(var i = 0; i < rdata.length; i++) {
-			huHtml += "<p>" + rdata[i].username;
-			huHtml += " <a rel='" + rdata[i].username + "' href='javascript:;'>[X]</a></p>";
+			huHtml += "<div class='row'><div class='col-md-2' style='padding-top:8px;'>" + rdata[i].username + "</div>";
+			huHtml += " <a rel='" + rdata[i].username + "' href='javascript:;' class='btn btn-danger btn-light'>L&ouml;schen</a></div>";
 		}
 		$("#htusers").html(huHtml);
 		// delete htuser event
-		$("#htusers p a").click(function() {
+		$("#htusers div a").click(function() {
 			if(confirm("Sind Sie sicher?")) {
 				var un = $(this).attr("rel");
 				$.post("app/edit_conf.php", {
@@ -125,12 +125,12 @@ function loadHtHosts() {
 	}, function(rdata) {
 		var hhHtml = "";
 		for(var j = 0; j < rdata.length; j++) {
-			hhHtml += "<p>" + rdata[j].host;
-			hhHtml += " <a rel='" + rdata[j].host + "' href='javascript:;'>[X]</a></p>";
+			hhHtml += "<div class='row'><div class='col-md-2' style='padding-top:8px;'>" + rdata[j].host + "</div>";
+			hhHtml += " <a rel='" + rdata[j].host + "' href='javascript:;' class='btn btn-danger btn-light'>L&ouml;schen</a></div>";
 		}
 		$("#hthosts").html(hhHtml);
 		// delete hthost event
-		$("#hthosts p a").click(function() {
+		$("#hthosts div a").click(function() {
 			if(confirm("Sind Sie sicher?")) {
 				var ht = $(this).attr("rel");
 				$.post("app/edit_conf.php", {
@@ -159,8 +159,8 @@ function loadConfCallback(rdata) {
 	var ciHtml = "";
 	for(var i = 0; i < rdata.length; i++) {
 		var ciName = rdata[i].opt_name;
-		var ciNameLabel = "<p><label>" + ciName + "</label> ";
-		var ciValue = "<input type='text' class='textBox' style='width:24em;' value='" + rdata[i].opt_value + "' /> ";
+		var ciNameLabel = "<div class='form-group'><label type='varName' class='control-label col-md-3'>" + ciName + "</label> ";
+		var ciValue = "<div class='controls col-md-9'><input type='text' class='textBox form-control' value='" + rdata[i].opt_value + "' /></div></div>";
 		ciHtml += (ciNameLabel + ciValue);
 	}
 	$("#container").html(ciHtml);
@@ -181,11 +181,11 @@ function loadWebsiteConfCallback(rdata) {
 	var ciHtml = "";
 	for(var i = 0; i < rdata.length; i++) {
 		var ciName = rdata[i].opt_name;
-		var ciNameLabel = "<p><label type='varName'>" + ciName + "</label> ";
-		var ciValue = "<input type='text' class='textBox' style='width:24em;' id='" + ciName + "' value='" + rdata[i].opt_value + "' /> ";
+		var ciNameLabel = "<div class='form-group'><label type='varName' class='control-label col-md-3'>" + ciName + "</label> ";
+		var ciValue = "<div class='controls col-md-9'><input type='text' class='textBox form-control' id='" + ciName + "' value='" + rdata[i].opt_value + "' /></div></div> ";
 		ciHtml += (ciNameLabel + ciValue);
 		if (ciName == 'name-des-Webauftritts') {
-		ciHtml += "<input type='checkbox' id='chkAllowHtml' name='chkAllowHtml' value='ja' /><label for='chkAllowHtml'>Eigene HTML-Anweisungen zulassen</label>";
+		ciHtml += "<div class='form-group'><div class='col-md-offset-3 col-md-9'><div class='checkbox'><label><input type='checkbox' id='chkAllowHtml' name='chkAllowHtml' value='ja' />Eigene HTML-Anweisungen zulassen</label></div></div></div>";
 		}
 	}
 	$("#websiteContainer").html(ciHtml);
@@ -194,13 +194,13 @@ function loadWebsiteConfCallback(rdata) {
 
 function saveContentCallback(data) {
 	$("#ajaxLoader").hide();
-	//alert(data);
+	alert(data);
 	saveVars(data);
 }
 //for every button save vars
 function saveVars(data){
 	var poData = [];
-	$("#websiteContainer p").each(function() {
+	$("#websiteContainer div").each(function() {
 		var ccName = $(this).find("label[type=varName]").text();
 		var ccValue = $(this).find("input[type=text]").val();
 		var ccItem = {
@@ -209,7 +209,7 @@ function saveVars(data){
 		};
 		poData.push(ccItem);
 	});
-	$("#genWebItemsContainer p").each(function() {
+	$("#genWebItemsContainer div").each(function() {
 		var gcName = $(this).find("input[name=txtGenItemCf_Name]").val();
 		var gcValue = $(this).find("input[name=txtGenItemCf_Val]").val();
 		var gcItem = {
@@ -284,7 +284,7 @@ function loadFeedImportCallback(rdata) {
 		var feedId = rdata.feeds[i].id;
 		var feedIdLabel = "<div class='form-group'><label class='control-label col-md-1'>Feed-" + feedId + "</label> ";
 		var feedTitle = "<div class='controls col-md-3'><input type='text' id='txtFeedTitle_" + feedId + "' class='textBox form-control' value='" + rdata.feeds[i].title + "' /></div> ";
-		var feedUrl = "<div class='controls col-md-5'><input type='text' id='txtFeedUrl_" + feedId + "' class='textBox form-control' value='" + rdata.feeds[i].url + "' /></div><div class='col-md-1'>[<a href='javascript:;'>X</a>]</div></div>";
+		var feedUrl = "<div class='controls col-md-5'><input type='text' id='txtFeedUrl_" + feedId + "' class='textBox form-control' value='" + rdata.feeds[i].url + "' /></div><div class='controls col-md-3'><a href='javascript:;' class='btn btn-danger btn-light'>L&ouml;schen</a></div></div>";
 		feedHtml += (feedIdLabel + feedTitle + feedUrl);
 		feedCounter++;
 	}
@@ -369,7 +369,7 @@ $(document).ready(function() {
 		if(!loadWebsiteConfDone) {
 			return;
 		}
-		if(confirm("Are you sure to replace the Logos of all the existing pages?")) {
+		if(confirm("Möchten Sie das Logo auf allen existierenden Seiten ersetzen?")) {
 			$("#ajaxLoader").show();
 			btnNameTmp = $(this).val();
 			$(this).val("Moment...");
@@ -432,20 +432,20 @@ $(document).ready(function() {
 			$("#save_osm").val(btnNameTmp);
 			$("#save_osm").removeAttr("disabled");
 			saveVars("kontakt.shtml wurde erstellt");
-			$('#hr').append('<p>Done.</p>');
+			$('#hr').append('<p>Fertig.</p>');
 		});
 	});
 
 	$("#btnWebAddConf").click(function() {
 		var genItemHtml = "";
-		var newItemHtml = "<p><input type='text' name='txtGenItemCf_Name' class='textBox' style='width:19.75em;' />";
-		newItemHtml += " <input type='text' name='txtGenItemCf_Val' class='textBox' style='width:24em;' /> [<a href='javascript:;'>X</a>]</p>";
+		var newItemHtml = "<div class='form-group'><div class='controls col-md-3'><input type='text' name='txtGenItemCf_Name' class='textBox form-control' /></div>";
+		newItemHtml += " <div class='controls col-md-6'><input type='text' name='txtGenItemCf_Val' class='textBox form-control' /></div><div class='controls col-md-3'><a href='javascript:;' class='btn btn-danger btn-light'>L&ouml;schen</a></div></div>";
 		$("#genWebItemsContainer .mi").replaceWith(genItemHtml + newItemHtml + "<div class='mi'></div>");
 
 		// for removing
-		$("#genWebItemsContainer p a").click(function() {
-			if(confirm("Sure to remove?")) {
-				$(this).parent().remove();
+		$("#genWebItemsContainer a").click(function() {
+			if(confirm("Wollen Sie diesen Eintrag wirklich löschen?")) {
+				$(this).parents(".form-group").remove();
 			}
 		});
 	});
@@ -516,7 +516,7 @@ $(document).ready(function() {
 			feedCounter++;
 			var newFeedBoxHtml = "<div class='form-group'><label class='control-label col-md-1'>Feed-" + feedCounter + "</label> ";
 			newFeedBoxHtml += "<div class='controls col-md-3'><input type='text' id='txtFeedTitle_" + feedCounter + "' class='textBox form-control' /></div> ";
-			newFeedBoxHtml += "<div class='controls col-md-5'><input type='text' id='txtFeedUrl_" + feedCounter + "' class='textBox form-control' /></div> <div class='col-md-1'>[<a href='javascript:;'>X</a>]</div></div>";
+			newFeedBoxHtml += "<div class='controls col-md-5'><input type='text' id='txtFeedUrl_" + feedCounter + "' class='textBox form-control' /></div><div class='controls col-md-3'><a href='javascript:;' class='btn btn-danger btn-light'>L&ouml;schen</a></div></div>";
 			$("#feedimport .mi").replaceWith(newFeedBoxHtml + "<div class='mi'></div>");
 
 			// add event for removing
@@ -532,7 +532,7 @@ $(document).ready(function() {
 		var genItemHtml = "";
 //		genItemHtml += $("#feedimportGenItems").html();
 		var newItemHtml = "<div class='form-group'><div class='controls col-md-3'><input type='text' name='txtGenItemFI_Name' class='textBox form-control' /></div>";
-		newItemHtml += " <div class='controls col-md-6'><input type='text' name='txtGenItemFI_Val' class='textBox form-control' /></div> <div class='col-md-1'> [<a href='javascript:;'>X</a>]</div></div>";
+		newItemHtml += " <div class='controls col-md-6'><input type='text' name='txtGenItemFI_Val' class='textBox form-control' /></div><div class='controls col-md-3'><a href='javascript:;' class='btn btn-danger btn-light'>L&ouml;schen</a></div></div>";
 		$("#feedimportGenItems .mi").replaceWith(genItemHtml + newItemHtml + "<div class='mi'></div>");
 
 		// for removing
@@ -556,8 +556,8 @@ $(document).ready(function() {
 		$("#feedimport div").each(function() {
 			var feedIdStr = $(this).find("label").text();
 			var feedId = feedIdStr.split("-")[1];
-			var feedTitle = $(this).find("div").find("input").get(0).value;
-			var feedUrl = $(this).find("div").find("input").get(1).value;
+			var feedTitle = $(this).find("input[id^='txtFeedTitle']").value;
+			var feedUrl = $(this).find("input[id^='txtFeedUrl']").value;
 			var feedItem = {
 				"id": feedId,
 				"title": feedTitle,
@@ -602,14 +602,14 @@ $(document).ready(function() {
 	/* common conf: post */
 	$("#btnAddConf").click(function() {
 		var genItemHtml = "";
-		var newItemHtml = "<p><input type='text' name='txtGenItemCf_Name' class='textBox' style='width:19.75em;' />";
-		newItemHtml += " <input type='text' name='txtGenItemCf_Val' class='textBox' style='width:24em;' /> [<a href='javascript:;'>X</a>]</p>";
+		var newItemHtml = "<div class='form-group'><div class='controls col-md-3'><input type='text' name='txtGenItemCf_Name' class='textBox form-control' /></div>";
+		newItemHtml += " <div class='controls col-md-6'><input type='text' name='txtGenItemCf_Val' class='textBox form-control' /></div><div class='controls col-md-3'><a href='javascript:;' class='btn btn-danger btn-light'>L&ouml;schen</a></div></div>";
 		$("#genItemsContainer .mi").replaceWith(genItemHtml + newItemHtml + "<div class='mi'></div>");
 
 		// for removing
-		$("#genItemsContainer p a").click(function() {
-			if(confirm("Sure to remove?")) {
-				$(this).parent().remove();
+		$("#genItemsContainer a").click(function() {
+			if(confirm("Wollen Sie diesen Eintrag wirklich löschen?")) {
+				$(this).parents(".form-group").remove();
 			}
 		});
 	});
@@ -619,7 +619,7 @@ $(document).ready(function() {
 			return;
 		}
 		var poData = [];
-		$("#container p").each(function() {
+		$("#container div").each(function() {
 			var ccName = $(this).find("label").text();
 			var ccValue = $(this).find("input").val();
 			var ccItem = {
@@ -628,7 +628,7 @@ $(document).ready(function() {
 			};
 			poData.push(ccItem);
 		});
-		$("#genItemsContainer p").each(function() {
+		$("#genItemsContainer div").each(function() {
 			var gcName = $(this).find("input[name=txtGenItemCf_Name]").val();
 			var gcValue = $(this).find("input[name=txtGenItemCf_Val]").val();
 			var gcItem = {
@@ -699,7 +699,7 @@ $(document).ready(function() {
 <body id="bd_Conf">
 	<?php require('common_nav_menu.php'); ?>
 
-	<div class="container page" id="wrapper">
+	<div class="container" id="wrapper">
 
 		<div class="page-header">
             <h2 class="page-header">Konfigurationsdateien bearbeiten</h2>
@@ -760,20 +760,30 @@ $(document).ready(function() {
 						<legend>.htusers</legend>
 						<div id="htusers"></div>
 						<hr size="1" noshade="noshade" />
-						<label for="txtNewHtUserName">Username</label>
-						<input type="text" id="txtNewHtUserName" class="textBox" size="16" />
-						<label for="txtNewHtUserPass">Password</label>
-						<input type="password" id="txtNewHtUserPass" class="txtBox" size="16" />
-						<input type="button" id="btnAddNewHtUser" value="Hinzufügen" class="btn btn-success btn-light" />
+						<div class="form-group">
+							<label for="txtNewHtUserName" class="col-md-2 control-label">Username</label>
+							<div class="col-sm-3">
+								<input type="text" id="txtNewHtUserName" class="textBox form-control" />
+							</div>
+							<label for="txtNewHtUserPass" class="col-md-2 control-label">Password</label>
+							<div class="col-sm-3">
+								<input type="password" id="txtNewHtUserPass" class="txtBox form-control" />
+							</div>
+							<input type="button" id="btnAddNewHtUser" value="Hinzufügen" class="btn btn-success btn-light" />
+						</div>
 					</fieldset>
 
 					<fieldset id="fld_hthosts">
 						<legend>hthosts</legend>
 						<div id="hthosts"></div>
 						<hr size="1" noshade="noshade" />
-						<label for="txtNewHtHost">Domain/IP</label>
-						<input type="text" id="txtNewHtHost" class="textBox" size="16" />
-						<input type="button" id="btnAddNewHtHost" value="Hinzufügen" class="btn btn-success btn-light" />
+						<div class="form-group">
+							<label for="txtNewHtHost" class="col-md-2 control-label">Domain/IP</label>
+							<div class="col-sm-5">
+								<input type="text" id="txtNewHtHost" class="textBox form-control" />
+							</div>
+							<input type="button" id="btnAddNewHtHost" value="Hinzufügen" class="btn btn-success btn-light" />
+						</div>
 					</fieldset>
 				</form>
 			</div>
