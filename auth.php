@@ -13,10 +13,10 @@ namespace auth;
 //if called directly, exit.
 no_direct_call();
 
-require_once('config/config.php');
+require_once 'config/config.php';
 
-require_once(NE_DIR_ROOT.'app/log_funcs.php');
-require_once(NE_DIR_ROOT.'app/sessions.php');
+require NE_DIR_ROOT.'app/log_funcs.php';
+require NE_DIR_ROOT.'app/sessions.php';
 
 //global variables
 global $ne_config_info;
