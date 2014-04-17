@@ -2,4 +2,17 @@
 sftp-config.json
 
 .DS_Store
+#bak files
+*.bak
+#project folder netbeans?
 /NavEditor3/
+#idea
+/.idea/
+/*.iml
+#logs
+/log/*.log
+/log/*.csv
+#backups
+/.htbackup/
+#generated configs
+/data/*.conf
