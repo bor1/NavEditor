@@ -321,6 +321,7 @@ $(document).ready(function() {
 		$("#txtFirstName").val("");
 		$("#txtLastName").val("");
 		$("#filAttachment").val("");
+		$("#userPhoto").removeAttr('src');
 		tinyMCE.get("txtContent").setContent("");
 		currentFileName = "";
 		$("#txtFirstName").focus();
@@ -331,7 +332,7 @@ $(document).ready(function() {
 		var lName = $("#txtLastName").val();
 		var content = tinyMCE.get("txtContent").getContent();
 		if(fName == "" || lName == "" || content == "") {
-			alert("All fields must be filled!");
+			alert("Alle Felder müssen ausgefüllt sein!");
 			return false;
 		}
 		var maName = fName + " " + lName;
@@ -406,65 +407,73 @@ $(document).ready(function() {
 <body id="bd_MA">
 <?php require('common_nav_menu.php'); ?>
 
-    <div id="wrapper" class="container-fluid" style="padding-top: 30px">
-	<div id="confList" class="span3">
+    <div class="container">
+		<div class="page-header">
+			<h3>Personendaten für UnivIS-Plugin bearbeiten</h3>
+		</div>
 
-        <fieldset>
-			<label>UnivIS-ID</label>
-			<input type="text" id="txtUnivISId" class="textBox" size="16" />
-			<input type="button" id="btnSetUnivISId" class="button" value="setzen" />
-		</fieldset>
+		<div class="row">
+			<div id="confList" class="col-md-3">
 
-        <fieldset>
-            <label class="help-block">Die vorhandenen Zusatzinformationen<br />zu Personen:</label>
-			<input type="button" id="btnAddNew" class="button" value="Neue(n) Mitarbeiter(in) anlegen" />
-			<ul></ul>
-		</fieldset>
+				<div class="form-group">
+					<h4>UnivIS-ID</h4>
+					<input type="text" id="txtUnivISId" class="textBox form-control" style="margin-bottom: 5px;" placeholder="UnivIS-Org-Nr eintragen"/>
+
+					<input type="button" id="btnSetUnivISId" class="btn btn-light btn-primary" value="setzen" />
+				</div>
+				<hr style="border-top: solid 1px #ccc; border-bottom: solid 1px transparent;">
+				<div class="form-group">
+						<h4 class="help-block">Personen:</h4>
+						<input type="button" id="btnAddNew" class="btn btn-light btn-success" style="margin-bottom: 10px;" value="Mitarbeiter hinzuf&uuml;gen" />
+				</div>
+				<ul></ul>
+
+			</div>
+
+			<div id="contentPanel2" class="col-md-9 page">
+				<div class="page-header">
+					<h4 class="page-header">Mitarbeiter bearbeiten</h4>
+				</div>
+
+				<form id="frmEdit" class="form-horizontal">
+					<div class="row">
+					<div class="col-md-9">
+						<div id="fld_feedimport" class="form-group">
+							<label class="col-md-2 control-label" for="txtFirstName">Vorname:</label>
+							<div class="col-md-4">
+								<input type="text" id="txtFirstName" name="txtFirstName" class="textBox form-control" />
+							</div>
+							<label class="col-md-2 control-label" for="txtLastName">Nachname:</label>
+							<div class="col-md-4">
+								<input type="text" id="txtLastName" name="txtLastName" class="textBox form-control" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-md-2 control-label" for="filAttachment">Foto:</label>
+							<div class="col-md-6">
+								<input type="file" id="filAttachment" name="filAttachment" class="textBox" />
+								<img id="ajaxWaiting" src="ajax-loader.gif" border="0" style="width:16px;height:16px;border:0;display:none;" />
+							</div>
+							<div class="controls span">
+								<input type="button" id="btnUpload" name="btnUpload" class="btn btn-light btn-primary" value="hochladen" />
+							</div>
+						</div>
+
+						<p><a href="file_editor.php" target="_blank">Dateien manuell &uuml;ber den Dateimanager hochladen</a></p>
+					</div>
+
+					<div class="col-md-3">
+						<img id="userPhoto" border="0" style="display:none;margin-bottom:10px;" />
+					</div>
+				</div>
+
+					<textarea id="txtContent" name="txtContent" cols="120" rows="15" class="textBox"></textarea>
+					<hr size="1" noshade="noshade" />
+					<input type="button" id="btnUpdate" name="btnUpdate" value="Speichern" class="btn btn-success btn-light" style="margin: 5px" />
+				</form>
+			</div>
+		</div>
 	</div>
-
-	<div id="contentPanel2" class="span9">
-        <form id="frmEdit" style="position:relative;" class="form-inline">
-			<fieldset id="fld_feedimport">
-				<legend>Mitarbeiter bearbeiten</legend>
-                <p>
-                    <div class="controls-row">
-                        <div class="control-group span3">
-                            <label class="control-label" for="txtFirstName">Vorname:</label>
-                            <div class="controls">
-                                <input type="text" id="txtFirstName" name="txtFirstName" size="32" class="textBox" />
-                            </div>
-                        </div>
-                        <div class="control-group span3">
-                            <label class="control-label" for="txtLastName">Nachname:</label>
-                            <div class="controls">
-                                <input type="text" id="txtLastName" name="txtLastName" size="32" class="textBox" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="control-group inline">
-                        <label class="control-label span" for="filAttachment">Foto:</label>
-                        <div class="controls span ">
-                            <input type="file" id="filAttachment" name="filAttachment" class="textBox" />
-                            <img id="ajaxWaiting" src="ajax-loader.gif" border="0" style="width:16px;height:16px;border:0;display:none;" />
-                        </div>
-                        <div class="controls span">
-                            <input type="button" id="btnUpload" name="btnUpload" class="button btn" value="hochladen" />
-                        </div>
-                    </div>
-
-                </p>
-				<p>
-                    <a href="file_editor.php" target="_blank" class="row">Dateien in FileEditor hochladen</a>
-				</p>
-				<textarea id="txtContent" name="txtContent" cols="120" rows="15" class="textBox"></textarea>
-				<img id="userPhoto" border="0" style="position:absolute;top:11px;right:2px;display:none;" />
-				<hr size="1" noshade="noshade" />
-				<input type="button" id="btnUpdate" name="btnUpdate" value="Update" class="button" />
-			</fieldset>
-		</form>
-	</div>
-
-</div>
 <?php require('common_footer.php'); ?>
 </body>
 

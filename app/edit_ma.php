@@ -56,22 +56,23 @@ function get_ma_file_dir() {
 	$ma_file_dir = '';
 
 	foreach($retv as $ar) {
-		if(($ar['opt_name'] == 'URL_Mitarbeiter') && ($ar['opt_value'] != '')) {
-			$v1 = substr($ar['opt_value'], 0, strrpos($ar['opt_value'], '/'));
-			$ma_file_dir = $_SERVER['DOCUMENT_ROOT'] . $v1 . '/';
+		if(($ar['opt_name'] == 'Datenverzeichnis') && ($ar['opt_value'] != '')) {
+			$v1 = $ar['opt_value'];
+			$ma_file_dir = $_SERVER['DOCUMENT_ROOT'] . '/' . $v1 . '/mitarbeiter-einzeln/';
 		}
 		if($ar['opt_name'] == 'UnivISId' || $ar['opt_name'] == 'UnivISOrgNr') {
 			$univis_id = $ar['opt_value'];
 		}
 	}
 	if(!is_dir($ma_file_dir)) {
-		$ma_file_dir = $_SERVER['DOCUMENT_ROOT'] . '/mitarbeiter/daten/';
+		$ma_file_dir = $_SERVER['DOCUMENT_ROOT'] . '/univis-daten/';
 	}
 
 	return $ma_file_dir;
 }
 
 $ma_file_dir1 = get_ma_file_dir();
+
 if(!file_exists($ma_file_dir1)) {
 	mkdir($ma_file_dir1, 0777, TRUE);
 }
@@ -119,14 +120,14 @@ switch($oper) {
 		}
 		$new_file_content = str_replace(array('<comment_ssi>', '<comment>', '</comment>'), array('<!-' . '-#', '<!--', '-->'), $new_file_content);
 		if(file_put_contents($ma_file, $new_file_content)) {
-			echo('Update done!');
+			echo('Gespeichert!');
 		} else {
-			echo('Update file error!');
+			echo('Fehler beim Speichern!');
 		}
 		break;
 	case 'delete':
 		@unlink($ma_file);
-		echo('Done!');
+		echo('Fertig!');
 		break;
 	case 'get_univis_id':
 		echo($univis_id);
@@ -169,7 +170,7 @@ switch($oper) {
 
 		$new_content = $before_part . $new_univis_id_line . $after_part;
 		file_put_contents($fpath, $new_content);
-		echo('Neue UnivIS-ID wurde gesperchert.');
+		echo('Neue UnivIS-ID wurde gespeichert.');
 		break;
 	default:
 		break;

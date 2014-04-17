@@ -115,7 +115,7 @@ if(!file_exists("../../".$ne_config_info['website_conf_filename']) || !file_exis
 		<div id="updateInfo">
 
 			<div class="row">
-				<div class="update-cat col-md-3">
+				<div class="update-cat col-md-2">
 					<span>Aktuell verwendete Version:</span>
 				</div>
 				<div class="col-md-1">
@@ -124,7 +124,7 @@ if(!file_exists("../../".$ne_config_info['website_conf_filename']) || !file_exis
 			</div>
 
 			<div class="row">
-				<div class="update-cat col-md-3">
+				<div class="update-cat col-md-2">
 					<span>Letzte offizielle Testversion:</span>
 				</div>
 				<div class="col-md-1">
@@ -139,7 +139,7 @@ if(!file_exists("../../".$ne_config_info['website_conf_filename']) || !file_exis
 			</div>
 
 			<div class="row">
-				<div class="update-cat col-md-3">
+				<div class="update-cat col-md-2">
 					<span>Stabile Version:</span>
 				</div>
 				<div class="col-md-1">
@@ -153,6 +153,7 @@ if(!file_exists("../../".$ne_config_info['website_conf_filename']) || !file_exis
 				</div>
 			</div>
 
+			<hr />
 			<h3>Alternativer Layout-Vorschlag (funktioniert aber noch nicht)</h3>
 
 			<div class="panel panel-info">

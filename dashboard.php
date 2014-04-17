@@ -48,7 +48,6 @@ $sp->handle_content_type();
 
 		<div class="container">
 
-
 				<div class="page-header">
 					<h1> <a href="<?php echo($sp->get_permalink()); ?>"><?php echo($sp->get_title()); ?></a> <small>Nachrichten und Artikel des WebTeams</small></h1>
 				</div>

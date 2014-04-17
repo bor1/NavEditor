@@ -181,7 +181,7 @@ div.page-header {
 
 .container.page {
   margin: 30px auto;
-  padding: 0 30px; }
+  padding: 0 30px 30px; }
 
 .dashboard .card {
   background: white;
@@ -203,9 +203,6 @@ div.page-header {
     padding: 0 10px;
     padding-top: 14px;
     border-top: solid 1px #e4e4e4; }
-
-.update .update-cat {
-  width: 185px; }
 
 .nav-editor {
   margin: 40px 0; }

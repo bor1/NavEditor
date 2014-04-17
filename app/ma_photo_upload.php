@@ -100,13 +100,13 @@ function get_ma_file_dir() {
 	$ma_file_dir = '';
 
 	foreach($retv as $ar) {
-		if(($ar['opt_name'] == 'URL_Mitarbeiter') && ($ar['opt_value'] != '')) {
-			$v1 = substr($ar['opt_value'], 0, strrpos($ar['opt_value'], '/'));
-			$ma_file_dir = $_SERVER['DOCUMENT_ROOT'] . $v1 . '/';
+		if(($ar['opt_name'] == 'Datenverzeichnis') && ($ar['opt_value'] != '')) {
+			$v1 = $ar['opt_value'];
+			$ma_file_dir = $_SERVER['DOCUMENT_ROOT'] . '/' . $v1 . '/mitarbeiter-einzeln/';
 		}
 	}
 	if(!is_dir($ma_file_dir)) {
-		$ma_file_dir = $_SERVER['DOCUMENT_ROOT'] . '/mitarbeiter/daten/';
+		$ma_file_dir = $_SERVER['DOCUMENT_ROOT'] . '/univis-daten/';
 	}
 
 	return $ma_file_dir;
@@ -136,19 +136,19 @@ $json_res = array(
 if(count($_FILES)) {
 	// Doublecheck that we really had a file:
 	if(!($_FILES['filAttachment']['size'])) {
-		$json_res['error'] = 'No actual file uploaded!';
+		$json_res['error'] = 'Datei konnte nicht hochgeladen werden!';
 	} else {
 		$newnamepath = $ma_photo_file_path;
 
 		// Attempt to move the uploaded file to it's new home:
 		if(!(move_uploaded_file($_FILES['filAttachment']['tmp_name'], $newnamepath))) {
-			$json_res['error'] = 'A problem occurred during file upload!';
+			$json_res['error'] = 'Beim hochladen ist ein Fehler aufgetreten!';
 		} else {
 			// It worked!
 			chmod($newnamepath, 0755);
 			copy($newnamepath, $ma_file_dir_ori . $ma_photo_file_name);
 			create_thumb($newnamepath, $newnamepath, 180, 180); // thumb size here!!
-			$json_res['info'] = 'Done!';
+			$json_res['info'] = 'Fertig!';
 		}
 	}
 	echo(json_encode($json_res));
