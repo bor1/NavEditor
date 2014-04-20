@@ -11,8 +11,8 @@ namespace sessions {
 
     /**
      * Start, resume or destroy session<br />
-     * if session already exists and not expiried - refresh.<br />
-     * if session exists and expiried - destroy.<br />
+     * if session already exists and not expired - refresh.<br />
+     * if session exists and expired - destroy.<br />
      * if no session exists - create one.
      * @global array $ne_config_info
      * @param int $timeout time session started/resumed for. If <= 0 then the current session will be destroyed
@@ -36,7 +36,7 @@ namespace sessions {
 
         //if there is a session //no need?
         if(\session_id()){
-            //if LAST_ACTIVITY expiried, unset session
+            //if LAST_ACTIVITY expired, unset session
             if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > $timeout)){
                 unsetSession();
             //else refresh session
@@ -84,4 +84,3 @@ namespace sessions {
     }
 
 }
-?>
