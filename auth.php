@@ -10,6 +10,12 @@
 
 namespace auth;
 
+use Exception;
+use Logger\LoggerCSV;
+use NavTools;
+use UserMgmt;
+use sessions;
+
 //if called directly, exit.
 no_direct_call();
 
@@ -27,17 +33,17 @@ global $g_UserMgmt;
 global $g_Logger;
 
 //start or refresh session
-\sessions\setSession();
+sessions\setSession();
 
-$g_UserMgmt = new \UserMgmt();
-$g_Logger = new \Logger\LoggerCSV();
+$g_UserMgmt = new UserMgmt();
+$g_Logger = new LoggerCSV();
 
-$is_admin = FALSE;
+$is_admin = false;
 
 $loginResult = 'FAIL'; //values: FAIL, OK
 //get username and password
-$current_user_name = \NavTools::ifsetor($_SESSION['ne_username'], '');
-$current_user_pwd = \NavTools::ifsetor($_SESSION['ne_password'], '');
+$current_user_name = NavTools::ifsetor($_SESSION['ne_username'], '');
+$current_user_pwd = NavTools::ifsetor($_SESSION['ne_password'], '');
 
 
 //try to login
@@ -51,7 +57,7 @@ if (empty($current_user_name)
 }
 
 //log current called page
-$g_Logger->log('Called page:'.\NavTools::ifsetor($_SERVER['HTTP_REFERER'],'unknown'));
+$g_Logger->log('Called page:'. NavTools::ifsetor($_SERVER['HTTP_REFERER'],'unknown'));
 
 //test file access
 //if not public... otherwise OK, nothing to do
@@ -63,14 +69,14 @@ if (!checkPublic()) {
             //test access for the requested file
             $requested_file_path = str_replace($ne_config_info['app_path_without_host'], '', $_SERVER['SCRIPT_NAME']);
             if (!$g_UserMgmt->isAllowAccesPHP($requested_file_path, $current_user_name)) {
-                access_denied('You dont have permission for this file');
+                access_denied('You don\'t have permission for this file');
             }
             break;
         case 'FAIL': //if failed to login
             login_failed();
             break;
         default:
-            throw new \Exception('Cannot login...');
+            throw new Exception('Cannot login...');
             break;
     }
 }
@@ -85,7 +91,7 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 
 /**
  * Stop script if this file called directly.<br />
- * @todo implement with traits, with no parameter passed. Make sure php_5.4 supported
+ * @todo implement with traits. Make sure php_5.4 supported
  */
 function no_direct_call() {
     $backtrace = debug_backtrace();
@@ -130,7 +136,7 @@ function checkPublic() {
 
 /**
  * generates and shows "access denied" page
- * @param string $msg messagee to show
+ * @param string $msg message to show
  */
 function access_denied($msg = 'Contact SERVER_ADMIN for your account information.') {
     $backlink = '<A HREF="javascript:history.go(-1)">Click here to go back to previous page</A>';
@@ -145,7 +151,7 @@ function setGlobals() {
     global $g_current_user_permission, $g_current_user_name, $g_Logger, $is_admin, $g_UserMgmt;
 
     if(!isset($_SESSION['ne_username'])){
-        return FALSE;
+        return false;
     }
 
     $current_user_name = $_SESSION['ne_username'];
@@ -153,8 +159,10 @@ function setGlobals() {
     $g_current_user_name = $current_user_name;
     $g_Logger->setCurrentUserName($current_user_name); //set username for logger
     //set $is_admin, fallback. TODO remove. replace with permissions check
-    if (strcmp($current_user_name, \NavTools::getServerAdmin()) == 0) {
-        $is_admin = TRUE;
+    if (strcmp($current_user_name, NavTools::getServerAdmin()) == 0) {
+        $is_admin = true;
     }
+
+    return true;
 }
 ?>
