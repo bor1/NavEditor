@@ -23,7 +23,7 @@ function htpasswd($pwd) {
  */
 function modifyRelativePath($sPath){
     //add slash if not exist
-    if($sPath[0] != '/'){ $sPath = '/'+$sPath;}
+    if($sPath[0] != '/'){ $sPath = '/'.$sPath;}
     //make full path
     $path = $_SERVER['DOCUMENT_ROOT'] . $sPath;
     //return filtered
