@@ -2,7 +2,7 @@
 /**
  * Manager for Config files
  * requires config.php!
- * TODO implemets ConfigManagerInterface?
+ * TODO implements ConfigManagerInterface?
  */
 class ConfigManager {
 
@@ -73,9 +73,9 @@ class ConfigManager {
     /**
      * Getter for only one config item
      *
-     * @param type $conf_item item name
-     * @param type $defaultval default value in case no config item found
-     * @return string Config item value
+     * @param string $conf_item item name
+     * @param mixed $defaultval default value in case no config item found
+     * @return mixed Config item value
      */
 	public function get_conf_item($conf_item, $defaultval) {
         $associativeArray= &$this->_conf_items_associative;
@@ -95,7 +95,7 @@ class ConfigManager {
     /**
      * updates $data_array settings in config file
      *
-     * @param array $data_array assiciative array, settings with values to update
+     * @param array $data_array associative array, settings with values to update
      * @return boolean Success
      */
     public function update_conf_items($data_array){
@@ -137,7 +137,7 @@ class ConfigManager {
      * Removes items $aItemsToRemove from config file
      *
      * @param array $aItemsToRemove array of items to remove
-     * @return Success
+     * @return bool Success
      */
     public function remove_conf_items($aItemsToRemove){
         //first backup
@@ -157,7 +157,7 @@ class ConfigManager {
 
     /**
      * Makes backup of current config file
-     * Once pro script runned
+     * Once pro script started
      */
     private function _backup_conf_file(){
         static $bDidBackup = false;
