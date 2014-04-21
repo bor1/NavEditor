@@ -68,7 +68,7 @@ if (!checkPublic()) {
         case 'OK'://if logged in
             //test access for the requested file
             $requested_file_path = str_replace($ne_config_info['app_path_without_host'], '', $_SERVER['SCRIPT_NAME']);
-            if (!$g_UserMgmt->isAllowAccesPHP($requested_file_path, $current_user_name)) {
+            if (!$g_UserMgmt->isAllowAccessPHP($requested_file_path, $current_user_name)) {
                 access_denied('You don\'t have permission for this file');
             }
             break;

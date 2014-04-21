@@ -127,7 +127,7 @@ class LoggerCSV extends NE_Logger {
 
     /**
      * Set $_currentUserName
-     * @param string $sFormat
+     * @param string $sCurrentUserName
      */
     public function setCurrentUserName($sCurrentUserName) {
         $this->_currentUserName = \NavTools::ifsetor($sCurrentUserName, parent::getCurrentUser());
@@ -224,7 +224,7 @@ class LoggerCSV extends NE_Logger {
 
     /**
      * Filters log file, depends on max history time (if timestamp set) or max file size<br />
-     * With no argumets, class instance variables will be used
+     * With no arguments, class instance variables will be used
      * @param int $iMaxFileSize
      * @param int $iMaxHistory
      * @return int number of removed lines

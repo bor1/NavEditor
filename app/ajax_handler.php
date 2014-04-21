@@ -24,7 +24,7 @@ try {
 
 
     //test if user has permission for the php file
-    if (!$g_UserMgmt->isAllowAccesPHP($file_to_call)) {
+    if (!$g_UserMgmt->isAllowAccessPHP($file_to_call)) {
         throw new Exception('Kein zugriff auf "' . $file_to_call . '"');
     }
 
@@ -35,15 +35,15 @@ try {
         //AreasEditor------------------------------------------------------------
         case 'app/classes/AreasEditor.php':
 
-            $bereichsname = $data_to_pass['bereich'];
+            $areasname = $data_to_pass['bereich'];
             //falls bereich undefiniert, return error
-            if (strlen($bereichsname) == 0) {
+            if (strlen($areasname) == 0) {
                 throw new Exception('Bereich undefiniert');
             }
 
             require_once $ne_config_info['app_path'] . $file_to_call;
 
-            $AreaEditor = new AreasEditor($bereichsname);
+            $AreaEditor = new AreasEditor($areasname);
             //AreasEditor/functions----------------------------------------------
             switch ($function_to_call) {
 
