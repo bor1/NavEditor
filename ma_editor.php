@@ -450,11 +450,11 @@ $(document).ready(function() {
 						</div>
 						<div class="form-group">
 							<label class="col-md-2 control-label" for="filAttachment">Foto:</label>
-							<div class="col-md-6">
+							<div class="col-md-7">
 								<input type="file" id="filAttachment" name="filAttachment" class="textBox" />
 								<img id="ajaxWaiting" src="ajax-loader.gif" border="0" style="width:16px;height:16px;border:0;display:none;" />
 							</div>
-							<div class="controls span">
+							<div class="col-md-2 controls span">
 								<input type="button" id="btnUpload" name="btnUpload" class="btn btn-light btn-primary" value="hochladen" />
 							</div>
 						</div>

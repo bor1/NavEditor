@@ -657,7 +657,7 @@ require_once('auth.php');
 
         <script id="picture-preview-template" type="text/x-handlebars-template">
 
-              <div class="span3" style="height: 400px; margin-bottom: 60px;">
+              <div class="span3">
                   <div class="thumbnail">
                       <h5>{{titel}}</h5>
                       <img src="{{url}}">
