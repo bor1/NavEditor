@@ -278,7 +278,8 @@ $ne_config_info['default_includes_js_css'] = Array(
     "jquery-1.10.1.min.js",
     "loading.js",
     "bootstrap.js",
-    "add_help.js"
+    "add_help.js",
+	"jquery.ui.accordion.min.js"
 );
 
 

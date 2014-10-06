@@ -16,7 +16,7 @@ function getDescriptionFromMetafile($patameter, $metafilepfad){
         if (file_exists($metafilepfad)){
     $metaContent = file_get_contents($metafilepfad);
     if (preg_match('/'.$patameter.'\.css[\s]*(.*)/', $metaContent, $regs)) {
-        $ret = $patameter.'.css - '.$regs[1];
+        $ret = $regs[1] . ' <span style="font-weight:normal">(' . $patameter.'.css)</span>';
     }else{
         $ret = $patameter.'.css - Keine Beschreibung gefunden!';
     }

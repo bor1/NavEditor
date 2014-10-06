@@ -110,6 +110,7 @@ function get_ma_file_dir() {
 	}
 
 	return $ma_file_dir;
+	echo $ma_file_dir;
 }
 
 $ma_file_dir1 = get_ma_file_dir();

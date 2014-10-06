@@ -73,10 +73,12 @@ $(document).ready(function() {
 
 <body id="bd_removeCaches">
 <?php require('common_nav_menu.php'); ?>
-	<div class="container page" id="wrapper">
+	<div class="container" id="wrapper">
 		<div class="page-header">
-			<h2 id="header">Caches l&ouml;schen</h2>
-		</div>
+			<h2 id="page-title" class="page-header">Caches l&ouml;schen</h2>
+        </div>
+
+
 
 
 		<div id="contentPanel1" class="well" style="max-width: 300px;">

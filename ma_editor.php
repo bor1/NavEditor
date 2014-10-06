@@ -405,12 +405,12 @@ $(document).ready(function() {
 </head>
 
 <body id="bd_MA">
-<?php require('common_nav_menu.php'); ?>
+<?php require('common_nav_menu.php');?>
 
     <div class="container">
 		<div class="page-header">
-			<h3>Personendaten für UnivIS-Plugin bearbeiten</h3>
-		</div>
+			<h2 id="page-title" class="page-header">UnivIS-Integration <small>Personendaten für UnivIS-Plugin bearbeiten</small></h2>
+        </div>
 
 		<div class="row">
 			<div id="confList" class="col-md-3">

@@ -53,14 +53,18 @@ $sp->handle_content_type();
 				</div>
 
 
-			<div class="row">
+			<div class="panel-group" id="accordion">
 				<?php foreach($sp->get_items() as $item) { ?>
-					<div class="card span12" >
-						<div class="header clearfix">
-							<h5 class="title"><a href="<?php echo $item->get_permalink(); ?>"><?php echo $item->get_title(); ?></a></h5>
-							<p class="time"><?php echo formatDate($item->get_date('j. F Y - G:i')); ?> Uhr</p>
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<p class="pull-right"><?php echo formatDate($item->get_date('j. F Y - G:i')); ?> Uhr</p>
+							<h3 class="panel-title">
+							<a href="#"><?php echo $item->get_title(); ?> </a>
+								<a href="<?php echo $item->get_permalink(); ?>" target="_blank" title="Artikel im Webworking-Blog &ouml;ffnen"> <span class="glyphicon glyphicon-new-window" style="margin-left: 10px; font-weight: normal;"></span></a>
+							</h3>
+
 						</div>
-						<div class="content"><?php echo $item->get_description(); ?></div>
+						<div class="panel-body"><?php echo $item->get_description(); ?></div>
 					</div>
 				<?php } ?>
 			</div>
@@ -69,12 +73,10 @@ $sp->handle_content_type();
 	</div>
 
 	<script>
-		$(".card").click(function() {
-			var $this = $(this);
-
-			$this.find(".content").slideDown();
-			$this.siblings().find(".content").slideUp();
+		$(".panel-heading").click(function() {
+			$(this).next(".panel-body").slideToggle();
 		});
+
 	</script>
 
 	<?php require('common_footer.php'); ?>
