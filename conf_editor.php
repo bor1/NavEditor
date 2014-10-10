@@ -712,7 +712,7 @@ $(document).ready(function() {
 					<ul></ul>
 			</div>
 
-			<div class="col-md-9" id="contentPanel2">
+			<div class="col-md-9 page" id="contentPanel2">
 				<form id="frmEdit" class="form-horizontal">
 					<fieldset id="fld_feedimport">
 						<legend>feedimport.conf</legend>
@@ -721,9 +721,9 @@ $(document).ready(function() {
 						<div id="feedimportOpts"></div>
 						<div id="feedimportGenItems"><div class="mi"></div></div>
 						<hr size="1" noshade="noshade" />
-						<input type="button" id="btnAddFeedBox" value="Feed einf&uuml;gen" class="btn btn-primary btn-light" />
-						<input type="button" id="btnAddItemFeedImport" value="Konfig-Eintrag einf&uuml;gen" class="btn btn-primary btn-light" />
-						<input type="button" id="btnUpdFeedImport" value="Speichern" class="btn btn-success btn-light" />
+						<input type="button" id="btnAddFeedBox" value="Feed einf&uuml;gen" class="btn btn-primary btn-light" style="margin:5px;" />
+						<input type="button" id="btnAddItemFeedImport" value="Konfig-Eintrag einf&uuml;gen" class="btn btn-primary btn-light" style="margin:5px;" />
+						<input type="button" id="btnUpdFeedImport" value="Speichern" class="btn btn-success btn-light" style="margin:5px;" />
 					</fieldset>
 
 					<fieldset id="fld_website">

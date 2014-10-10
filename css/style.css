@@ -183,26 +183,9 @@ div.page-header {
   margin: 30px auto;
   padding: 0 30px 30px; }
 
-.dashboard .card {
-  background: white;
-  margin-bottom: 5px;
-  padding: 10px 0;
-  border-radius: 3px;
-  border: solid 1px #e4e4e4; }
-  .dashboard .card .header {
-    padding: 0 10px; }
-    .dashboard .card .header .title {
-      float: left;
-	  line-height: inherit;}
-    .dashboard .card .header .time {
-      float: right;
-      margin: 10px 0;
-      color: #999; }
-  .dashboard .card .content {
+.dashboard .panel .panel-body {
     display: none;
-    padding: 0 10px;
-    padding-top: 14px;
-    border-top: solid 1px #e4e4e4; }
+}
 
 .nav-editor {
   margin: 40px 0; }
@@ -369,4 +352,7 @@ div.page-header {
 #previewImage img {
 	width:100%;
 	height: auto;
+}
+pre {
+	font-size: .76em;
 }

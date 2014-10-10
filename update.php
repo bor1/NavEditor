@@ -114,12 +114,12 @@ if(!file_exists("../../".$ne_config_info['website_conf_filename']) || !file_exis
 
 		<div id="updateInfo">
 
-			<div class="row">
+			<!--<div class="row">
 				<div class="update-cat col-md-2">
 					<span>Aktuell verwendete Version:</span>
 				</div>
 				<div class="col-md-1">
-					<span id="cur_ver"><?php echo($ne_config_info['version']); ?></span>
+					<span id="cur_ver"><?php //echo($ne_config_info['version']); ?></span>
 				</div>
 			</div>
 
@@ -154,7 +154,7 @@ if(!file_exists("../../".$ne_config_info['website_conf_filename']) || !file_exis
 			</div>
 
 			<hr />
-			<h3>Alternativer Layout-Vorschlag (funktioniert aber noch nicht)</h3>
+			<h3>Alternativer Layout-Vorschlag (funktioniert aber noch nicht)</h3>-->
 
 			<div class="panel panel-info">
 				<div class="panel-heading"><h3 class="panel-title">Aktuell verwendete Version: <span id="cur_ver"><?php echo($ne_config_info['version']); ?></span></h3></div>
@@ -165,14 +165,15 @@ if(!file_exists("../../".$ne_config_info['website_conf_filename']) || !file_exis
 
 			<div class="panel panel-success">
 				<div class="panel-heading">
-					<h3 class="panel-title">Stabile Version: <span id="stb_ver"></span></h3>
+					<h3 class="panel-title">Aktuelle stabile Version: <span id="stb_ver"></span></h3>
 				</div>
 				<div class="panel-body">
-					<div class="col-md-6">
-						<b>Letzte Änderungen:</b><pre id="stb_changelog" class="changelog"></pre>
+					<p><b>Letzte Änderungen:</b></p>
+					<div class="col-md-8">
+						<pre id="stb_changelog" class="changelog"></pre>
 					</div>
-					<div class="col-md-2">
-						<input type="button" id="btnDoUpdate" class="btn btn-success btn-light" value="Diese Version installieren" disabled="true" />
+					<div class="col-md-4">
+						<input type="button" id="btnDoUpdate" class="btn btn-success btn-light" value="Installieren" disabled="true" />
 					</div>
 				</div>
 			</div>
@@ -182,11 +183,12 @@ if(!file_exists("../../".$ne_config_info['website_conf_filename']) || !file_exis
 					<h3 class="panel-title">Letzte offizielle Testversion: <span id="tst_ver"></span></h3>
 				</div>
 				<div class="panel-body">
-					<div class="col-md-6">
-						<b>Letzte Änderungen:</b><pre id="tst_changelog" class="changelog"></pre>
+					<p><b>Letzte Änderungen:</b></p>
+					<div class="col-md-8">
+						<pre id="tst_changelog" class="changelog"></pre>
 					</div>
-					<div class="col-md-2">
-						<input type="button" id="btnDoTestUpdate" class="btn btn-warning btn-light" value="Diese Testversion installieren" disabled="true" />
+					<div class="col-md-4">
+						<input type="button" id="btnDoTestUpdate" class="btn btn-warning btn-light" value="Testversion installieren" disabled="true" />
 					</div>
 				</div>
 			</div>
