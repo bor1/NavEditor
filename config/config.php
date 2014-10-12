@@ -9,8 +9,8 @@ require_once(NE_DIR_ROOT . 'autoload.php');
 require_once(NE_DIR_CONFIG  . 'config_users.php');
 require_once(NE_DIR_CONFIG  . 'config_areaeditor.php');
 
-// error_reporting(E_ALL & ~E_STRICT);
-// ini_set('display_errors', 'on');
+ error_reporting(E_ALL & ~E_STRICT);
+ ini_set('display_errors', 'on');
 
 global $ne_config_info;
 global $ne_menu;
@@ -77,6 +77,12 @@ $ne_config_info['js_folder_name']   = 'js';
 
 // CSS folder name in vkdaten folder
 $ne_config_info['css_folder_name']  = 'css';
+
+// JS frontend folder name in vkdaten folder
+$ne_config_info['fe_js_folder_name']   = 'fe_js';
+
+// CSS frontend folder name in vkdaten folder
+$ne_config_info['fe_css_folder_name']  = 'fe_css';
 
 //URL to naveditor
 $ne_config_info['ne_url']           = "http://".$_SERVER['HTTP_HOST'].$ne_config_info['app_path_without_host'];

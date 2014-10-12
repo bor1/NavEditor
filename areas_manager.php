@@ -18,14 +18,14 @@ require_once('auth.php');
                 'livevalidation_standalone.compressed.js',
                 'live_validation.css',
                 'nav_tools.js'
-        )
+        );
+        
+        echo NavTools::includeFE("areas_manager");
         ?>
 
         <link rel="stylesheet" type="text/css" href="/vkdaten/tools/NavEditor3/fe_css/areas_manager.css">
-
-        <style type="text/css">
-
-        </style>
+        <script type="text/javascript" src="/vkdaten/tools/NavEditor3/fe_js/areas_manager.js"></script>
+            
 		<script type="text/javascript">
 			var _json_area_data = '<?php echo(json_encode($g_areas_settings['area_settings'])); ?>';
 		</script>

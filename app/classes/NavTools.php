@@ -8,6 +8,26 @@
 class NavTools {
 
     /**
+     * Wrapes a <script> tag around input
+     * @param String $filename
+     * @return String
+     * the tag to place between <head> tags
+     */
+    public static function wrapScriptInclude($filename){
+        return '<script type="text/javascript" src="' . $filename . '"></script>';
+    }
+    
+    /**
+     * Wrapes a <style> tag around input
+     * @param String $filename
+     * @return String
+     * the tag to place between <head> tags
+     */
+    public static function wrapStyleInclude($filename){
+        return '<link rel="stylesheet" type="text/css" href="' . $filename . '">';
+    }
+    
+    /**
      * include js und css files in html. from JS and CSS directory
      * there is an option to add default includes set like jQuery files etc..
      *
@@ -70,6 +90,34 @@ class NavTools {
             }
         }
 
+        return $retString;
+    }
+    
+    /**
+     * Includes the the .css and .js files for the frontend
+     * @param String $frontendClass
+     * the class that should be loaded
+     */
+    public static function includeFE($frontendClass){
+        global $ne_config_info;
+        
+        $retString = '';
+        
+        $path_css = $ne_config_info['ne_url'] . $ne_config_info['fe_js_folder_name'] . '/';
+        $path_js  = $ne_config_info['ne_url'] . $ne_config_info['fe_css_folder_name'] . '/';
+        
+        switch ($frontendClass){
+            case ("areas_manager"):
+                $retString .= NavTools::wrapScriptInclude($path_js . "magic.js");
+                $retString .= NavTools::wrapScriptInclude($path_js . "areas_manager.js");
+                $retString .= NavTools::wrapStyleInclude($path_css . "areas_manager.css");
+                break;
+            
+            default:
+                $retString .= "<!-- couldn\'t recognize the frontend class -->\n";
+                break;
+        }
+        
         return $retString;
     }
 
