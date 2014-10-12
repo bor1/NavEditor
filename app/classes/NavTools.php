@@ -82,11 +82,13 @@ class NavTools {
             switch (strtolower($ext)) {
                 case "js":
                     $path = $ne_config_info['ne_url'] . $ne_config_info['js_folder_name'] . "/" . $file_only;
-                    $retString .= "<script type=\"text/javascript\" src=\"" . $path . $file_params . "\"></script>\n";
+                    $retString .= NavTools::wrapScriptInclude($path . $file_params);
+                    //$retString .= "<script type=\"text/javascript\" src=\"" . $path . $file_params . "\"></script>\n";
                     break;
                 case "css":
                     $path = $ne_config_info['ne_url'] . $ne_config_info['css_folder_name'] . "/" . $file_only;
-                    $retString .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"" . $path . $file_params . "\">\n";
+                    $retString .= NavTools::wrapStyleInclude($path . $file_params);
+                    //$retString .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"" . $path . $file_params . "\">\n";
             }
         }
 
