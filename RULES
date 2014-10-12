@@ -5,16 +5,4 @@ general:
   a) Seperate .css, .js files and the php classes completly
   b) classes that are mainly used by one site should have the similiar name
   c) keep the files as small and simple as possible. Especially the .php files you access via webbrowser
-
-2 Ways:
-
-1)
- [site based]
-  a) each php has a (sub)folder with all the .css and .js files
-  b) the name of the subflder should be the same
-  c) [maybe] automatical including all .js and .css files from this folder
-
-2)
- [type-based]
-  a) all .css files are in the css subfolder, all .js files in the js subfolder, etc
-  b) all php classes should be in a folder ... (I think this is "class" right now ...)
+  d) all .css files are in the css subfolder, all .js files in the fe_js subfolder, etc
