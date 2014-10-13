@@ -14,16 +14,16 @@
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
  *
- * 	* Redistributions of source code must retain the above copyright notice, this list of
- * 	  conditions and the following disclaimer.
+ *     * Redistributions of source code must retain the above copyright notice, this list of
+ *       conditions and the following disclaimer.
  *
- * 	* Redistributions in binary form must reproduce the above copyright notice, this list
- * 	  of conditions and the following disclaimer in the documentation and/or other materials
- * 	  provided with the distribution.
+ *     * Redistributions in binary form must reproduce the above copyright notice, this list
+ *       of conditions and the following disclaimer in the documentation and/or other materials
+ *       provided with the distribution.
  *
- * 	* Neither the name of the SimplePie Team nor the names of its contributors may be used
- * 	  to endorse or promote products derived from this software without specific prior
- * 	  written permission.
+ *     * Neither the name of the SimplePie Team nor the names of its contributors may be used
+ *       to endorse or promote products derived from this software without specific prior
+ *       written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
@@ -413,1128 +413,1128 @@ define('SIMPLEPIE_FILE_SOURCE_FILE_GET_CONTENTS', 16);
  */
 class SimplePie
 {
-	/**
-	 * @var array Raw data
-	 * @access private
-	 */
-	public $data = array();
-
-	/**
-	 * @var mixed Error string
-	 * @access private
-	 */
-	public $error;
-
-	/**
-	 * @var object Instance of SimplePie_Sanitize (or other class)
-	 * @see SimplePie::set_sanitize_class()
-	 * @access private
-	 */
-	public $sanitize;
-
-	/**
-	 * @var string SimplePie Useragent
-	 * @see SimplePie::set_useragent()
-	 * @access private
-	 */
-	public $useragent = SIMPLEPIE_USERAGENT;
-
-	/**
-	 * @var string Feed URL
-	 * @see SimplePie::set_feed_url()
-	 * @access private
-	 */
-	public $feed_url;
-
-	/**
-	 * @var object Instance of SimplePie_File to use as a feed
-	 * @see SimplePie::set_file()
-	 * @access private
-	 */
-	public $file;
-
-	/**
-	 * @var string Raw feed data
-	 * @see SimplePie::set_raw_data()
-	 * @access private
-	 */
-	public $raw_data;
-
-	/**
-	 * @var int Timeout for fetching remote files
-	 * @see SimplePie::set_timeout()
-	 * @access private
-	 */
-	public $timeout = 10;
-
-	/**
-	 * @var bool Forces fsockopen() to be used for remote files instead
-	 * of cURL, even if a new enough version is installed
-	 * @see SimplePie::force_fsockopen()
-	 * @access private
-	 */
-	public $force_fsockopen = false;
-
-	/**
-	 * @var bool Force the given data/URL to be treated as a feed no matter what
-	 * it appears like
-	 * @see SimplePie::force_feed()
-	 * @access private
-	 */
-	public $force_feed = false;
-
-	/**
-	 * @var bool Enable/Disable Caching
-	 * @see SimplePie::enable_cache()
-	 * @access private
-	 */
-	public $cache = true;
-
-	/**
-	 * @var int Cache duration (in seconds)
-	 * @see SimplePie::set_cache_duration()
-	 * @access private
-	 */
-	public $cache_duration = 3600;
-
-	/**
-	 * @var int Auto-discovery cache duration (in seconds)
-	 * @see SimplePie::set_autodiscovery_cache_duration()
-	 * @access private
-	 */
-	public $autodiscovery_cache_duration = 604800; // 7 Days.
-
-	/**
-	 * @var string Cache location (relative to executing script)
-	 * @see SimplePie::set_cache_location()
-	 * @access private
-	 */
-	public $cache_location = './cache';
-
-	/**
-	 * @var string Function that creates the cache filename
-	 * @see SimplePie::set_cache_name_function()
-	 * @access private
-	 */
-	public $cache_name_function = 'md5';
-
-	/**
-	 * @var bool Reorder feed by date descending
-	 * @see SimplePie::enable_order_by_date()
-	 * @access private
-	 */
-	public $order_by_date = true;
-
-	/**
-	 * @var mixed Force input encoding to be set to the follow value
-	 * (false, or anything type-cast to false, disables this feature)
-	 * @see SimplePie::set_input_encoding()
-	 * @access private
-	 */
-	public $input_encoding = false;
-
-	/**
-	 * @var int Feed Autodiscovery Level
-	 * @see SimplePie::set_autodiscovery_level()
-	 * @access private
-	 */
-	public $autodiscovery = SIMPLEPIE_LOCATOR_ALL;
-
-	/**
-	 * Class registry object
-	 *
-	 * @var SimplePie_Registry
-	 */
-	public $registry;
-
-	/**
-	 * @var int Maximum number of feeds to check with autodiscovery
-	 * @see SimplePie::set_max_checked_feeds()
-	 * @access private
-	 */
-	public $max_checked_feeds = 10;
-
-	/**
-	 * @var array All the feeds found during the autodiscovery process
-	 * @see SimplePie::get_all_discovered_feeds()
-	 * @access private
-	 */
-	public $all_discovered_feeds = array();
-
-	/**
-	 * @var string Web-accessible path to the handler_image.php file.
-	 * @see SimplePie::set_image_handler()
-	 * @access private
-	 */
-	public $image_handler = '';
-
-	/**
-	 * @var array Stores the URLs when multiple feeds are being initialized.
-	 * @see SimplePie::set_feed_url()
-	 * @access private
-	 */
-	public $multifeed_url = array();
-
-	/**
-	 * @var array Stores SimplePie objects when multiple feeds initialized.
-	 * @access private
-	 */
-	public $multifeed_objects = array();
-
-	/**
-	 * @var array Stores the get_object_vars() array for use with multifeeds.
-	 * @see SimplePie::set_feed_url()
-	 * @access private
-	 */
-	public $config_settings = null;
-
-	/**
-	 * @var integer Stores the number of items to return per-feed with multifeeds.
-	 * @see SimplePie::set_item_limit()
-	 * @access private
-	 */
-	public $item_limit = 0;
-
-	/**
-	 * @var array Stores the default attributes to be stripped by strip_attributes().
-	 * @see SimplePie::strip_attributes()
-	 * @access private
-	 */
-	public $strip_attributes = array('bgsound', 'class', 'expr', 'id', 'style', 'onclick', 'onerror', 'onfinish', 'onmouseover', 'onmouseout', 'onfocus', 'onblur', 'lowsrc', 'dynsrc');
-
-	/**
-	 * @var array Stores the default tags to be stripped by strip_htmltags().
-	 * @see SimplePie::strip_htmltags()
-	 * @access private
-	 */
-	public $strip_htmltags = array('base', 'blink', 'body', 'doctype', 'embed', 'font', 'form', 'frame', 'frameset', 'html', 'iframe', 'input', 'marquee', 'meta', 'noscript', 'object', 'param', 'script', 'style');
-
-	/**
-	 * The SimplePie class contains feed level data and options
-	 *
-	 * To use SimplePie, create the SimplePie object with no parameters. You can
-	 * then set configuration options using the provided methods. After setting
-	 * them, you must initialise the feed using $feed->init(). At that point the
-	 * object's methods and properties will be available to you.
-	 *
-	 * Previously, it was possible to pass in the feed URL along with cache
-	 * options directly into the constructor. This has been removed as of 1.3 as
-	 * it caused a lot of confusion.
-	 *
-	 * @since 1.0 Preview Release
-	 */
-	public function __construct()
-	{
-		if (version_compare(PHP_VERSION, '5.2', '<'))
-		{
-			trigger_error('PHP 4.x, 5.0 and 5.1 are no longer supported. Please upgrade to PHP 5.2 or newer.');
-			die();
-		}
-
-		// Other objects, instances created here so we can set options on them
-		$this->sanitize = new SimplePie_Sanitize();
-		$this->registry = new SimplePie_Registry();
-
-		if (func_num_args() > 0)
-		{
-			$level = defined('E_USER_DEPRECATED') ? E_USER_DEPRECATED : E_USER_WARNING;
-			trigger_error('Passing parameters to the constructor is no longer supported. Please use set_feed_url(), set_cache_location(), and set_cache_location() directly.', $level);
-
-			$args = func_get_args();
-			switch (count($args)) {
-				case 3:
-					$this->set_cache_duration($args[2]);
-				case 2:
-					$this->set_cache_location($args[1]);
-				case 1:
-					$this->set_feed_url($args[0]);
-					$this->init();
-			}
-		}
-	}
-
-	/**
-	 * Used for converting object to a string
-	 */
-	public function __toString()
-	{
-		return md5(serialize($this->data));
-	}
-
-	/**
-	 * Remove items that link back to this before destroying this object
-	 */
-	public function __destruct()
-	{
-		if ((version_compare(PHP_VERSION, '5.3', '<') || !gc_enabled()) && !ini_get('zend.ze1_compatibility_mode'))
-		{
-			if (!empty($this->data['items']))
-			{
-				foreach ($this->data['items'] as $item)
-				{
-					$item->__destruct();
-				}
-				unset($item, $this->data['items']);
-			}
-			if (!empty($this->data['ordered_items']))
-			{
-				foreach ($this->data['ordered_items'] as $item)
-				{
-					$item->__destruct();
-				}
-				unset($item, $this->data['ordered_items']);
-			}
-		}
-	}
-
-	/**
-	 * Force the given data/URL to be treated as a feed
-	 *
-	 * This tells SimplePie to ignore the content-type provided by the server.
-	 * Be careful when using this option, as it will also disable autodiscovery.
-	 *
-	 * @since 1.1
-	 * @param bool $enable Force the given data/URL to be treated as a feed
-	 */
-	public function force_feed($enable = false)
-	{
-		$this->force_feed = (bool) $enable;
-	}
-
-	/**
-	 * Set the URL of the feed you want to parse
-	 *
-	 * This allows you to enter the URL of the feed you want to parse, or the
-	 * website you want to try to use auto-discovery on. This takes priority
-	 * over any set raw data.
-	 *
-	 * You can set multiple feeds to mash together by passing an array instead
-	 * of a string for the $url. Remember that with each additional feed comes
-	 * additional processing and resources.
-	 *
-	 * @since 1.0 Preview Release
-	 * @see set_raw_data()
-	 * @param string|array $url This is the URL (or array of URLs) that you want to parse.
-	 */
-	public function set_feed_url($url)
-	{
-		$this->multifeed_url = array();
-		if (is_array($url))
-		{
-			foreach ($url as $value)
-			{
-				$this->multifeed_url[] = $this->registry->call('Misc', 'fix_protocol', array($value, 1));
-			}
-		}
-		else
-		{
-			$this->feed_url = $this->registry->call('Misc', 'fix_protocol', array($url, 1));
-		}
-	}
-
-	/**
-	 * Set an instance of {@see SimplePie_File} to use as a feed
-	 *
-	 * @param SimplePie_File &$file
-	 * @return bool True on success, false on failure
-	 */
-	public function set_file(&$file)
-	{
-		if ($file instanceof SimplePie_File)
-		{
-			$this->feed_url = $file->url;
-			$this->file =& $file;
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Set the raw XML data to parse
-	 *
-	 * Allows you to use a string of RSS/Atom data instead of a remote feed.
-	 *
-	 * If you have a feed available as a string in PHP, you can tell SimplePie
-	 * to parse that data string instead of a remote feed. Any set feed URL
-	 * takes precedence.
-	 *
-	 * @since 1.0 Beta 3
-	 * @param string $data RSS or Atom data as a string.
-	 * @see set_feed_url()
-	 */
-	public function set_raw_data($data)
-	{
-		$this->raw_data = $data;
-	}
-
-	/**
-	 * Set the the default timeout for fetching remote feeds
-	 *
-	 * This allows you to change the maximum time the feed's server to respond
-	 * and send the feed back.
-	 *
-	 * @since 1.0 Beta 3
-	 * @param int $timeout The maximum number of seconds to spend waiting to retrieve a feed.
-	 */
-	public function set_timeout($timeout = 10)
-	{
-		$this->timeout = (int) $timeout;
-	}
-
-	/**
-	 * Force SimplePie to use fsockopen() instead of cURL
-	 *
-	 * @since 1.0 Beta 3
-	 * @param bool $enable Force fsockopen() to be used
-	 */
-	public function force_fsockopen($enable = false)
-	{
-		$this->force_fsockopen = (bool) $enable;
-	}
-
-	/**
-	 * Enable/disable caching in SimplePie.
-	 *
-	 * This option allows you to disable caching all-together in SimplePie.
-	 * However, disabling the cache can lead to longer load times.
-	 *
-	 * @since 1.0 Preview Release
-	 * @param bool $enable Enable caching
-	 */
-	public function enable_cache($enable = true)
-	{
-		$this->cache = (bool) $enable;
-	}
-
-	/**
-	 * Set the length of time (in seconds) that the contents of a feed will be
-	 * cached
-	 *
-	 * @param int $seconds The feed content cache duration
-	 */
-	public function set_cache_duration($seconds = 3600)
-	{
-		$this->cache_duration = (int) $seconds;
-	}
-
-	/**
-	 * Set the length of time (in seconds) that the autodiscovered feed URL will
-	 * be cached
-	 *
-	 * @param int $seconds The autodiscovered feed URL cache duration.
-	 */
-	public function set_autodiscovery_cache_duration($seconds = 604800)
-	{
-		$this->autodiscovery_cache_duration = (int) $seconds;
-	}
-
-	/**
-	 * Set the file system location where the cached files should be stored
-	 *
-	 * @param string $location The file system location.
-	 */
-	public function set_cache_location($location = './cache')
-	{
-		$this->cache_location = (string) $location;
-	}
-
-	/**
-	 * Set whether feed items should be sorted into reverse chronological order
-	 *
-	 * @param bool $enable Sort as reverse chronological order.
-	 */
-	public function enable_order_by_date($enable = true)
-	{
-		$this->order_by_date = (bool) $enable;
-	}
-
-	/**
-	 * Set the character encoding used to parse the feed
-	 *
-	 * This overrides the encoding reported by the feed, however it will fall
-	 * back to the normal encoding detection if the override fails
-	 *
-	 * @param string $encoding Character encoding
-	 */
-	public function set_input_encoding($encoding = false)
-	{
-		if ($encoding)
-		{
-			$this->input_encoding = (string) $encoding;
-		}
-		else
-		{
-			$this->input_encoding = false;
-		}
-	}
-
-	/**
-	 * Set how much feed autodiscovery to do
-	 *
-	 * @see SIMPLEPIE_LOCATOR_NONE
-	 * @see SIMPLEPIE_LOCATOR_AUTODISCOVERY
-	 * @see SIMPLEPIE_LOCATOR_LOCAL_EXTENSION
-	 * @see SIMPLEPIE_LOCATOR_LOCAL_BODY
-	 * @see SIMPLEPIE_LOCATOR_REMOTE_EXTENSION
-	 * @see SIMPLEPIE_LOCATOR_REMOTE_BODY
-	 * @see SIMPLEPIE_LOCATOR_ALL
-	 * @param int $level Feed Autodiscovery Level (level can be a combination of the above constants, see bitwise OR operator)
-	 */
-	public function set_autodiscovery_level($level = SIMPLEPIE_LOCATOR_ALL)
-	{
-		$this->autodiscovery = (int) $level;
-	}
-
-	/**
-	 * Get the class registry
-	 *
-	 * Use this to override SimplePie's default classes
-	 * @see SimplePie_Registry
-	 * @return SimplePie_Registry
-	 */
-	public function &get_registry()
-	{
-		return $this->registry;
-	}
-
-	/**#@+
-	 * Useful when you are overloading or extending SimplePie's default classes.
-	 *
-	 * @deprecated Use {@see get_registry()} instead
-	 * @link http://php.net/manual/en/language.oop5.basic.php#language.oop5.basic.extends PHP5 extends documentation
-	 * @param string $class Name of custom class
-	 * @return boolean True on success, false otherwise
-	 */
-	/**
-	 * Set which class SimplePie uses for caching
-	 */
-	public function set_cache_class($class = 'SimplePie_Cache')
-	{
-		return $this->registry->register('Cache', $class, true);
-	}
-
-	/**
-	 * Set which class SimplePie uses for auto-discovery
-	 */
-	public function set_locator_class($class = 'SimplePie_Locator')
-	{
-		return $this->registry->register('Locator', $class, true);
-	}
-
-	/**
-	 * Set which class SimplePie uses for XML parsing
-	 */
-	public function set_parser_class($class = 'SimplePie_Parser')
-	{
-		return $this->registry->register('Parser', $class, true);
-	}
-
-	/**
-	 * Set which class SimplePie uses for remote file fetching
-	 */
-	public function set_file_class($class = 'SimplePie_File')
-	{
-		return $this->registry->register('File', $class, true);
-	}
-
-	/**
-	 * Set which class SimplePie uses for data sanitization
-	 */
-	public function set_sanitize_class($class = 'SimplePie_Sanitize')
-	{
-		return $this->registry->register('Sanitize', $class, true);
-	}
-
-	/**
-	 * Set which class SimplePie uses for handling feed items
-	 */
-	public function set_item_class($class = 'SimplePie_Item')
-	{
-		return $this->registry->register('Item', $class, true);
-	}
-
-	/**
-	 * Set which class SimplePie uses for handling author data
-	 */
-	public function set_author_class($class = 'SimplePie_Author')
-	{
-		return $this->registry->register('Author', $class, true);
-	}
-
-	/**
-	 * Set which class SimplePie uses for handling category data
-	 */
-	public function set_category_class($class = 'SimplePie_Category')
-	{
-		return $this->registry->register('Category', $class, true);
-	}
-
-	/**
-	 * Set which class SimplePie uses for feed enclosures
-	 */
-	public function set_enclosure_class($class = 'SimplePie_Enclosure')
-	{
-		return $this->registry->register('Enclosure', $class, true);
-	}
-
-	/**
-	 * Set which class SimplePie uses for `<media:text>` captions
-	 */
-	public function set_caption_class($class = 'SimplePie_Caption')
-	{
-		return $this->registry->register('Caption', $class, true);
-	}
-
-	/**
-	 * Set which class SimplePie uses for `<media:copyright>`
-	 */
-	public function set_copyright_class($class = 'SimplePie_Copyright')
-	{
-		return $this->registry->register('Copyright', $class, true);
-	}
-
-	/**
-	 * Set which class SimplePie uses for `<media:credit>`
-	 */
-	public function set_credit_class($class = 'SimplePie_Credit')
-	{
-		return $this->registry->register('Credit', $class, true);
-	}
-
-	/**
-	 * Set which class SimplePie uses for `<media:rating>`
-	 */
-	public function set_rating_class($class = 'SimplePie_Rating')
-	{
-		return $this->registry->register('Rating', $class, true);
-	}
-
-	/**
-	 * Set which class SimplePie uses for `<media:restriction>`
-	 */
-	public function set_restriction_class($class = 'SimplePie_Restriction')
-	{
-		return $this->registry->register('Restriction', $class, true);
-	}
-
-	/**
-	 * Set which class SimplePie uses for content-type sniffing
-	 */
-	public function set_content_type_sniffer_class($class = 'SimplePie_Content_Type_Sniffer')
-	{
-		return $this->registry->register('Content_Type_Sniffer', $class, true);
-	}
-
-	/**
-	 * Set which class SimplePie uses item sources
-	 */
-	public function set_source_class($class = 'SimplePie_Source')
-	{
-		return $this->registry->register('Source', $class, true);
-	}
-	/**#@-*/
-
-	/**
-	 * Set the user agent string
-	 *
-	 * @param string $ua New user agent string.
-	 */
-	public function set_useragent($ua = SIMPLEPIE_USERAGENT)
-	{
-		$this->useragent = (string) $ua;
-	}
-
-	/**
-	 * Set callback function to create cache filename with
-	 *
-	 * @param mixed $function Callback function
-	 */
-	public function set_cache_name_function($function = 'md5')
-	{
-		if (is_callable($function))
-		{
-			$this->cache_name_function = $function;
-		}
-	}
-
-	/**
-	 * Set options to make SP as fast as possible
-	 *
-	 * Forgoes a substantial amount of data sanitization in favor of speed. This
-	 * turns SimplePie into a dumb parser of feeds.
-	 *
-	 * @param bool $set Whether to set them or not
-	 */
-	public function set_stupidly_fast($set = false)
-	{
-		if ($set)
-		{
-			$this->enable_order_by_date(false);
-			$this->remove_div(false);
-			$this->strip_comments(false);
-			$this->strip_htmltags(false);
-			$this->strip_attributes(false);
-			$this->set_image_handler(false);
-		}
-	}
-
-	/**
-	 * Set maximum number of feeds to check with autodiscovery
-	 *
-	 * @param int $max Maximum number of feeds to check
-	 */
-	public function set_max_checked_feeds($max = 10)
-	{
-		$this->max_checked_feeds = (int) $max;
-	}
-
-	public function remove_div($enable = true)
-	{
-		$this->sanitize->remove_div($enable);
-	}
-
-	public function strip_htmltags($tags = '', $encode = null)
-	{
-		if ($tags === '')
-		{
-			$tags = $this->strip_htmltags;
-		}
-		$this->sanitize->strip_htmltags($tags);
-		if ($encode !== null)
-		{
-			$this->sanitize->encode_instead_of_strip($tags);
-		}
-	}
-
-	public function encode_instead_of_strip($enable = true)
-	{
-		$this->sanitize->encode_instead_of_strip($enable);
-	}
-
-	public function strip_attributes($attribs = '')
-	{
-		if ($attribs === '')
-		{
-			$attribs = $this->strip_attributes;
-		}
-		$this->sanitize->strip_attributes($attribs);
-	}
-
-	/**
-	 * Set the output encoding
-	 *
-	 * Allows you to override SimplePie's output to match that of your webpage.
-	 * This is useful for times when your webpages are not being served as
-	 * UTF-8.  This setting will be obeyed by {@see handle_content_type()}, and
-	 * is similar to {@see set_input_encoding()}.
-	 *
-	 * It should be noted, however, that not all character encodings can support
-	 * all characters.  If your page is being served as ISO-8859-1 and you try
-	 * to display a Japanese feed, you'll likely see garbled characters.
-	 * Because of this, it is highly recommended to ensure that your webpages
-	 * are served as UTF-8.
-	 *
-	 * The number of supported character encodings depends on whether your web
-	 * host supports {@link http://php.net/mbstring mbstring},
-	 * {@link http://php.net/iconv iconv}, or both. See
-	 * {@link http://simplepie.org/wiki/faq/Supported_Character_Encodings} for
-	 * more information.
-	 *
-	 * @param string $encoding
-	 */
-	public function set_output_encoding($encoding = 'UTF-8')
-	{
-		$this->sanitize->set_output_encoding($encoding);
-	}
-
-	public function strip_comments($strip = false)
-	{
-		$this->sanitize->strip_comments($strip);
-	}
-
-	/**
-	 * Set element/attribute key/value pairs of HTML attributes
-	 * containing URLs that need to be resolved relative to the feed
-	 *
-	 * Defaults to |a|@href, |area|@href, |blockquote|@cite, |del|@cite,
-	 * |form|@action, |img|@longdesc, |img|@src, |input|@src, |ins|@cite,
-	 * |q|@cite
-	 *
-	 * @since 1.0
-	 * @param array|null $element_attribute Element/attribute key/value pairs, null for default
-	 */
-	public function set_url_replacements($element_attribute = null)
-	{
-		$this->sanitize->set_url_replacements($element_attribute);
-	}
-
-	/**
-	 * Set the handler to enable the display of cached images.
-	 *
-	 * @param str $page Web-accessible path to the handler_image.php file.
-	 * @param str $qs The query string that the value should be passed to.
-	 */
-	public function set_image_handler($page = false, $qs = 'i')
-	{
-		if ($page !== false)
-		{
-			$this->sanitize->set_image_handler($page . '?' . $qs . '=');
-		}
-		else
-		{
-			$this->image_handler = '';
-		}
-	}
-
-	/**
-	 * Set the limit for items returned per-feed with multifeeds
-	 *
-	 * @param integer $limit The maximum number of items to return.
-	 */
-	public function set_item_limit($limit = 0)
-	{
-		$this->item_limit = (int) $limit;
-	}
-
-	/**
-	 * Initialize the feed object
-	 *
-	 * This is what makes everything happen.  Period.  This is where all of the
-	 * configuration options get processed, feeds are fetched, cached, and
-	 * parsed, and all of that other good stuff.
-	 *
-	 * @return boolean True if successful, false otherwise
-	 */
-	public function init()
-	{
-		// Check absolute bare minimum requirements.
-		if (!extension_loaded('xml') || !extension_loaded('pcre'))
-		{
-			return false;
-		}
-		// Then check the xml extension is sane (i.e., libxml 2.7.x issue on PHP < 5.2.9 and libxml 2.7.0 to 2.7.2 on any version) if we don't have xmlreader.
-		elseif (!extension_loaded('xmlreader'))
-		{
-			static $xml_is_sane = null;
-			if ($xml_is_sane === null)
-			{
-				$parser_check = xml_parser_create();
-				xml_parse_into_struct($parser_check, '<foo>&amp;</foo>', $values);
-				xml_parser_free($parser_check);
-				$xml_is_sane = isset($values[0]['value']);
-			}
-			if (!$xml_is_sane)
-			{
-				return false;
-			}
-		}
-
-		if (method_exists($this->sanitize, 'set_registry'))
-		{
-			$this->sanitize->set_registry($this->registry);
-		}
-
-		// Pass whatever was set with config options over to the sanitizer.
-		// Pass the classes in for legacy support; new classes should use the registry instead
-		$this->sanitize->pass_cache_data($this->cache, $this->cache_location, $this->cache_name_function, $this->registry->get_class('Cache'));
-		$this->sanitize->pass_file_data($this->registry->get_class('File'), $this->timeout, $this->useragent, $this->force_fsockopen);
-
-		if (!empty($this->multifeed_url))
-		{
-			$i = 0;
-			$success = 0;
-			$this->multifeed_objects = array();
-			$this->error = array();
-			foreach ($this->multifeed_url as $url)
-			{
-				$this->multifeed_objects[$i] = clone $this;
-				$this->multifeed_objects[$i]->set_feed_url($url);
-				$single_success = $this->multifeed_objects[$i]->init();
-				$success |= $single_success;
-				if (!$single_success)
-				{
-					$this->error[$i] = $this->multifeed_objects[$i]->error();
-				}
-				$i++;
-			}
-			return (bool) $success;
-		}
-		elseif ($this->feed_url === null && $this->raw_data === null)
-		{
-			return false;
-		}
-
-		$this->error = null;
-		$this->data = array();
-		$this->multifeed_objects = array();
-		$cache = false;
-
-		if ($this->feed_url !== null)
-		{
-			$parsed_feed_url = $this->registry->call('Misc', 'parse_url', array($this->feed_url));
-
-			// Decide whether to enable caching
-			if ($this->cache && $parsed_feed_url['scheme'] !== '')
-			{
-				$cache = $this->registry->call('Cache', 'get_handler', array($this->cache_location, call_user_func($this->cache_name_function, $this->feed_url), 'spc'));
-			}
-
-			// Fetch the data via SimplePie_File into $this->raw_data
-			if (($fetched = $this->fetch_data($cache)) === true)
-			{
-				return true;
-			}
-			elseif ($fetched === false) {
-				return false;
-			}
-
-			list($headers, $sniffed) = $fetched;
-		}
-
-		// Set up array of possible encodings
-		$encodings = array();
-
-		// First check to see if input has been overridden.
-		if ($this->input_encoding !== false)
-		{
-			$encodings[] = $this->input_encoding;
-		}
-
-		$application_types = array('application/xml', 'application/xml-dtd', 'application/xml-external-parsed-entity');
-		$text_types = array('text/xml', 'text/xml-external-parsed-entity');
-
-		// RFC 3023 (only applies to sniffed content)
-		if (isset($sniffed))
-		{
-			if (in_array($sniffed, $application_types) || substr($sniffed, 0, 12) === 'application/' && substr($sniffed, -4) === '+xml')
-			{
-				if (isset($headers['content-type']) && preg_match('/;\x20?charset=([^;]*)/i', $headers['content-type'], $charset))
-				{
-					$encodings[] = strtoupper($charset[1]);
-				}
-				$encodings = array_merge($encodings, $this->registry->call('Misc', 'xml_encoding', array($this->raw_data, &$this->registry)));
-				$encodings[] = 'UTF-8';
-			}
-			elseif (in_array($sniffed, $text_types) || substr($sniffed, 0, 5) === 'text/' && substr($sniffed, -4) === '+xml')
-			{
-				if (isset($headers['content-type']) && preg_match('/;\x20?charset=([^;]*)/i', $headers['content-type'], $charset))
-				{
-					$encodings[] = $charset[1];
-				}
-				$encodings[] = 'US-ASCII';
-			}
-			// Text MIME-type default
-			elseif (substr($sniffed, 0, 5) === 'text/')
-			{
-				$encodings[] = 'US-ASCII';
-			}
-		}
-
-		// Fallback to XML 1.0 Appendix F.1/UTF-8/ISO-8859-1
-		$encodings = array_merge($encodings, $this->registry->call('Misc', 'xml_encoding', array($this->raw_data, &$this->registry)));
-		$encodings[] = 'UTF-8';
-		$encodings[] = 'ISO-8859-1';
-
-		// There's no point in trying an encoding twice
-		$encodings = array_unique($encodings);
-
-		// Loop through each possible encoding, till we return something, or run out of possibilities
-		foreach ($encodings as $encoding)
-		{
-			// Change the encoding to UTF-8 (as we always use UTF-8 internally)
-			if ($utf8_data = $this->registry->call('Misc', 'change_encoding', array($this->raw_data, $encoding, 'UTF-8')))
-			{
-				// Create new parser
-				$parser = $this->registry->create('Parser');
-
-				// If it's parsed fine
-				if ($parser->parse($utf8_data, 'UTF-8'))
-				{
-					$this->data = $parser->get_data();
-					if (!($this->get_type() & ~SIMPLEPIE_TYPE_NONE))
-					{
-						$this->error = "A feed could not be found at $this->feed_url. This does not appear to be a valid RSS or Atom feed.";
-						$this->registry->call('Misc', 'error', array($this->error, E_USER_NOTICE, __FILE__, __LINE__));
-						return false;
-					}
-
-					if (isset($headers))
-					{
-						$this->data['headers'] = $headers;
-					}
-					$this->data['build'] = SIMPLEPIE_BUILD;
-
-					// Cache the file if caching is enabled
-					if ($cache && !$cache->save($this))
-					{
-						trigger_error("$this->cache_location is not writeable. Make sure you've set the correct relative or absolute path, and that the location is server-writable.", E_USER_WARNING);
-					}
-					return true;
-				}
-			}
-		}
-
-		if (isset($parser))
-		{
-			// We have an error, just set SimplePie_Misc::error to it and quit
-			$this->error = sprintf('This XML document is invalid, likely due to invalid characters. XML error: %s at line %d, column %d', $parser->get_error_string(), $parser->get_current_line(), $parser->get_current_column());
-		}
-		else
-		{
-			$this->error = 'The data could not be converted to UTF-8. You MUST have either the iconv or mbstring extension installed. Upgrading to PHP 5.x (which includes iconv) is highly recommended.';
-		}
-
-		$this->registry->call('Misc', 'error', array($this->error, E_USER_NOTICE, __FILE__, __LINE__));
-
-		return false;
-	}
-
-	/**
-	 * Fetch the data via SimplePie_File
-	 *
-	 * If the data is already cached, attempt to fetch it from there instead
-	 * @param SimplePie_Cache|false $cache Cache handler, or false to not load from the cache
-	 * @return array|true Returns true if the data was loaded from the cache, or an array of HTTP headers and sniffed type
-	 */
-	protected function fetch_data(&$cache)
-	{
-		// If it's enabled, use the cache
-		if ($cache)
-		{
-			// Load the Cache
-			$this->data = $cache->load();
-			if (!empty($this->data))
-			{
-				// If the cache is for an outdated build of SimplePie
-				if (!isset($this->data['build']) || $this->data['build'] !== SIMPLEPIE_BUILD)
-				{
-					$cache->unlink();
-					$this->data = array();
-				}
-				// If we've hit a collision just rerun it with caching disabled
-				elseif (isset($this->data['url']) && $this->data['url'] !== $this->feed_url)
-				{
-					$cache = false;
-					$this->data = array();
-				}
-				// If we've got a non feed_url stored (if the page isn't actually a feed, or is a redirect) use that URL.
-				elseif (isset($this->data['feed_url']))
-				{
-					// If the autodiscovery cache is still valid use it.
-					if ($cache->mtime() + $this->autodiscovery_cache_duration > time())
-					{
-						// Do not need to do feed autodiscovery yet.
-						if ($this->data['feed_url'] !== $this->data['url'])
-						{
-							$this->set_feed_url($this->data['feed_url']);
-							return $this->init();
-						}
-
-						$cache->unlink();
-						$this->data = array();
-					}
-				}
-				// Check if the cache has been updated
-				elseif ($cache->mtime() + $this->cache_duration < time())
-				{
-					// If we have last-modified and/or etag set
-					if (isset($this->data['headers']['last-modified']) || isset($this->data['headers']['etag']))
-					{
-						$headers = array(
-							'Accept' => 'application/atom+xml, application/rss+xml, application/rdf+xml;q=0.9, application/xml;q=0.8, text/xml;q=0.8, text/html;q=0.7, unknown/unknown;q=0.1, application/unknown;q=0.1, */*;q=0.1',
-						);
-						if (isset($this->data['headers']['last-modified']))
-						{
-							$headers['if-modified-since'] = $this->data['headers']['last-modified'];
-						}
-						if (isset($this->data['headers']['etag']))
-						{
-							$headers['if-none-match'] = $this->data['headers']['etag'];
-						}
-
-						$file = $this->registry->create('File', array($this->feed_url, $this->timeout/10, 5, $headers, $this->useragent, $this->force_fsockopen));
-
-						if ($file->success)
-						{
-							if ($file->status_code === 304)
-							{
-								$cache->touch();
-								return true;
-							}
-						}
-						else
-						{
-							unset($file);
-						}
-					}
-				}
-				// If the cache is still valid, just return true
-				else
-				{
-					$this->raw_data = false;
-					return true;
-				}
-			}
-			// If the cache is empty, delete it
-			else
-			{
-				$cache->unlink();
-				$this->data = array();
-			}
-		}
-		// If we don't already have the file (it'll only exist if we've opened it to check if the cache has been modified), open it.
-		if (!isset($file))
-		{
-			if ($this->file instanceof SimplePie_File && $this->file->url === $this->feed_url)
-			{
-				$file =& $this->file;
-			}
-			else
-			{
-				$headers = array(
-					'Accept' => 'application/atom+xml, application/rss+xml, application/rdf+xml;q=0.9, application/xml;q=0.8, text/xml;q=0.8, text/html;q=0.7, unknown/unknown;q=0.1, application/unknown;q=0.1, */*;q=0.1',
-				);
-				$file = $this->registry->create('File', array($this->feed_url, $this->timeout, 5, $headers, $this->useragent, $this->force_fsockopen));
-			}
-		}
-		// If the file connection has an error, set SimplePie::error to that and quit
-		if (!$file->success && !($file->method & SIMPLEPIE_FILE_SOURCE_REMOTE === 0 || ($file->status_code === 200 || $file->status_code > 206 && $file->status_code < 300)))
-		{
-			$this->error = $file->error;
-			return !empty($this->data);
-		}
-
-		if (!$this->force_feed)
-		{
-			// Check if the supplied URL is a feed, if it isn't, look for it.
-			$locate = $this->registry->create('Locator', array(&$file, $this->timeout, $this->useragent, $this->max_checked_feeds));
-
-			if (!$locate->is_feed($file))
-			{
-				// We need to unset this so that if SimplePie::set_file() has been called that object is untouched
-				unset($file);
-				try
-				{
-					if (!($file = $locate->find($this->autodiscovery, $this->all_discovered_feeds)))
-					{
-						$this->error = "A feed could not be found at $this->feed_url. A feed with an invalid mime type may fall victim to this error, or " . SIMPLEPIE_NAME . " was unable to auto-discover it.. Use force_feed() if you are certain this URL is a real feed.";
-						$this->registry->call('Misc', 'error', array($this->error, E_USER_NOTICE, __FILE__, __LINE__));
-						return false;
-					}
-				}
-				catch (SimplePie_Exception $e)
-				{
-					// This is usually because DOMDocument doesn't exist
-					$this->error = $e->getMessage();
-					$this->registry->call('Misc', 'error', array($this->error, E_USER_NOTICE, $e->getFile(), $e->getLine()));
-					return false;
-				}
-				if ($cache)
-				{
-					$this->data = array('url' => $this->feed_url, 'feed_url' => $file->url, 'build' => SIMPLEPIE_BUILD);
-					if (!$cache->save($this))
-					{
-						trigger_error("$this->cache_location is not writeable. Make sure you've set the correct relative or absolute path, and that the location is server-writable.", E_USER_WARNING);
+    /**
+     * @var array Raw data
+     * @access private
+     */
+    public $data = array();
+
+    /**
+     * @var mixed Error string
+     * @access private
+     */
+    public $error;
+
+    /**
+     * @var object Instance of SimplePie_Sanitize (or other class)
+     * @see SimplePie::set_sanitize_class()
+     * @access private
+     */
+    public $sanitize;
+
+    /**
+     * @var string SimplePie Useragent
+     * @see SimplePie::set_useragent()
+     * @access private
+     */
+    public $useragent = SIMPLEPIE_USERAGENT;
+
+    /**
+     * @var string Feed URL
+     * @see SimplePie::set_feed_url()
+     * @access private
+     */
+    public $feed_url;
+
+    /**
+     * @var object Instance of SimplePie_File to use as a feed
+     * @see SimplePie::set_file()
+     * @access private
+     */
+    public $file;
+
+    /**
+     * @var string Raw feed data
+     * @see SimplePie::set_raw_data()
+     * @access private
+     */
+    public $raw_data;
+
+    /**
+     * @var int Timeout for fetching remote files
+     * @see SimplePie::set_timeout()
+     * @access private
+     */
+    public $timeout = 10;
+
+    /**
+     * @var bool Forces fsockopen() to be used for remote files instead
+     * of cURL, even if a new enough version is installed
+     * @see SimplePie::force_fsockopen()
+     * @access private
+     */
+    public $force_fsockopen = false;
+
+    /**
+     * @var bool Force the given data/URL to be treated as a feed no matter what
+     * it appears like
+     * @see SimplePie::force_feed()
+     * @access private
+     */
+    public $force_feed = false;
+
+    /**
+     * @var bool Enable/Disable Caching
+     * @see SimplePie::enable_cache()
+     * @access private
+     */
+    public $cache = true;
+
+    /**
+     * @var int Cache duration (in seconds)
+     * @see SimplePie::set_cache_duration()
+     * @access private
+     */
+    public $cache_duration = 3600;
+
+    /**
+     * @var int Auto-discovery cache duration (in seconds)
+     * @see SimplePie::set_autodiscovery_cache_duration()
+     * @access private
+     */
+    public $autodiscovery_cache_duration = 604800; // 7 Days.
+
+    /**
+     * @var string Cache location (relative to executing script)
+     * @see SimplePie::set_cache_location()
+     * @access private
+     */
+    public $cache_location = './cache';
+
+    /**
+     * @var string Function that creates the cache filename
+     * @see SimplePie::set_cache_name_function()
+     * @access private
+     */
+    public $cache_name_function = 'md5';
+
+    /**
+     * @var bool Reorder feed by date descending
+     * @see SimplePie::enable_order_by_date()
+     * @access private
+     */
+    public $order_by_date = true;
+
+    /**
+     * @var mixed Force input encoding to be set to the follow value
+     * (false, or anything type-cast to false, disables this feature)
+     * @see SimplePie::set_input_encoding()
+     * @access private
+     */
+    public $input_encoding = false;
+
+    /**
+     * @var int Feed Autodiscovery Level
+     * @see SimplePie::set_autodiscovery_level()
+     * @access private
+     */
+    public $autodiscovery = SIMPLEPIE_LOCATOR_ALL;
+
+    /**
+     * Class registry object
+     *
+     * @var SimplePie_Registry
+     */
+    public $registry;
+
+    /**
+     * @var int Maximum number of feeds to check with autodiscovery
+     * @see SimplePie::set_max_checked_feeds()
+     * @access private
+     */
+    public $max_checked_feeds = 10;
+
+    /**
+     * @var array All the feeds found during the autodiscovery process
+     * @see SimplePie::get_all_discovered_feeds()
+     * @access private
+     */
+    public $all_discovered_feeds = array();
+
+    /**
+     * @var string Web-accessible path to the handler_image.php file.
+     * @see SimplePie::set_image_handler()
+     * @access private
+     */
+    public $image_handler = '';
+
+    /**
+     * @var array Stores the URLs when multiple feeds are being initialized.
+     * @see SimplePie::set_feed_url()
+     * @access private
+     */
+    public $multifeed_url = array();
+
+    /**
+     * @var array Stores SimplePie objects when multiple feeds initialized.
+     * @access private
+     */
+    public $multifeed_objects = array();
+
+    /**
+     * @var array Stores the get_object_vars() array for use with multifeeds.
+     * @see SimplePie::set_feed_url()
+     * @access private
+     */
+    public $config_settings = null;
+
+    /**
+     * @var integer Stores the number of items to return per-feed with multifeeds.
+     * @see SimplePie::set_item_limit()
+     * @access private
+     */
+    public $item_limit = 0;
+
+    /**
+     * @var array Stores the default attributes to be stripped by strip_attributes().
+     * @see SimplePie::strip_attributes()
+     * @access private
+     */
+    public $strip_attributes = array('bgsound', 'class', 'expr', 'id', 'style', 'onclick', 'onerror', 'onfinish', 'onmouseover', 'onmouseout', 'onfocus', 'onblur', 'lowsrc', 'dynsrc');
+
+    /**
+     * @var array Stores the default tags to be stripped by strip_htmltags().
+     * @see SimplePie::strip_htmltags()
+     * @access private
+     */
+    public $strip_htmltags = array('base', 'blink', 'body', 'doctype', 'embed', 'font', 'form', 'frame', 'frameset', 'html', 'iframe', 'input', 'marquee', 'meta', 'noscript', 'object', 'param', 'script', 'style');
+
+    /**
+     * The SimplePie class contains feed level data and options
+     *
+     * To use SimplePie, create the SimplePie object with no parameters. You can
+     * then set configuration options using the provided methods. After setting
+     * them, you must initialise the feed using $feed->init(). At that point the
+     * object's methods and properties will be available to you.
+     *
+     * Previously, it was possible to pass in the feed URL along with cache
+     * options directly into the constructor. This has been removed as of 1.3 as
+     * it caused a lot of confusion.
+     *
+     * @since 1.0 Preview Release
+     */
+    public function __construct()
+    {
+        if (version_compare(PHP_VERSION, '5.2', '<'))
+        {
+            trigger_error('PHP 4.x, 5.0 and 5.1 are no longer supported. Please upgrade to PHP 5.2 or newer.');
+            die();
+        }
+
+        // Other objects, instances created here so we can set options on them
+        $this->sanitize = new SimplePie_Sanitize();
+        $this->registry = new SimplePie_Registry();
+
+        if (func_num_args() > 0)
+        {
+            $level = defined('E_USER_DEPRECATED') ? E_USER_DEPRECATED : E_USER_WARNING;
+            trigger_error('Passing parameters to the constructor is no longer supported. Please use set_feed_url(), set_cache_location(), and set_cache_location() directly.', $level);
+
+            $args = func_get_args();
+            switch (count($args)) {
+                case 3:
+                    $this->set_cache_duration($args[2]);
+                case 2:
+                    $this->set_cache_location($args[1]);
+                case 1:
+                    $this->set_feed_url($args[0]);
+                    $this->init();
+            }
+        }
+    }
+
+    /**
+     * Used for converting object to a string
+     */
+    public function __toString()
+    {
+        return md5(serialize($this->data));
+    }
+
+    /**
+     * Remove items that link back to this before destroying this object
+     */
+    public function __destruct()
+    {
+        if ((version_compare(PHP_VERSION, '5.3', '<') || !gc_enabled()) && !ini_get('zend.ze1_compatibility_mode'))
+        {
+            if (!empty($this->data['items']))
+            {
+                foreach ($this->data['items'] as $item)
+                {
+                    $item->__destruct();
+                }
+                unset($item, $this->data['items']);
+            }
+            if (!empty($this->data['ordered_items']))
+            {
+                foreach ($this->data['ordered_items'] as $item)
+                {
+                    $item->__destruct();
+                }
+                unset($item, $this->data['ordered_items']);
+            }
+        }
+    }
+
+    /**
+     * Force the given data/URL to be treated as a feed
+     *
+     * This tells SimplePie to ignore the content-type provided by the server.
+     * Be careful when using this option, as it will also disable autodiscovery.
+     *
+     * @since 1.1
+     * @param bool $enable Force the given data/URL to be treated as a feed
+     */
+    public function force_feed($enable = false)
+    {
+        $this->force_feed = (bool) $enable;
+    }
+
+    /**
+     * Set the URL of the feed you want to parse
+     *
+     * This allows you to enter the URL of the feed you want to parse, or the
+     * website you want to try to use auto-discovery on. This takes priority
+     * over any set raw data.
+     *
+     * You can set multiple feeds to mash together by passing an array instead
+     * of a string for the $url. Remember that with each additional feed comes
+     * additional processing and resources.
+     *
+     * @since 1.0 Preview Release
+     * @see set_raw_data()
+     * @param string|array $url This is the URL (or array of URLs) that you want to parse.
+     */
+    public function set_feed_url($url)
+    {
+        $this->multifeed_url = array();
+        if (is_array($url))
+        {
+            foreach ($url as $value)
+            {
+                $this->multifeed_url[] = $this->registry->call('Misc', 'fix_protocol', array($value, 1));
+            }
+        }
+        else
+        {
+            $this->feed_url = $this->registry->call('Misc', 'fix_protocol', array($url, 1));
+        }
+    }
+
+    /**
+     * Set an instance of {@see SimplePie_File} to use as a feed
+     *
+     * @param SimplePie_File &$file
+     * @return bool True on success, false on failure
+     */
+    public function set_file(&$file)
+    {
+        if ($file instanceof SimplePie_File)
+        {
+            $this->feed_url = $file->url;
+            $this->file =& $file;
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Set the raw XML data to parse
+     *
+     * Allows you to use a string of RSS/Atom data instead of a remote feed.
+     *
+     * If you have a feed available as a string in PHP, you can tell SimplePie
+     * to parse that data string instead of a remote feed. Any set feed URL
+     * takes precedence.
+     *
+     * @since 1.0 Beta 3
+     * @param string $data RSS or Atom data as a string.
+     * @see set_feed_url()
+     */
+    public function set_raw_data($data)
+    {
+        $this->raw_data = $data;
+    }
+
+    /**
+     * Set the the default timeout for fetching remote feeds
+     *
+     * This allows you to change the maximum time the feed's server to respond
+     * and send the feed back.
+     *
+     * @since 1.0 Beta 3
+     * @param int $timeout The maximum number of seconds to spend waiting to retrieve a feed.
+     */
+    public function set_timeout($timeout = 10)
+    {
+        $this->timeout = (int) $timeout;
+    }
+
+    /**
+     * Force SimplePie to use fsockopen() instead of cURL
+     *
+     * @since 1.0 Beta 3
+     * @param bool $enable Force fsockopen() to be used
+     */
+    public function force_fsockopen($enable = false)
+    {
+        $this->force_fsockopen = (bool) $enable;
+    }
+
+    /**
+     * Enable/disable caching in SimplePie.
+     *
+     * This option allows you to disable caching all-together in SimplePie.
+     * However, disabling the cache can lead to longer load times.
+     *
+     * @since 1.0 Preview Release
+     * @param bool $enable Enable caching
+     */
+    public function enable_cache($enable = true)
+    {
+        $this->cache = (bool) $enable;
+    }
+
+    /**
+     * Set the length of time (in seconds) that the contents of a feed will be
+     * cached
+     *
+     * @param int $seconds The feed content cache duration
+     */
+    public function set_cache_duration($seconds = 3600)
+    {
+        $this->cache_duration = (int) $seconds;
+    }
+
+    /**
+     * Set the length of time (in seconds) that the autodiscovered feed URL will
+     * be cached
+     *
+     * @param int $seconds The autodiscovered feed URL cache duration.
+     */
+    public function set_autodiscovery_cache_duration($seconds = 604800)
+    {
+        $this->autodiscovery_cache_duration = (int) $seconds;
+    }
+
+    /**
+     * Set the file system location where the cached files should be stored
+     *
+     * @param string $location The file system location.
+     */
+    public function set_cache_location($location = './cache')
+    {
+        $this->cache_location = (string) $location;
+    }
+
+    /**
+     * Set whether feed items should be sorted into reverse chronological order
+     *
+     * @param bool $enable Sort as reverse chronological order.
+     */
+    public function enable_order_by_date($enable = true)
+    {
+        $this->order_by_date = (bool) $enable;
+    }
+
+    /**
+     * Set the character encoding used to parse the feed
+     *
+     * This overrides the encoding reported by the feed, however it will fall
+     * back to the normal encoding detection if the override fails
+     *
+     * @param string $encoding Character encoding
+     */
+    public function set_input_encoding($encoding = false)
+    {
+        if ($encoding)
+        {
+            $this->input_encoding = (string) $encoding;
+        }
+        else
+        {
+            $this->input_encoding = false;
+        }
+    }
+
+    /**
+     * Set how much feed autodiscovery to do
+     *
+     * @see SIMPLEPIE_LOCATOR_NONE
+     * @see SIMPLEPIE_LOCATOR_AUTODISCOVERY
+     * @see SIMPLEPIE_LOCATOR_LOCAL_EXTENSION
+     * @see SIMPLEPIE_LOCATOR_LOCAL_BODY
+     * @see SIMPLEPIE_LOCATOR_REMOTE_EXTENSION
+     * @see SIMPLEPIE_LOCATOR_REMOTE_BODY
+     * @see SIMPLEPIE_LOCATOR_ALL
+     * @param int $level Feed Autodiscovery Level (level can be a combination of the above constants, see bitwise OR operator)
+     */
+    public function set_autodiscovery_level($level = SIMPLEPIE_LOCATOR_ALL)
+    {
+        $this->autodiscovery = (int) $level;
+    }
+
+    /**
+     * Get the class registry
+     *
+     * Use this to override SimplePie's default classes
+     * @see SimplePie_Registry
+     * @return SimplePie_Registry
+     */
+    public function &get_registry()
+    {
+        return $this->registry;
+    }
+
+    /**#@+
+     * Useful when you are overloading or extending SimplePie's default classes.
+     *
+     * @deprecated Use {@see get_registry()} instead
+     * @link http://php.net/manual/en/language.oop5.basic.php#language.oop5.basic.extends PHP5 extends documentation
+     * @param string $class Name of custom class
+     * @return boolean True on success, false otherwise
+     */
+    /**
+     * Set which class SimplePie uses for caching
+     */
+    public function set_cache_class($class = 'SimplePie_Cache')
+    {
+        return $this->registry->register('Cache', $class, true);
+    }
+
+    /**
+     * Set which class SimplePie uses for auto-discovery
+     */
+    public function set_locator_class($class = 'SimplePie_Locator')
+    {
+        return $this->registry->register('Locator', $class, true);
+    }
+
+    /**
+     * Set which class SimplePie uses for XML parsing
+     */
+    public function set_parser_class($class = 'SimplePie_Parser')
+    {
+        return $this->registry->register('Parser', $class, true);
+    }
+
+    /**
+     * Set which class SimplePie uses for remote file fetching
+     */
+    public function set_file_class($class = 'SimplePie_File')
+    {
+        return $this->registry->register('File', $class, true);
+    }
+
+    /**
+     * Set which class SimplePie uses for data sanitization
+     */
+    public function set_sanitize_class($class = 'SimplePie_Sanitize')
+    {
+        return $this->registry->register('Sanitize', $class, true);
+    }
+
+    /**
+     * Set which class SimplePie uses for handling feed items
+     */
+    public function set_item_class($class = 'SimplePie_Item')
+    {
+        return $this->registry->register('Item', $class, true);
+    }
+
+    /**
+     * Set which class SimplePie uses for handling author data
+     */
+    public function set_author_class($class = 'SimplePie_Author')
+    {
+        return $this->registry->register('Author', $class, true);
+    }
+
+    /**
+     * Set which class SimplePie uses for handling category data
+     */
+    public function set_category_class($class = 'SimplePie_Category')
+    {
+        return $this->registry->register('Category', $class, true);
+    }
+
+    /**
+     * Set which class SimplePie uses for feed enclosures
+     */
+    public function set_enclosure_class($class = 'SimplePie_Enclosure')
+    {
+        return $this->registry->register('Enclosure', $class, true);
+    }
+
+    /**
+     * Set which class SimplePie uses for `<media:text>` captions
+     */
+    public function set_caption_class($class = 'SimplePie_Caption')
+    {
+        return $this->registry->register('Caption', $class, true);
+    }
+
+    /**
+     * Set which class SimplePie uses for `<media:copyright>`
+     */
+    public function set_copyright_class($class = 'SimplePie_Copyright')
+    {
+        return $this->registry->register('Copyright', $class, true);
+    }
+
+    /**
+     * Set which class SimplePie uses for `<media:credit>`
+     */
+    public function set_credit_class($class = 'SimplePie_Credit')
+    {
+        return $this->registry->register('Credit', $class, true);
+    }
+
+    /**
+     * Set which class SimplePie uses for `<media:rating>`
+     */
+    public function set_rating_class($class = 'SimplePie_Rating')
+    {
+        return $this->registry->register('Rating', $class, true);
+    }
+
+    /**
+     * Set which class SimplePie uses for `<media:restriction>`
+     */
+    public function set_restriction_class($class = 'SimplePie_Restriction')
+    {
+        return $this->registry->register('Restriction', $class, true);
+    }
+
+    /**
+     * Set which class SimplePie uses for content-type sniffing
+     */
+    public function set_content_type_sniffer_class($class = 'SimplePie_Content_Type_Sniffer')
+    {
+        return $this->registry->register('Content_Type_Sniffer', $class, true);
+    }
+
+    /**
+     * Set which class SimplePie uses item sources
+     */
+    public function set_source_class($class = 'SimplePie_Source')
+    {
+        return $this->registry->register('Source', $class, true);
+    }
+    /**#@-*/
+
+    /**
+     * Set the user agent string
+     *
+     * @param string $ua New user agent string.
+     */
+    public function set_useragent($ua = SIMPLEPIE_USERAGENT)
+    {
+        $this->useragent = (string) $ua;
+    }
+
+    /**
+     * Set callback function to create cache filename with
+     *
+     * @param mixed $function Callback function
+     */
+    public function set_cache_name_function($function = 'md5')
+    {
+        if (is_callable($function))
+        {
+            $this->cache_name_function = $function;
+        }
+    }
+
+    /**
+     * Set options to make SP as fast as possible
+     *
+     * Forgoes a substantial amount of data sanitization in favor of speed. This
+     * turns SimplePie into a dumb parser of feeds.
+     *
+     * @param bool $set Whether to set them or not
+     */
+    public function set_stupidly_fast($set = false)
+    {
+        if ($set)
+        {
+            $this->enable_order_by_date(false);
+            $this->remove_div(false);
+            $this->strip_comments(false);
+            $this->strip_htmltags(false);
+            $this->strip_attributes(false);
+            $this->set_image_handler(false);
+        }
+    }
+
+    /**
+     * Set maximum number of feeds to check with autodiscovery
+     *
+     * @param int $max Maximum number of feeds to check
+     */
+    public function set_max_checked_feeds($max = 10)
+    {
+        $this->max_checked_feeds = (int) $max;
+    }
+
+    public function remove_div($enable = true)
+    {
+        $this->sanitize->remove_div($enable);
+    }
+
+    public function strip_htmltags($tags = '', $encode = null)
+    {
+        if ($tags === '')
+        {
+            $tags = $this->strip_htmltags;
+        }
+        $this->sanitize->strip_htmltags($tags);
+        if ($encode !== null)
+        {
+            $this->sanitize->encode_instead_of_strip($tags);
+        }
+    }
+
+    public function encode_instead_of_strip($enable = true)
+    {
+        $this->sanitize->encode_instead_of_strip($enable);
+    }
+
+    public function strip_attributes($attribs = '')
+    {
+        if ($attribs === '')
+        {
+            $attribs = $this->strip_attributes;
+        }
+        $this->sanitize->strip_attributes($attribs);
+    }
+
+    /**
+     * Set the output encoding
+     *
+     * Allows you to override SimplePie's output to match that of your webpage.
+     * This is useful for times when your webpages are not being served as
+     * UTF-8.  This setting will be obeyed by {@see handle_content_type()}, and
+     * is similar to {@see set_input_encoding()}.
+     *
+     * It should be noted, however, that not all character encodings can support
+     * all characters.  If your page is being served as ISO-8859-1 and you try
+     * to display a Japanese feed, you'll likely see garbled characters.
+     * Because of this, it is highly recommended to ensure that your webpages
+     * are served as UTF-8.
+     *
+     * The number of supported character encodings depends on whether your web
+     * host supports {@link http://php.net/mbstring mbstring},
+     * {@link http://php.net/iconv iconv}, or both. See
+     * {@link http://simplepie.org/wiki/faq/Supported_Character_Encodings} for
+     * more information.
+     *
+     * @param string $encoding
+     */
+    public function set_output_encoding($encoding = 'UTF-8')
+    {
+        $this->sanitize->set_output_encoding($encoding);
+    }
+
+    public function strip_comments($strip = false)
+    {
+        $this->sanitize->strip_comments($strip);
+    }
+
+    /**
+     * Set element/attribute key/value pairs of HTML attributes
+     * containing URLs that need to be resolved relative to the feed
+     *
+     * Defaults to |a|@href, |area|@href, |blockquote|@cite, |del|@cite,
+     * |form|@action, |img|@longdesc, |img|@src, |input|@src, |ins|@cite,
+     * |q|@cite
+     *
+     * @since 1.0
+     * @param array|null $element_attribute Element/attribute key/value pairs, null for default
+     */
+    public function set_url_replacements($element_attribute = null)
+    {
+        $this->sanitize->set_url_replacements($element_attribute);
+    }
+
+    /**
+     * Set the handler to enable the display of cached images.
+     *
+     * @param str $page Web-accessible path to the handler_image.php file.
+     * @param str $qs The query string that the value should be passed to.
+     */
+    public function set_image_handler($page = false, $qs = 'i')
+    {
+        if ($page !== false)
+        {
+            $this->sanitize->set_image_handler($page . '?' . $qs . '=');
+        }
+        else
+        {
+            $this->image_handler = '';
+        }
+    }
+
+    /**
+     * Set the limit for items returned per-feed with multifeeds
+     *
+     * @param integer $limit The maximum number of items to return.
+     */
+    public function set_item_limit($limit = 0)
+    {
+        $this->item_limit = (int) $limit;
+    }
+
+    /**
+     * Initialize the feed object
+     *
+     * This is what makes everything happen.  Period.  This is where all of the
+     * configuration options get processed, feeds are fetched, cached, and
+     * parsed, and all of that other good stuff.
+     *
+     * @return boolean True if successful, false otherwise
+     */
+    public function init()
+    {
+        // Check absolute bare minimum requirements.
+        if (!extension_loaded('xml') || !extension_loaded('pcre'))
+        {
+            return false;
+        }
+        // Then check the xml extension is sane (i.e., libxml 2.7.x issue on PHP < 5.2.9 and libxml 2.7.0 to 2.7.2 on any version) if we don't have xmlreader.
+        elseif (!extension_loaded('xmlreader'))
+        {
+            static $xml_is_sane = null;
+            if ($xml_is_sane === null)
+            {
+                $parser_check = xml_parser_create();
+                xml_parse_into_struct($parser_check, '<foo>&amp;</foo>', $values);
+                xml_parser_free($parser_check);
+                $xml_is_sane = isset($values[0]['value']);
+            }
+            if (!$xml_is_sane)
+            {
+                return false;
+            }
+        }
+
+        if (method_exists($this->sanitize, 'set_registry'))
+        {
+            $this->sanitize->set_registry($this->registry);
+        }
+
+        // Pass whatever was set with config options over to the sanitizer.
+        // Pass the classes in for legacy support; new classes should use the registry instead
+        $this->sanitize->pass_cache_data($this->cache, $this->cache_location, $this->cache_name_function, $this->registry->get_class('Cache'));
+        $this->sanitize->pass_file_data($this->registry->get_class('File'), $this->timeout, $this->useragent, $this->force_fsockopen);
+
+        if (!empty($this->multifeed_url))
+        {
+            $i = 0;
+            $success = 0;
+            $this->multifeed_objects = array();
+            $this->error = array();
+            foreach ($this->multifeed_url as $url)
+            {
+                $this->multifeed_objects[$i] = clone $this;
+                $this->multifeed_objects[$i]->set_feed_url($url);
+                $single_success = $this->multifeed_objects[$i]->init();
+                $success |= $single_success;
+                if (!$single_success)
+                {
+                    $this->error[$i] = $this->multifeed_objects[$i]->error();
+                }
+                $i++;
+            }
+            return (bool) $success;
+        }
+        elseif ($this->feed_url === null && $this->raw_data === null)
+        {
+            return false;
+        }
+
+        $this->error = null;
+        $this->data = array();
+        $this->multifeed_objects = array();
+        $cache = false;
+
+        if ($this->feed_url !== null)
+        {
+            $parsed_feed_url = $this->registry->call('Misc', 'parse_url', array($this->feed_url));
+
+            // Decide whether to enable caching
+            if ($this->cache && $parsed_feed_url['scheme'] !== '')
+            {
+                $cache = $this->registry->call('Cache', 'get_handler', array($this->cache_location, call_user_func($this->cache_name_function, $this->feed_url), 'spc'));
+            }
+
+            // Fetch the data via SimplePie_File into $this->raw_data
+            if (($fetched = $this->fetch_data($cache)) === true)
+            {
+                return true;
+            }
+            elseif ($fetched === false) {
+                return false;
+            }
+
+            list($headers, $sniffed) = $fetched;
+        }
+
+        // Set up array of possible encodings
+        $encodings = array();
+
+        // First check to see if input has been overridden.
+        if ($this->input_encoding !== false)
+        {
+            $encodings[] = $this->input_encoding;
+        }
+
+        $application_types = array('application/xml', 'application/xml-dtd', 'application/xml-external-parsed-entity');
+        $text_types = array('text/xml', 'text/xml-external-parsed-entity');
+
+        // RFC 3023 (only applies to sniffed content)
+        if (isset($sniffed))
+        {
+            if (in_array($sniffed, $application_types) || substr($sniffed, 0, 12) === 'application/' && substr($sniffed, -4) === '+xml')
+            {
+                if (isset($headers['content-type']) && preg_match('/;\x20?charset=([^;]*)/i', $headers['content-type'], $charset))
+                {
+                    $encodings[] = strtoupper($charset[1]);
+                }
+                $encodings = array_merge($encodings, $this->registry->call('Misc', 'xml_encoding', array($this->raw_data, &$this->registry)));
+                $encodings[] = 'UTF-8';
+            }
+            elseif (in_array($sniffed, $text_types) || substr($sniffed, 0, 5) === 'text/' && substr($sniffed, -4) === '+xml')
+            {
+                if (isset($headers['content-type']) && preg_match('/;\x20?charset=([^;]*)/i', $headers['content-type'], $charset))
+                {
+                    $encodings[] = $charset[1];
+                }
+                $encodings[] = 'US-ASCII';
+            }
+            // Text MIME-type default
+            elseif (substr($sniffed, 0, 5) === 'text/')
+            {
+                $encodings[] = 'US-ASCII';
+            }
+        }
+
+        // Fallback to XML 1.0 Appendix F.1/UTF-8/ISO-8859-1
+        $encodings = array_merge($encodings, $this->registry->call('Misc', 'xml_encoding', array($this->raw_data, &$this->registry)));
+        $encodings[] = 'UTF-8';
+        $encodings[] = 'ISO-8859-1';
+
+        // There's no point in trying an encoding twice
+        $encodings = array_unique($encodings);
+
+        // Loop through each possible encoding, till we return something, or run out of possibilities
+        foreach ($encodings as $encoding)
+        {
+            // Change the encoding to UTF-8 (as we always use UTF-8 internally)
+            if ($utf8_data = $this->registry->call('Misc', 'change_encoding', array($this->raw_data, $encoding, 'UTF-8')))
+            {
+                // Create new parser
+                $parser = $this->registry->create('Parser');
+
+                // If it's parsed fine
+                if ($parser->parse($utf8_data, 'UTF-8'))
+                {
+                    $this->data = $parser->get_data();
+                    if (!($this->get_type() & ~SIMPLEPIE_TYPE_NONE))
+                    {
+                        $this->error = "A feed could not be found at $this->feed_url. This does not appear to be a valid RSS or Atom feed.";
+                        $this->registry->call('Misc', 'error', array($this->error, E_USER_NOTICE, __FILE__, __LINE__));
+                        return false;
+                    }
+
+                    if (isset($headers))
+                    {
+                        $this->data['headers'] = $headers;
+                    }
+                    $this->data['build'] = SIMPLEPIE_BUILD;
+
+                    // Cache the file if caching is enabled
+                    if ($cache && !$cache->save($this))
+                    {
+                        trigger_error("$this->cache_location is not writeable. Make sure you've set the correct relative or absolute path, and that the location is server-writable.", E_USER_WARNING);
+                    }
+                    return true;
+                }
+            }
+        }
+
+        if (isset($parser))
+        {
+            // We have an error, just set SimplePie_Misc::error to it and quit
+            $this->error = sprintf('This XML document is invalid, likely due to invalid characters. XML error: %s at line %d, column %d', $parser->get_error_string(), $parser->get_current_line(), $parser->get_current_column());
+        }
+        else
+        {
+            $this->error = 'The data could not be converted to UTF-8. You MUST have either the iconv or mbstring extension installed. Upgrading to PHP 5.x (which includes iconv) is highly recommended.';
+        }
+
+        $this->registry->call('Misc', 'error', array($this->error, E_USER_NOTICE, __FILE__, __LINE__));
+
+        return false;
+    }
+
+    /**
+     * Fetch the data via SimplePie_File
+     *
+     * If the data is already cached, attempt to fetch it from there instead
+     * @param SimplePie_Cache|false $cache Cache handler, or false to not load from the cache
+     * @return array|true Returns true if the data was loaded from the cache, or an array of HTTP headers and sniffed type
+     */
+    protected function fetch_data(&$cache)
+    {
+        // If it's enabled, use the cache
+        if ($cache)
+        {
+            // Load the Cache
+            $this->data = $cache->load();
+            if (!empty($this->data))
+            {
+                // If the cache is for an outdated build of SimplePie
+                if (!isset($this->data['build']) || $this->data['build'] !== SIMPLEPIE_BUILD)
+                {
+                    $cache->unlink();
+                    $this->data = array();
+                }
+                // If we've hit a collision just rerun it with caching disabled
+                elseif (isset($this->data['url']) && $this->data['url'] !== $this->feed_url)
+                {
+                    $cache = false;
+                    $this->data = array();
+                }
+                // If we've got a non feed_url stored (if the page isn't actually a feed, or is a redirect) use that URL.
+                elseif (isset($this->data['feed_url']))
+                {
+                    // If the autodiscovery cache is still valid use it.
+                    if ($cache->mtime() + $this->autodiscovery_cache_duration > time())
+                    {
+                        // Do not need to do feed autodiscovery yet.
+                        if ($this->data['feed_url'] !== $this->data['url'])
+                        {
+                            $this->set_feed_url($this->data['feed_url']);
+                            return $this->init();
+                        }
+
+                        $cache->unlink();
+                        $this->data = array();
+                    }
+                }
+                // Check if the cache has been updated
+                elseif ($cache->mtime() + $this->cache_duration < time())
+                {
+                    // If we have last-modified and/or etag set
+                    if (isset($this->data['headers']['last-modified']) || isset($this->data['headers']['etag']))
+                    {
+                        $headers = array(
+                            'Accept' => 'application/atom+xml, application/rss+xml, application/rdf+xml;q=0.9, application/xml;q=0.8, text/xml;q=0.8, text/html;q=0.7, unknown/unknown;q=0.1, application/unknown;q=0.1, */*;q=0.1',
+                        );
+                        if (isset($this->data['headers']['last-modified']))
+                        {
+                            $headers['if-modified-since'] = $this->data['headers']['last-modified'];
+                        }
+                        if (isset($this->data['headers']['etag']))
+                        {
+                            $headers['if-none-match'] = $this->data['headers']['etag'];
+                        }
+
+                        $file = $this->registry->create('File', array($this->feed_url, $this->timeout/10, 5, $headers, $this->useragent, $this->force_fsockopen));
+
+                        if ($file->success)
+                        {
+                            if ($file->status_code === 304)
+                            {
+                                $cache->touch();
+                                return true;
+                            }
+                        }
+                        else
+                        {
+                            unset($file);
+                        }
+                    }
+                }
+                // If the cache is still valid, just return true
+                else
+                {
+                    $this->raw_data = false;
+                    return true;
+                }
+            }
+            // If the cache is empty, delete it
+            else
+            {
+                $cache->unlink();
+                $this->data = array();
+            }
+        }
+        // If we don't already have the file (it'll only exist if we've opened it to check if the cache has been modified), open it.
+        if (!isset($file))
+        {
+            if ($this->file instanceof SimplePie_File && $this->file->url === $this->feed_url)
+            {
+                $file =& $this->file;
+            }
+            else
+            {
+                $headers = array(
+                    'Accept' => 'application/atom+xml, application/rss+xml, application/rdf+xml;q=0.9, application/xml;q=0.8, text/xml;q=0.8, text/html;q=0.7, unknown/unknown;q=0.1, application/unknown;q=0.1, */*;q=0.1',
+                );
+                $file = $this->registry->create('File', array($this->feed_url, $this->timeout, 5, $headers, $this->useragent, $this->force_fsockopen));
+            }
+        }
+        // If the file connection has an error, set SimplePie::error to that and quit
+        if (!$file->success && !($file->method & SIMPLEPIE_FILE_SOURCE_REMOTE === 0 || ($file->status_code === 200 || $file->status_code > 206 && $file->status_code < 300)))
+        {
+            $this->error = $file->error;
+            return !empty($this->data);
+        }
+
+        if (!$this->force_feed)
+        {
+            // Check if the supplied URL is a feed, if it isn't, look for it.
+            $locate = $this->registry->create('Locator', array(&$file, $this->timeout, $this->useragent, $this->max_checked_feeds));
+
+            if (!$locate->is_feed($file))
+            {
+                // We need to unset this so that if SimplePie::set_file() has been called that object is untouched
+                unset($file);
+                try
+                {
+                    if (!($file = $locate->find($this->autodiscovery, $this->all_discovered_feeds)))
+                    {
+                        $this->error = "A feed could not be found at $this->feed_url. A feed with an invalid mime type may fall victim to this error, or " . SIMPLEPIE_NAME . " was unable to auto-discover it.. Use force_feed() if you are certain this URL is a real feed.";
+                        $this->registry->call('Misc', 'error', array($this->error, E_USER_NOTICE, __FILE__, __LINE__));
+                        return false;
+                    }
+                }
+                catch (SimplePie_Exception $e)
+                {
+                    // This is usually because DOMDocument doesn't exist
+                    $this->error = $e->getMessage();
+                    $this->registry->call('Misc', 'error', array($this->error, E_USER_NOTICE, $e->getFile(), $e->getLine()));
+                    return false;
+                }
+                if ($cache)
+                {
+                    $this->data = array('url' => $this->feed_url, 'feed_url' => $file->url, 'build' => SIMPLEPIE_BUILD);
+                    if (!$cache->save($this))
+                    {
+                        trigger_error("$this->cache_location is not writeable. Make sure you've set the correct relative or absolute path, and that the location is server-writable.", E_USER_WARNING);
 					}
 					$cache = $this->registry->call('Cache', 'get_handler', array($this->cache_location, call_user_func($this->cache_name_function, $file->url), 'spc'));
 				}

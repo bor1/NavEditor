@@ -8,9 +8,9 @@ class ConfigManager {
 
 
 
-	private $_editor_conf_file_path; //config file to read
+    private $_editor_conf_file_path; //config file to read
 
-	private $_conf_items; //save data in Array of Array('NAME' => name, 'VALUE' => value) format
+    private $_conf_items; //save data in Array of Array('NAME' => name, 'VALUE' => value) format
     private $_conf_items_associative; //associative Array[NAME]=VALUE
 
 
@@ -19,17 +19,17 @@ class ConfigManager {
      * @param string $default_conf_file config file path, to manage
      * @throws Exception
      */
-	public function __construct($default_conf_file) {
+    public function __construct($default_conf_file) {
 
-		$this->_editor_conf_file_path = $default_conf_file;
+        $this->_editor_conf_file_path = $default_conf_file;
         if(!is_file($this->_editor_conf_file_path)){
             throw new Exception('Config file "'.$this->_editor_conf_file_path.'" not found.');
         }
-		$this->_conf_items = array();
+        $this->_conf_items = array();
         $this->_conf_items_associative = array();
 
-		$this->_loadConfig();
-	}
+        $this->_loadConfig();
+    }
 
     /**
      * loads config data from file to class private array/s
@@ -65,9 +65,9 @@ class ConfigManager {
      * @param bool $bAssociative true: returns associative array, false: not associative
      * @return array Array of config data, optional not $associative
      */
-	public function get_confs($bAssociative = true) {
-		return ($bAssociative)?$this->_conf_items_associative:$this->_conf_items;
-	}
+    public function get_confs($bAssociative = true) {
+        return ($bAssociative)?$this->_conf_items_associative:$this->_conf_items;
+    }
 
 
     /**
@@ -77,7 +77,7 @@ class ConfigManager {
      * @param mixed $defaultval default value in case no config item found
      * @return mixed Config item value
      */
-	public function get_conf_item($conf_item, $defaultval) {
+    public function get_conf_item($conf_item, $defaultval) {
         $associativeArray= &$this->_conf_items_associative;
 
         if (isset($associativeArray[$conf_item])){
