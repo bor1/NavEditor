@@ -25,11 +25,11 @@ var ne3_magic = function(){
 ne3_magic.createLink = function(text, link, onclick, css_class, id){
     retString = '<a href="' + link + '"';
     if (onclick   !== false)
-        retString += '" onclick="' + onclick + '"';
+        retString += ' onclick="' + onclick + '"';
     if (css_class !== false)
-        retString += '" class="' + css_class + '"';
+        retString += ' class="' + css_class + '"';
     if (id        !== false)
-        retString += '" id="' + id + '"';
+        retString += ' id="' + id + '"';
     
     retString += '>' + text + '</a>' + "\n";
     return retString;
@@ -49,17 +49,21 @@ ne3_magic.createButton = function(name, value, onclick, css_class, id){
               + '" value="' + value + '"';
 
     if (onclick   !== false)
-        retString += '" onclick="' + onclick + '"';
+        retString += ' onclick="' + onclick + '"';
     if (css_class !== false)
-        retString += '" class="' + css_class + '"';
+        retString += ' class="' + css_class + '"';
     if (id        !== false)
-        retString += '" id="' + id + '"';
+        retString += ' id="' + id + '"';
     
     retString += '>';
     return retString;
 };
 
-ne3_magic.createFormField = function(){
+ne3_magic.createFormField = function(name, type, size, maxlength, value){
+    //
+};
+
+ne3_magic.createTextArea = function(name, cols, rows, content){
     //
 };
 
