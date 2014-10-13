@@ -9,6 +9,10 @@ require_once('auth.php');
 
         <title>Bereich Management - <?php echo($ne_config_info['app_titleplain']); ?></title>
 
+        <script type="text/javascript">
+                var _json_area_data = '<?php echo(json_encode($g_areas_settings['area_settings'])); ?>';
+        </script>
+
         <?php
         echo NavTools::includeHtml('default',
                 'jquery-ui-1.8.2.custom.min.js',
@@ -23,13 +27,6 @@ require_once('auth.php');
         echo NavTools::includeFE("areas_manager");
         ?>
 
-        <link rel="stylesheet" type="text/css" href="/vkdaten/tools/NavEditor3/fe_css/areas_manager.css">
-        <script type="text/javascript" src="/vkdaten/tools/NavEditor3/fe_js/areas_manager.js"></script>
-            
-		<script type="text/javascript">
-			var _json_area_data = '<?php echo(json_encode($g_areas_settings['area_settings'])); ?>';
-		</script>
-		
         <script type="text/javascript">
 
             /*-------- after document loaded do code: --------*/

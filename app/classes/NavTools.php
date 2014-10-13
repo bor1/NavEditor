@@ -14,7 +14,7 @@ class NavTools {
      * the tag to place between <head> tags
      */
     public static function wrapScriptInclude($filename){
-        return '<script type="text/javascript" src="' . $filename . '"></script>';
+        return '<script type="text/javascript" src="' . $filename . '"></script>' . "\n";
     }
     
     /**
@@ -24,7 +24,7 @@ class NavTools {
      * the tag to place between <head> tags
      */
     public static function wrapStyleInclude($filename){
-        return '<link rel="stylesheet" type="text/css" href="' . $filename . '">';
+        return '<link rel="stylesheet" type="text/css" href="' . $filename . '">' . "\n";
     }
     
     /**
@@ -105,8 +105,8 @@ class NavTools {
         
         $retString = '';
         
-        $path_css = $ne_config_info['ne_url'] . $ne_config_info['fe_js_folder_name'] . '/';
-        $path_js  = $ne_config_info['ne_url'] . $ne_config_info['fe_css_folder_name'] . '/';
+        $path_css = $ne_config_info['ne_url'] . $ne_config_info['fe_css_folder_name'] . '/';
+        $path_js  = $ne_config_info['ne_url'] . $ne_config_info['fe_js_folder_name'] . '/';
         
         switch ($frontendClass){
             case ("areas_manager"):
