@@ -201,8 +201,10 @@ function generateDropBoxSettingHtml(settingName, settingHtmlNameParam, listArray
  * @param string label - button label
  */
 function createButtonHtml(buttonName, label){
-    var html = '<button class="temp_buttons" id='+buttonName+'>'+ label +'</button>';
-    return html;
+    /*var html = '<button class="temp_buttons" id='+buttonName+'>'+ label +'</button>';
+    return html;*/
+
+    return ne3_magic.createButton("", label, false, temp_buttons, buttonName);
 }
 
 /**

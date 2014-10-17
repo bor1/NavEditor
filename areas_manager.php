@@ -45,7 +45,7 @@ require_once('auth.php');
                     if(checkInputChange()){$(this).blur();return;}
 
                     var thisBereichName = $(this).attr("id");
-                    var bereichArray = _area_data_array[thisBereichName]
+                    var bereichArray = _area_data_array[thisBereichName];
                     fillFieldsWithData(bereichArray);
                     _currentValues['area'] = thisBereichName;
                     //ui bug ? ..

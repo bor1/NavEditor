@@ -42,11 +42,10 @@ ne3_magic.createLink = function(text, link, onclick, css_class, id){
  * @param {String} onclick
  * @param {String} css_class
  * @param {String} id
- * @returns {retString|String}
+ * @returns {String}
  */
 ne3_magic.createButton = function(name, value, onclick, css_class, id){
-    retString = '<input type="button" name="' + name
-              + '" value="' + value + '"';
+    retString = '<button name="' + name + '"';
 
     if (onclick   !== false)
         retString += ' onclick="' + onclick + '"';
@@ -55,23 +54,119 @@ ne3_magic.createButton = function(name, value, onclick, css_class, id){
     if (id        !== false)
         retString += ' id="' + id + '"';
     
-    retString += '>';
+    retString += '>' + value + '</button>';
     return retString;
 };
 
-ne3_magic.createFormField = function(name, type, size, maxlength, value){
-    //
+/**
+ * Creates a simple <input> form Field.
+ * @param {String} name
+ * @param {String} type
+ * @param {String} size
+ * @param {String} maxlength
+ * @param {String} value
+ * @param {String} css_class
+ * @param {String} id 
+ * @returns {String}
+ */
+ne3_magic.createFormField = function(name, type, size, maxlength, value, css_class, id){
+    var retString = '<input name="' + name + '" type="' + type + '"';
+    
+    if (size !== false)
+        retString += ' size="' + size + '"';
+    if (maxlength !== false)
+        retString += ' maxlength="' + maxlength + '"';
+    if (value !== false)
+        retString += ' value="' + value + '"';
+    if (css_class !== false)
+        retString += ' class="' + css_class + '"';
+    if (id        !== false)
+        retString += ' id="' + id + '"';
+    
+    retString += ">";
+    return retString;
 };
 
-ne3_magic.createTextArea = function(name, cols, rows, content){
-    //
+/**
+ * Creates a text area.
+ * @param {String} name
+ * @param {String} cols
+ * @param {String} rows
+ * @param {String} content
+ * @param {String} css_class
+ * @param {String} id 
+ * @returns {String} html tag in a string
+ */
+ne3_magic.createTextArea = function(name, cols, rows, content, css_class, id){
+    if (cols === false)
+        cols = 30;
+    if (rows === false)
+        rows = 5;
+    
+    var retString = '<textarea name="' + name +'" cols="' + cols +'" rows="' + rows + '"';
+    
+    if (css_class !== false)
+        retString += ' class="' + css_class + '"';
+    if (id        !== false)
+        retString += ' id="' + id + '"';
+    
+    retString += '>';
+    
+    if ((content !== false) && (content !== ""))
+        retString += content;
+    
+    retString += '</textarea>';
+    return retString;
 };
 
-ne3_magic.createForm = function(JSONdata){
-    if (! (JSONdata instanceof JSON))
+/**
+ * Generates the html code for a dropbox
+ * @param {String} name
+ * @param {String} elements
+ * @param {String} css_class
+ * @param {String} id
+ * @returns {retString|String}
+ */
+ne3_magic.generateDropBox = function(name, elements, css_class, id){
+
+    size = elements.length;
+    
+    retString = '<select name="' + name +  '" size="' + size + '"';
+        
+    if (css_class !== false)
+        retString += ' class="' + css_class + '"';
+    if (id        !== false)
+        retString += ' id="' + id + '"';
+        
+    retString += '>';
+    
+    for (i=0; i< (elements.length); i++)
+        retString += '<option>' + elements[i] + '</option>';
+    
+    retString += '</select>';
+    
+    return retString;
+};
+
+/**
+ * This function generates an html form out of JSON data.
+ * For the data format, see ./../fe_json/RULES
+ * @param {JSONstring} JSONdata
+ * @returns {retString|String}
+ */
+ne3_magic.createForm = function(JSONdata){    
+    
+    try { //JSON.parse() throws a "SyntaxError" exception if the string to parse is not valid JSON.
+          //see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse
+        var data = JSON.parse(JSONdata);
+    }
+    catch (error){
         return '<!-- no JSON data given to ne3_magic.createForm --!>';
+    }
     
     retString = '';
+    
+    
     
     
     return retString;

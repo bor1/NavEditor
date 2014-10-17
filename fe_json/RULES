@@ -1,0 +1,21 @@
+HOWTO: write a json file that will be parsed into a form by fe_js/magic.js
+
+adapt everything inside "<*>" to your own needs!
+
+description:
+
+<fe_class>   is your frontend class. This is used in NavTools::includeFE()
+             and will *may*be used to implement a fully abstract wonderful magic
+             .php file for all forms.
+
+
+basic setup:
+
+{
+ "identifier" : "json_form_data",
+ "class"      : "<fe_class>",
+ "form" :
+  {
+   
+  }
+}
