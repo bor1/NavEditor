@@ -38,13 +38,13 @@ ne3_magic.createLink = function(text, link, onclick, css_class, id){
 /**
  * Creates an html button and returns the tag in a string
  * @param {String} name
- * @param {String} value
+ * @param {String} label
  * @param {String} onclick
  * @param {String} css_class
  * @param {String} id
  * @returns {String}
  */
-ne3_magic.createButton = function(name, value, onclick, css_class, id){
+ne3_magic.createButton = function(name, label, onclick, css_class, id){
     retString = '<button name="' + name + '"';
 
     if (onclick   !== false)
@@ -54,7 +54,7 @@ ne3_magic.createButton = function(name, value, onclick, css_class, id){
     if (id        !== false)
         retString += ' id="' + id + '"';
     
-    retString += '>' + value + '</button>';
+    retString += '>' + label + '</button>';
     return retString;
 };
 
@@ -149,7 +149,8 @@ ne3_magic.generateDropBox = function(name, elements, css_class, id){
 };
 
 /**
- * This function generates an html form out of JSON data.
+ * This function generates an html form out of a JSON data string OR
+ * out of the json information parsed into JSONdata
  * For the data format, see ./../fe_json/RULES
  * @param {JSONstring} JSONdata
  * @returns {retString|String}
@@ -161,13 +162,29 @@ ne3_magic.createForm = function(JSONdata){
         var data = JSON.parse(JSONdata);
     }
     catch (error){
-        return '<!-- no JSON data given to ne3_magic.createForm --!>';
+        if (! (JSONdata.identifier))
+            return '<!-- no JSON data given to ne3_magic.createForm --!>';
+        
+        //JSONdata is already parsed
+        data = JSONdata;
     }
     
     retString = '';
     
+    if (data.identifier !== json_form_data)
+        return '<!-- wrong format in ne3_magic.createForm --!>';
+    
+    retString += '<form name="' + data.form.name + '"';
+    
+    if (data.form.css_class !== "")
+        retString += ' class="' + data.form.css_class + '"';
+    if (data.form.css_id !== "")
+        retString += ' id="' + data.form.id + '"';
+    
+    retString += '>';
     
     
+    retString += '</form>';
     
     return retString;
 };

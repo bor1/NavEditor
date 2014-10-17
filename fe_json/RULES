@@ -4,18 +4,74 @@ adapt everything inside "<*>" to your own needs!
 
 description:
 
-<fe_class>   is your frontend class. This is used in NavTools::includeFE()
-             and will *may*be used to implement a fully abstract wonderful magic
-             .php file for all forms.
+//               is a comment at the end of a line
+                 do NOT put this into an original file!
+
+<fe_class>       is your frontend class. This is used in NavTools::includeFE()
+                 and will *may*be used to implement a fully abstract wonderful magic
+                 .php file for all forms.
+
+<name_of_form>   the name that will be inside the <form> tag
 
 
 basic setup:
+
 
 {
  "identifier" : "json_form_data",
  "class"      : "<fe_class>",
  "form" :
   {
-   
+   "name"       : "<name_of_form>",
+   "css_class"  : "<css _class_of_form>",
+   "css_id"     : "<css_id_of_form>"
+
+   "elements"   :
+   [
+    { //a link:
+     "type"    : "link",
+     "text"    : "text inside of your Link",
+     "link"    : "<the url>",
+     "onclick" : "<js_function>",        //not required
+     "css_class" : "<css_class_of_link", //not required
+     "css_id"  : "<css_id_of_link"       //not required
+    },
+    { //a button:
+     "type"    : "button",
+     "name"    : "<name_of_your_button>",
+     "label"   : "<the_label>",
+     "onclick" : "<js_function>",        //not required
+     "css_class" : "<css_class_of_link", //not required
+     "css_id"  : "<css_id_of_link"       //not required
+    },
+    { //an input field (general):
+     "type"    : "input",
+     "name"    : "<name_of_your_input>",
+     "type"    : "<type_of_input>",
+     "size"    : "<size_of_input>",      //not required
+     "maxlength":"<maxlength_of_input>", //not required
+     "value"    : "<initial_value>",     //not required
+     "css_class" : "<css_class_of_link", //not required
+     "css_id"  : "<css_id_of_link"       //not required
+    },
+    { // a textarea:
+     "name"    : "<name_of_area>",
+     "cols"    : "<cols_of_area>",
+     "rows"    : "<rows_of_area>",
+     "content" : "<initial_value>",      //not required
+     "css_class" : "<css_class_of_link", //not required
+     "css_id"  : "<css_id_of_link"       //not required
+    },
+    { // a dropbox:
+     "name"    : "<name_of_dropbox>",
+     "elements": [
+                  "<option_1",
+                  "<option_2",
+                  "<whatever"
+                 ]
+     "css_class" : "<css_class_of_link", //not required
+     "css_id"  : "<css_id_of_link"       //not required
+    }
+   ]
   }
 }
