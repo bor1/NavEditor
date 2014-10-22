@@ -13,13 +13,18 @@ description:
 
 <name_of_form>   the name that will be inside the <form> tag
 
+<id_of_form>     the id of the form that will be used to attach it to a selector
+
+<js_to_call>     the javascript that will be called after form is loaded. usually
+                 to fill it with the values. It will be attached manually.
 
 basic setup:
-
 
 {
  "identifier" : "json_form_data",
  "class"      : "<fe_class>",
+ "id"         : "<id_of_form>",
+ "js_loaded"  : "<js_to_call>",
  "form" :
   {
    "name"       : "<name_of_form>",
@@ -65,13 +70,39 @@ basic setup:
     { // a dropbox:
      "name"    : "<name_of_dropbox>",
      "elements": [
-                  "<option_1",
-                  "<option_2",
-                  "<whatever"
+                  "<option_1>",
+                  "<option_2>",
+                  "<whatever>"
                  ]
      "css_class" : "<css_class_of_link", //not required
      "css_id"  : "<css_id_of_link"       //not required
     }
    ]
   }
+}
+
+
+
+HOWTO: define a selector list
+
+This is how to generate a list, that selects forms.
+
+<css_id_selector>  Where to generate the selector list
+<css_id_form>      Where to generate the form
+
+{
+ "id"       : "id_of_selector",
+ "css_id_s" : "<css_id_selector>",
+ "css_id_f" : "<css_id_form>",
+ "elements" :
+ [
+  { //a header in the list (h1, h2, h3, etc. ...)
+   "type"    : "h1",
+   "content" : "<text"
+  },
+  { //a link that call the generate function for a form
+   "type"    : "form",
+   "form_id" : "<id_of_form>"
+  }
+ ]
 }

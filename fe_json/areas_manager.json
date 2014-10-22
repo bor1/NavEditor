@@ -1,0 +1,60 @@
+{
+ "identifier" : "json_form_data",
+ "class"      : "areas_manager_form",
+ "id"         : "areas_manager_form",
+ "js_loaded"  : "areas_manager.loadData()",
+ "form" :
+  {
+   "name"       : "areas_manager_form",
+   "css_class"  : "areas_manager_form",
+   "css_id"     : "areas_manager_form",
+
+   "elements"   :
+   [
+    {
+     "type"    : "link",
+     "text"    : "text inside of your Link",
+     "link"    : "<the url>",
+     "onclick" : "<js_function>",
+     "css_class" : "<css_class_of_link",
+     "css_id"  : "<css_id_of_link"
+    },
+    {
+     "type"    : "button",
+     "name"    : "<name_of_your_button>",
+     "label"   : "<the_label>",
+     "onclick" : "<js_function>",
+     "css_class" : "<css_class_of_link",
+     "css_id"  : "<css_id_of_link"
+    },
+    {
+     "type"    : "input",
+     "name"    : "<name_of_your_input>",
+     "type"    : "<type_of_input>",
+     "size"    : "<size_of_input>",
+     "maxlength":"<maxlength_of_input>",
+     "value"    : "<initial_value>",
+     "css_class" : "<css_class_of_link",
+     "css_id"  : "<css_id_of_link"
+    },
+    {
+     "name"    : "<name_of_area>",
+     "cols"    : "<cols_of_area>",
+     "rows"    : "<rows_of_area>",
+     "content" : "<initial_value>",
+     "css_class" : "<css_class_of_link>",
+     "css_id"  : "<css_id_of_link>"
+    },
+    {
+     "name"    : "<name_of_dropbox>",
+     "elements": [
+                  "<option_1>",
+                  "<option_2>",
+                  "<whatever>"
+                 ],
+     "css_class" : "<css_class_of_link>",
+     "css_id"  : "<css_id_of_link>"
+    }
+   ]
+  }
+}

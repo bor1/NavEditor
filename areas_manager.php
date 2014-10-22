@@ -28,126 +28,23 @@ require_once('auth.php');
         ?>
 
         <script type="text/javascript">
-
-            /*-------- after document loaded do code: --------*/
-            $(document).ready(function() {
-                //make beautiful buttons
-                $("button").button();
-
-                //loading all info about areas
-                NavTools.call_php('app/classes/AreasManager.php', 'getAllAreaSettings',
-                {},
-                loadContentCallback);
-
-                //all buttons to pick
-                $("#bereichList .bereich_button").on('click', function(){
-                    //ask by changes, prevent if needed
-                    if(checkInputChange()){$(this).blur();return;}
-
-                    var thisBereichName = $(this).attr("id");
-                    var bereichArray = _area_data_array[thisBereichName];
-                    fillFieldsWithData(bereichArray);
-                    _currentValues['area'] = thisBereichName;
-                    //ui bug ? ..
-                    addContentToElement($('#bereichSettings'), createButtonHtml('updateBereich', 'Speichern') + createButtonHtml('removeBereich', 'L&ouml;schen'));
-                    //addContentToElement($('#bereichSettings'), createButtonHtml('removeBereich', 'Delete Bereich'));
-                    checkInputChange(false);
-
-                    selectMenu($(this));
-                });
-
-
-                //btn create new
-                $("#bereichList #addNewBereich").on('click',function() {
-                    //ask by changes, prevent if needed
-                    if(checkInputChange()){$(this).blur();return;}
-
-                    fillFieldsWithData(_empty_area_data_array);
-                    clearTempButtons();
-                    addContentToElement($('#bereichSettings'), createButtonHtml('createBereich', 'Erstellen'));
-                    _currentValues['area'] = "";
-                    checkInputChange(false);
-                    selectMenu($(this));
-                });
-
-                //btn save bei new
-                $("#bereichmanager #createBereich").on('click',function() {
-                    if(!checkForm(true)){
-                        return;
-                    }
-                    var areaName = $("#bereichmanager input[name='name']").val();
-                    var params = readInput();
-                    //                    params = JSON.stringify(params);
-
-                    NavTools.call_php('app/classes/AreasManager.php', 'addAreaSettings',
-                    {
-                        name: areaName,
-                        settings: params
-                    },
-                    createBereichCallback);
-                });
-
-                //btn save
-                $("#bereichmanager #updateBereich").on('click',function() {
-                    if(!checkForm()){
-                        return;
-                    }
-                    var areaName = _currentValues['area'];
-
-                    if(confirm(unescape('Den Bereich: \"'+ areaName + '" aktualisieren?'))){
-                        var params = readInput()
-                        //                        params = JSON.stringify(params);
-                        NavTools.call_php('app/classes/AreasManager.php', 'updateAreaSettings',
-                        {
-                            name: areaName,
-                            settings: params
-                        },
-                        updateBereichCallback);
-                    }
-
-
-                });
-
-                //button delete bereich
-                $("#bereichmanager #removeBereich").on('click',function() {
-                    var areaName = _currentValues['area'];
-                    if(confirm(unescape('Den Bereich: \"'+ areaName + '" l%F6schen?'))){
-                        NavTools.call_php('app/classes/AreasManager.php', 'deleteAreaSettings',
-                        {
-                            name: areaName
-                        },
-                        removeBereichCallback);
-                    }
-                });
-
-                //bind event 'change' to every input, to catch any changes, for checkInputChange() function
-                $('#bereichmanager').find(':input').on('change', function(){
-                    if(_currentValues['area'] != null){
-                        if( _currentValues['area'].length > 0){
-                            _somethingChanged = true;
-                        }
-                    }
-                });
-
-                $(window).resize(function() {
-                    setPanelScroll();
-                });
-                setPanelScroll();
-            });
+            console.debug(fe_areas_manager);
+            console.debug(fe_areas_manager.loadContent);
+            $(document).ready(fe_areas_manager.loadContent());
         </script>
     </head>
 
-    <body id="bereich_manager">
+    <body id="areas_manager">
         <div id="wrapper">
             <h1 id="header"><?php echo($ne_config_info['app_title']); ?></h1>
             <div id="navBar">
                 <?php require('common_nav_menu.php'); ?>
             </div>
 
-            <div id="content_bereich_manager">
-                <div id="bereichmanager" >
-                    <div id="bereichList"></div>
-                    <div id="bereichSettings"></div>
+            <div id="content_areas_manager">
+                <div id="areas_manager" >
+                    <div id="areasList"></div>
+                    <div id="areasSettings"></div>
                 </div>
             </div>
 

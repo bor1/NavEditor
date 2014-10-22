@@ -84,6 +84,9 @@ $ne_config_info['fe_js_folder_name']   = 'fe_js';
 // CSS frontend folder name in vkdaten folder
 $ne_config_info['fe_css_folder_name']  = 'fe_css';
 
+// JSON form frontend folder name in vkdaten folder
+$ne_config_info['fe_json_folder_name']  = 'fe_json';
+
 //URL to naveditor
 $ne_config_info['ne_url']           = "http://".$_SERVER['HTTP_HOST'].$ne_config_info['app_path_without_host'];
 

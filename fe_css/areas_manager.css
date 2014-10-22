@@ -1,22 +1,22 @@
-#content_bereich_manager {
-    padding: 0 0.5em 0 0;
-    margin: 0 0 0.5em 0;
-    float: right;
-    width: 100%;
-}
-
-#bereichmanager {
+#areas_manager {
     width: 100%;
     min-height: 150px;
     max-height: 100%;
     min-width:  640px;
 }
 
-#bereichmanager>div {
+#content_areas_manager {
+    padding: 0 0.5em 0 0;
+    margin: 0 0 0.5em 0;
+    float: right;
+    width: 100%;
+}
+
+#areas_manager>div {
     border: 1px solid silver;
 }
 
-#bereichmanager #bereichList{
+#areas_manager #areasList{
     width: 10%;
     height: 100%;
     float: left;
@@ -25,7 +25,7 @@
     padding: 1px;
 }
 
-#bereichmanager #bereichSettings{
+#areas_manager #areasSettings{
     padding: 2px 2px 2px 1em;
     margin: 0 22% 0 12%;
     overflow: auto;
@@ -34,29 +34,29 @@
 }
 
 
-#bereichmanager #bereichList button{
+#areas_manager #bereichList button{
     width: 100%;
 }
 
-#bereichmanager .temp_buttons{
+#areas_manager .temp_buttons{
     width: 10em;
     height: 2.5em;
     margin: 10px;
     /*font-size: small;*/
 }
 
-#bereichmanager .bereichSettingsElement{
+#areas_manager .bereichSettingsElement{
     width: 320px;
     margin-left: 30px;
 }
 
-#bereichmanager label{
+#areas_manager label{
     display: inline-block;
     vertical-align: middle;
     alignment-adjust: middle;
     width: 10em;
 }
-#bereichList li button .buttonMenuSelected{
+#areas_manager li button .buttonMenuSelected{
     color: #f4f954;
     font-weight: bolder;
 }
