@@ -12,48 +12,42 @@
    "elements"   :
    [
     {
-     "type"    : "link",
-     "text"    : "text inside of your Link",
-     "link"    : "<the url>",
-     "onclick" : "<js_function>",
-     "css_class" : "<css_class_of_link",
-     "css_id"  : "<css_id_of_link"
-    },
-    {
-     "type"    : "button",
-     "name"    : "<name_of_your_button>",
-     "label"   : "<the_label>",
-     "onclick" : "<js_function>",
-     "css_class" : "<css_class_of_link",
-     "css_id"  : "<css_id_of_link"
-    },
-    {
+     "e_label" : "Name",
      "type"    : "input",
-     "name"    : "<name_of_your_input>",
-     "type"    : "<type_of_input>",
-     "size"    : "<size_of_input>",
-     "maxlength":"<maxlength_of_input>",
-     "value"    : "<initial_value>",
-     "css_class" : "<css_class_of_link",
-     "css_id"  : "<css_id_of_link"
+     "name"    : "name",
+     "f_type"  : "text",
+     "value"   : "",
+     "css_class" : "bereichSettingsElement",
+     "css_id"  : "name"
     },
     {
-     "name"    : "<name_of_area>",
-     "cols"    : "<cols_of_area>",
-     "rows"    : "<rows_of_area>",
-     "content" : "<initial_value>",
-     "css_class" : "<css_class_of_link>",
-     "css_id"  : "<css_id_of_link>"
+     "e_label" : "Titel",
+     "type"    : "input",
+     "name"    : "title",
+     "f_type"  : "text",
+     "value"   : "",
+     "css_class" : "bereichSettingsElement",
+     "css_id"  : "title"
     },
     {
-     "name"    : "<name_of_dropbox>",
+     "e_label" : "Dateiname",
+     "type"    : "input",
+     "name"    : "file_name",
+     "f_type"  : "text",
+     "value"   : "",
+     "css_class" : "bereichSettingsElement",
+     "css_id"  : "file_name"
+    },
+    {
+     "e_label" : "Minimum Rolle",
+     "name"    : "user_role_required",
      "elements": [
-                  "<option_1>",
-                  "<option_2>",
-                  "<whatever>"
+                  {"content" : "Benutzer"     , "value" : "user"     },
+                  {"content" : "Redakteur"    , "value" : "redaktor" },
+                  {"content" : "Administrator", "value" : "admin"    }
                  ],
-     "css_class" : "<css_class_of_link>",
-     "css_id"  : "<css_id_of_link>"
+     "css_class" : "bereichSettingsElement",
+     "css_id"  : "user_role_required"
     }
    ]
   }

@@ -5,23 +5,34 @@
 
 //fe_areas_manager = true;
 
-fe_areas_manager.vars = true;
-fe_areas_manager.vars.formLoaded = false;
+var fe_areas_manager = {
 
-fe_areas_manager.loadContent = function(){
+    vars : {
+        formLoaded : false
+    },
     
-    fe_areas_manager.loadList();
-    fe_areas_maneger.preloadForm();
-
-    $("areasList").innerHTML = "dies ist die liste";
+    loadContent : function(){
     
-};
+        fe_areas_manager.loadList();
+        fe_areas_manager.preloadForm();
 
-fe_areas_manager.preloadForm = function(){
-    fe_areas_manager.loadForm();
-    fe_areas_manager.disableForm();
-};
+    },
 
-fe_areas_manager.loadForm = function(){
-    //
+    loadList : function(){
+        $('#areasList').html('loading List ... <img src="ajax-loader.gif">');
+    },
+
+    preloadForm : function(){
+        fe_areas_manager.loadForm();
+        fe_areas_manager.disableForm();
+    },
+
+    loadForm : function(){
+        $('#areasSettings').html('loading Form ... <img src="ajax-loader.gif">');
+    },
+    
+    disableForm : function(){
+        //
+    }
+
 };

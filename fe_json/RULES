@@ -17,6 +17,7 @@ description:
 
 <js_to_call>     the javascript that will be called after form is loaded. usually
                  to fill it with the values. It will be attached manually.
+<e_label>        the label that will appear left from the element
 
 basic setup:
 
@@ -34,6 +35,7 @@ basic setup:
    "elements"   :
    [
     { //a link:
+     "e_label" : "<e_label>",
      "type"    : "link",
      "text"    : "text inside of your Link",
      "link"    : "<the url>",
@@ -42,6 +44,7 @@ basic setup:
      "css_id"  : "<css_id_of_link"       //not required
     },
     { //a button:
+     "e_label" : "<e_label>",
      "type"    : "button",
      "name"    : "<name_of_your_button>",
      "label"   : "<the_label>",
@@ -50,16 +53,18 @@ basic setup:
      "css_id"  : "<css_id_of_link"       //not required
     },
     { //an input field (general):
+     "e_label" : "<e_label>",
      "type"    : "input",
      "name"    : "<name_of_your_input>",
-     "type"    : "<type_of_input>",
+     "f_type"  : "<type_of_input>",
      "size"    : "<size_of_input>",      //not required
      "maxlength":"<maxlength_of_input>", //not required
-     "value"    : "<initial_value>",     //not required
+     "value"   : "<initial_value>",     //not required
      "css_class" : "<css_class_of_link", //not required
      "css_id"  : "<css_id_of_link"       //not required
     },
     { // a textarea:
+     "e_label" : "<e_label>",
      "name"    : "<name_of_area>",
      "cols"    : "<cols_of_area>",
      "rows"    : "<rows_of_area>",
@@ -68,11 +73,12 @@ basic setup:
      "css_id"  : "<css_id_of_link"       //not required
     },
     { // a dropbox:
+     "e_label" : "<e_label>",
      "name"    : "<name_of_dropbox>",
      "elements": [
-                  "<option_1>",
-                  "<option_2>",
-                  "<whatever>"
+                  {"content" : "<label_1>", "value" : "<value_1>"},
+                  {"content" : "<label_2>", "value" : "<value_2>"},
+                  {"content" : "<label_3>", "value" : "<value_3>"}
                  ]
      "css_class" : "<css_class_of_link", //not required
      "css_id"  : "<css_id_of_link"       //not required

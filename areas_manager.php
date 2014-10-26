@@ -10,7 +10,11 @@ require_once('auth.php');
         <title>Bereich Management - <?php echo($ne_config_info['app_titleplain']); ?></title>
 
         <script type="text/javascript">
-                var _json_area_data = '<?php echo(json_encode($g_areas_settings['area_settings'])); ?>';
+            var _json_area_data = '<?php echo(json_encode($g_areas_settings['area_settings'])); ?>';
+            <?php
+                $json_php_filename = $ne_config_info['fe_json_folder_name'] . "/areas_manager.json.php";
+                require($json_php_filename);
+            ?>
         </script>
 
         <?php
@@ -28,9 +32,7 @@ require_once('auth.php');
         ?>
 
         <script type="text/javascript">
-            console.debug(fe_areas_manager);
-            console.debug(fe_areas_manager.loadContent);
-            $(document).ready(fe_areas_manager.loadContent());
+            $(document).ready(fe_areas_manager.loadContent);
         </script>
     </head>
 
