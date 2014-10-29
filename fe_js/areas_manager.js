@@ -29,6 +29,8 @@ var fe_areas_manager = {
 
     loadForm : function(){
         $('#areasSettings').html('loading Form ... <img src="ajax-loader.gif">');
+        
+        $('#areasSettings').html(ne3_magic.createForm(areas_manager_form));
     },
     
     disableForm : function(){

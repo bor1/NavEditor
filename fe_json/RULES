@@ -65,6 +65,7 @@ basic setup:
     },
     { // a textarea:
      "e_label" : "<e_label>",
+     "type"    : "textarea",
      "name"    : "<name_of_area>",
      "cols"    : "<cols_of_area>",
      "rows"    : "<rows_of_area>",
@@ -74,6 +75,7 @@ basic setup:
     },
     { // a dropbox:
      "e_label" : "<e_label>",
+     "type"    : "dropbox",
      "name"    : "<name_of_dropbox>",
      "elements": [
                   {"content" : "<label_1>", "value" : "<value_1>"},

@@ -24,14 +24,14 @@ var ne3_magic = function(){
  */
 ne3_magic.createLink = function(text, link, onclick, css_class, id){
     retString = '<a href="' + link + '"';
-    if (onclick   !== false)
+    if (onclick   != "undefined")
         retString += ' onclick="' + onclick + '"';
     if (css_class !== false)
         retString += ' class="' + css_class + '"';
     if (id        !== false)
         retString += ' id="' + id + '"';
     
-    retString += '>' + text + '</a>' + "\n";
+    retString += '>' + text + '</a>';
     return retString;
 };
 
@@ -71,16 +71,20 @@ ne3_magic.createButton = function(name, label, onclick, css_class, id){
  */
 ne3_magic.createFormField = function(name, type, size, maxlength, value, css_class, id){
     var retString = '<input name="' + name + '" type="' + type + '"';
-    
-    if (size !== false)
+
+    if ((typeof size !== "undefined") && (size !== "undefined"))
         retString += ' size="' + size + '"';
-    if (maxlength !== false)
+    
+    if ((typeof maxlength !== "undefined") && (maxlength !== "undefined"))
         retString += ' maxlength="' + maxlength + '"';
-    if (value !== false)
+    
+    if ((typeof value !== "undefined") && (value !== "undefined"))
         retString += ' value="' + value + '"';
-    if (css_class !== false)
+    
+    if ((typeof css_class !== "undefined") && (css_class !== "undefined"))
         retString += ' class="' + css_class + '"';
-    if (id        !== false)
+    
+    if ((typeof id !== "undefined") && (id !== "undefined"))
         retString += ' id="' + id + '"';
     
     retString += ">";
@@ -127,7 +131,7 @@ ne3_magic.createTextArea = function(name, cols, rows, content, css_class, id){
  * @param {String} id
  * @returns {retString|String}
  */
-ne3_magic.generateDropBox = function(name, elements, css_class, id){
+ne3_magic.createDropBox = function(name, elements, css_class, id){
 
     size = elements.length;
     
@@ -171,7 +175,7 @@ ne3_magic.createForm = function(JSONdata){
     
     retString = '';
     
-    if (data.identifier !== json_form_data)
+    if (data.identifier !== "json_form_data")
         return '<!-- wrong format in ne3_magic.createForm --!>';
     
     retString += '<form name="' + data.form.name + '"';
@@ -182,8 +186,45 @@ ne3_magic.createForm = function(JSONdata){
         retString += ' id="' + data.form.id + '"';
     
     retString += '>';
+    retString += '<table>';
     
+    for (i=0; i<data.form.elements.length; i++){
+        
+        var curEl = data.form.elements[i];
+        
+        retString += '<tr><td>';
+        retString += '<b>' + curEl.e_label + '</b></td><td>';
+        //our current element
+        
+        switch(curEl.type){
+            case "link":
+                retString += ne3_magic.createLink(curEl.text, curEl.link, curEl.onclick, curEl.css_class, curEl.css_id);
+              break;
+              
+            case "button":
+            
+              break;
+              
+            case "input":
+                retString += ne3_magic.createFormField(curEl.name, curEl.f_type, curEl.size, curEl.maxlength, curEl.value, curEl.css_class, curEl.css_id);
+              break;
+              
+            case "textarea":
+            
+              break;
+              
+            case "dropbox":
+                
+              break;
+              
+            default:
+                retString += '<!-- Unknown type in magic.js::createForm-->' + "\n";
+        }
+        
+        retString += '</td></tr>' + "\n";
+    }
     
+    retString += '</table>';
     retString += '</form>';
     
     return retString;

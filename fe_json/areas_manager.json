@@ -40,6 +40,7 @@
     },
     {
      "e_label" : "Minimum Rolle",
+     "type"    : "dropbox",
      "name"    : "user_role_required",
      "elements": [
                   {"content" : "Benutzer"     , "value" : "user"     },
