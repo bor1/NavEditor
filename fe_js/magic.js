@@ -24,11 +24,11 @@ var ne3_magic = function(){
  */
 ne3_magic.createLink = function(text, link, onclick, css_class, id){
     retString = '<a href="' + link + '"';
-    if (onclick   != "undefined")
+    if ((typeof onclick !== "undefined") && (onclick !== "undefined"))
         retString += ' onclick="' + onclick + '"';
-    if (css_class !== false)
+    if ((typeof css_class !== "undefined") && (css_class !== "undefined"))
         retString += ' class="' + css_class + '"';
-    if (id        !== false)
+    if ((typeof id !== "undefined") && (id !== "undefined"))
         retString += ' id="' + id + '"';
     
     retString += '>' + text + '</a>';
@@ -47,11 +47,11 @@ ne3_magic.createLink = function(text, link, onclick, css_class, id){
 ne3_magic.createButton = function(name, label, onclick, css_class, id){
     retString = '<button name="' + name + '"';
 
-    if (onclick   !== false)
+    if ((typeof onclick !== "undefined") && (onclick !== "undefined"))
         retString += ' onclick="' + onclick + '"';
-    if (css_class !== false)
+    if ((typeof css_class !== "undefined") && (css_class !== "undefined"))
         retString += ' class="' + css_class + '"';
-    if (id        !== false)
+    if ((typeof id !== "undefined") && (id !== "undefined"))
         retString += ' id="' + id + '"';
     
     retString += '>' + label + '</button>';
@@ -102,16 +102,16 @@ ne3_magic.createFormField = function(name, type, size, maxlength, value, css_cla
  * @returns {String} html tag in a string
  */
 ne3_magic.createTextArea = function(name, cols, rows, content, css_class, id){
-    if (cols === false)
+    if ((typeof cols === "undefined") || (size === "undefined"))
         cols = 30;
-    if (rows === false)
+    if ((typeof rows === "undefined") || (size === "undefined"))
         rows = 5;
     
     var retString = '<textarea name="' + name +'" cols="' + cols +'" rows="' + rows + '"';
     
-    if (css_class !== false)
+    if ((typeof css_class !== "undefined") && (css_class !== "undefined"))
         retString += ' class="' + css_class + '"';
-    if (id        !== false)
+    if ((typeof id !== "undefined") && (css_class !== "undefined"))
         retString += ' id="' + id + '"';
     
     retString += '>';
@@ -133,19 +133,20 @@ ne3_magic.createTextArea = function(name, cols, rows, content, css_class, id){
  */
 ne3_magic.createDropBox = function(name, elements, css_class, id){
 
-    size = elements.length;
+    //size = elements.length;
+    size = 1;
     
     retString = '<select name="' + name +  '" size="' + size + '"';
         
-    if (css_class !== false)
+    if ((typeof css_class !== "undefined") && (css_class !== "undefined"))
         retString += ' class="' + css_class + '"';
-    if (id        !== false)
+    if ((typeof id !== "undefined") && (id !== "undefined"))
         retString += ' id="' + id + '"';
         
     retString += '>';
     
     for (i=0; i< (elements.length); i++)
-        retString += '<option>' + elements[i] + '</option>';
+        retString += '<option value="' + elements[i].value + '">' + elements[i].content + '</option>';
     
     retString += '</select>';
     
@@ -202,7 +203,7 @@ ne3_magic.createForm = function(JSONdata){
               break;
               
             case "button":
-            
+                retString += ne3_magic.createButton(curEl.name, curEl.label, curEl.onclick, curEl.css_class, curEl.css_id);
               break;
               
             case "input":
@@ -210,11 +211,11 @@ ne3_magic.createForm = function(JSONdata){
               break;
               
             case "textarea":
-            
+                retString += ne3_magic.createTextArea(curEl.name, curEl.cols, curEl.rows, curEl.content, curEl.css_class, curEl.css_id);
               break;
               
             case "dropbox":
-                
+                retString += ne3_magic.createDropBox(curEl.name, curEl.elements, curEl.css_class, curEl.css_id);
               break;
               
             default:

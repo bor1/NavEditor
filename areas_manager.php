@@ -50,8 +50,10 @@ require_once('auth.php');
                 </div>
             </div>
 
-            <?php require('common_footer.php'); ?>
         </div>
+        
+        <?php require('common_footer.php'); ?>
+    
     </body>
 
 </html>

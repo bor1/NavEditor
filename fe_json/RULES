@@ -85,6 +85,16 @@ basic setup:
      "css_class" : "<css_class_of_link", //not required
      "css_id"  : "<css_id_of_link"       //not required
     }
+   ],
+  "buttons" :
+  [ //buttons that will appear at the end of the form
+   { //a button:
+     "e_label" : "<e_label>",
+     "name"    : "<name_of_your_button>",
+     "onclick" : "<js_function>",        //not required
+     "css_class" : "<css_class_of_link", //not required
+     "css_id"  : "<css_id_of_link"       //not required
+    }
    ]
   }
 }
