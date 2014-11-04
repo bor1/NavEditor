@@ -225,6 +225,8 @@ class FileHandler {
 				array_push($target, $arr_part);
 				break;
 		}
+
+        return false;
 	}
 
 	private function _setQuickLink($key, &$nodes) {

@@ -8,6 +8,7 @@ class ContentHandler {
 	private $_content;
 	private $_newTemplateHtml;
 	private $_siteTitle;
+    /** @var  BackupManager */
 	private $_backupManager;
 	private $_content_block_pattern;
 	private $_content_block_pattern_fallback;
@@ -61,7 +62,7 @@ class ContentHandler {
 		return mb_convert_encoding($content, 'UTF-8', mb_detect_encoding($content, 'UTF-8, ISO-8859-1', TRUE));
 	}
 
-	public function setBackupManager($backupManager) {
+	public function setBackupManager(BackupManager $backupManager) {
 		$this->_backupManager = $backupManager;
 	}
 
@@ -86,11 +87,16 @@ class ContentHandler {
 		$pattern2 = '/(<div id="titel">)((\n|.)*?)(<\/div>)/i';
 		$this->_templateHtml = preg_replace($pattern2, '$1<h1>' . $this->_title . '</h1>$4', $this->_templateHtml);
 	}
+
 	private function replaceLogo() {
 		// <div id="logo">...</div>
 		global $ne_config_info;
 		$pattern = '%<div id="logo">.*?</div>%s';
 		$logoValues = $this->getConfValues($ne_config_info['website_conf_filename']);
+        $hrefB = '';
+        $hrefE = '';
+        $description = '';
+        $logoImg = '';
 
 		If ($this->_filePath != $_SERVER['DOCUMENT_ROOT'].'/index.shtml'){
 			$hrefB = '<a href="/">';
@@ -119,50 +125,50 @@ class ContentHandler {
 		$this->_templateHtml = preg_replace($pattern, $logo, $this->_templateHtml);
 	}
 
-	private function getConfValues($confFile) {
-	$fpath = $_SERVER['DOCUMENT_ROOT'] . '/vkdaten/'.$confFile;
-	$retv = array();
-	$to_concat = FALSE;
-	$fh = fopen($fpath, 'r') or die('Cannot open file!');
-	while(!feof($fh)) {
-		$oline = fgets($fh);
-		$pline = str_replace(array("\r", "\n", "\r\n"), '', ltrim($oline));
-		if((strlen($pline) == 0) || (substr($pline, 0, 1) == '#')) {
-			continue; // ignore comments and empty rows
-		}
+    private function getConfValues($confFile) {
+        $fpath     = $_SERVER['DOCUMENT_ROOT'] . '/vkdaten/' . $confFile;
+        $retv      = array();
+        $to_concat = false;
+        $fh = fopen($fpath, 'r') or die('Cannot open file!');
+        while (!feof($fh)) {
+            $oline = fgets($fh);
+            $pline = str_replace(array("\r", "\n", "\r\n"), '', ltrim($oline));
+            if ((strlen($pline) == 0) || (substr($pline, 0, 1) == '#')) {
+                continue; // ignore comments and empty rows
+            }
 
-		if(substr($pline, strlen($pline) - 2, 2) == " \\") {
-			// concat next lines to form the value
-			if($to_concat === FALSE) {
-				$to_concat = TRUE;
-				$arr_opts1 = preg_split('/\t|\s{2,}/', $pline);
-				$opt1 = array($arr_opts1[0], str_replace(" \\", "", $arr_opts1[1]));
-				continue;
-			} else {
-				$opt1[1] .= " " . str_replace(" \\", "", $pline);
-			}
-		} else {
-			if($to_concat) {
-				$opt1[1] .= " " . $pline; // the last line
-				$retv[$opt1[0]] = $opt1[1];
-				//array_push($retv, $opt1);
-				$to_concat = FALSE;
-			} else {
-				$arr_opts = preg_split('/\t|\s{2,}/', $pline);
-				/*$opt = array(
-					'opt_name' => $arr_opts[0],
-					'opt_value' => $arr_opts[1]
-				);
-				array_push($retv, $opt); */
-				$retv[$arr_opts[0]] = $arr_opts[1];
-			}
-		}
-	}
-	fclose($fh);
-	return $retv;
-	}
+            if (substr($pline, strlen($pline) - 2, 2) == " \\") {
+                // concat next lines to form the value
+                if ($to_concat === false) {
+                    $to_concat = true;
+                    $arr_opts1 = preg_split('/\t|\s{2,}/', $pline);
+                    $opt1      = array($arr_opts1[0], str_replace(" \\", "", $arr_opts1[1]));
+                    continue;
+                } else {
+                    $opt1[1] .= " " . str_replace(" \\", "", $pline);
+                }
+            } else {
+                if ($to_concat) {
+                    $opt1[1] .= " " . $pline; // the last line
+                    $retv[$opt1[0]] = $opt1[1];
+                    //array_push($retv, $opt1);
+                    $to_concat = false;
+                } else {
+                    $arr_opts = preg_split('/\t|\s{2,}/', $pline);
+                    /*$opt = array(
+                        'opt_name' => $arr_opts[0],
+                        'opt_value' => $arr_opts[1]
+                    );
+                    array_push($retv, $opt); */
+                    $retv[$arr_opts[0]] = $arr_opts[1];
+                }
+            }
+        }
+        fclose($fh);
+        return $retv;
+    }
 
-	private function replaceContent() {
+    private function replaceContent() {
 
 		$str_pattern = $this->_content_block_pattern;
 		preg_match($str_pattern, $this->_templateHtml, $matches);
@@ -278,11 +284,9 @@ class ContentHandler {
 		$start_pos = mb_strpos($this->_templateHtml, $this->_content_marker_start);
 		$end_pos = mb_strpos($this->_templateHtml, $this->_content_marker_end);
 		$is_newstartpos = 0;
-		$fallbackstart;
 
-		$start_pos = mb_strpos($this->_templateHtml, $this->_content_marker_start);
-                $fallbackstart = mb_strpos($this->_templateHtml, $this->_content_marker_start_fallback );
-                $fallbackstart += mb_strlen($this->_content_marker_start_fallback );
+        $fallbackstart = mb_strpos($this->_templateHtml, $this->_content_marker_start_fallback );
+        $fallbackstart += mb_strlen($this->_content_marker_start_fallback );
 
 		if ($start_pos !== FALSE) {
 			$start_pos += mb_strlen($this->_content_marker_start);
@@ -295,7 +299,6 @@ class ContentHandler {
 
 		}
 
-		$end_pos = mb_strpos($this->_templateHtml, $this->_content_marker_end);
 		if ($end_pos === FALSE) {
 			$end_pos = mb_strpos($this->_templateHtml, $this->_content_marker_end_fallback );
 		}
@@ -303,7 +306,7 @@ class ContentHandler {
 		if($start_pos === FALSE || $end_pos === FALSE) {
 			return '<span style="color:red; font-size: 1.5em; font-weight: bold;">Der Textbereich der Seite konnte nicht ermittelt werden. <br />M&ouml;glicherweise wurden fehlerhafte HTML-Anweisungen eingef&uuml;gt, die das Analysieren des Textes verhindern. Bitte korrigieren Sie die fehlerhaften Bestandteile des Codes &uuml;ber den Quellcode-Editor bei dem Men&uuml;punkt Bilder und Dateien (f&uuml;r Administratoren) oder nutzen einen HTML-Editor.  </span>';
 		}
-		$len = mb_strlen($this->_templateHtml);
+
 		$real_content = mb_substr($this->_templateHtml, $start_pos, $end_pos - $start_pos);
                 $textlen= mb_strlen($real_content);
                 if (($textlen < 1) && ($is_newstartpos)) {

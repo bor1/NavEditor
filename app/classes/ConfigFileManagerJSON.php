@@ -28,5 +28,3 @@ class ConfigFileManagerJSON extends ConfigFileManagerAbstract{
         return json_encode($data);
     }
 }
-
-?>

@@ -20,5 +20,3 @@ class NavEditorAbstractClass {
         return ($g_current_user_name)?:'';
     }
 }
-
-?>

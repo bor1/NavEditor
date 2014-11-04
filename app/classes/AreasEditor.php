@@ -23,9 +23,9 @@ class AreasEditor {
 
     /**
      * Constructor
-     *
-     * @global array $ne_config_info
      * @param string $areaname Name des Bereichs
+     * @throws Exception if no file name found in config settings
+     * @global array $ne_config_info
      */
     public function __construct($areaname) {
         global $ne_config_info;
@@ -269,5 +269,3 @@ class AreasEditor {
     }
 
 }
-
-?>

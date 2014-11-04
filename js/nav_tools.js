@@ -154,7 +154,7 @@ var NavTools = new function(){
      */
     this.dirname = function(path) {
         return path.replace(/\\/g, '/').replace(/\/[^\/]*\/?$/, '');
-    }
+    };
 
 
     /**
@@ -180,7 +180,7 @@ var NavTools = new function(){
         }
 
         return b;
-    }
+    };
 
 
     /**
@@ -201,6 +201,7 @@ var NavTools = new function(){
      */
     this.pathinfo = function(path, options) {
         var opt = '',
+            real_opt = '',
             optName = '',
             optTemp = 0,
             tmp_arr = {},
@@ -229,7 +230,9 @@ var NavTools = new function(){
         };
         // PATHINFO_ALL sums up all previously defined PATHINFOs (could just pre-calculate)
         for (optName in OPTS) {
-            OPTS.PATHINFO_ALL = OPTS.PATHINFO_ALL | OPTS[optName];
+            if(OPTS.hasOwnProperty(optName)){
+                OPTS.PATHINFO_ALL = OPTS.PATHINFO_ALL | OPTS[optName];
+            }
         }
         if (typeof options !== 'number') { // Allow for a single string or an array of string flags
             options = [].concat(options);
@@ -293,15 +296,18 @@ var NavTools = new function(){
         // If array contains only 1 element: return string
         cnt = 0;
         for (opt in tmp_arr) {
-            cnt++;
+            if(tmp_arr.hasOwnProperty(opt)){
+                cnt++;
+                real_opt = opt;
+            }
         }
-        if (cnt == 1) {
-            return tmp_arr[opt];
+        if (cnt === 1) {
+            return tmp_arr[real_opt];
         }
 
         // Return full-blown array
         return tmp_arr;
-    }
+    };
 
 
 
@@ -311,4 +317,4 @@ var NavTools = new function(){
     //set default settings
     this.set_settings();
 
-};
+}();

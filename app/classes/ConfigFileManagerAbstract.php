@@ -246,7 +246,7 @@ abstract class ConfigFileManagerAbstract{
     public function saveToFile() {
         $this->createBackUp();
         if (file_put_contents($this->_configFilePath, $this->encodeData($this->_configDataCache)) === FALSE) {
-            throw new Exception('Cannot save to file: "' . $this->configFilePath);
+            throw new Exception('Cannot save to file: "' . $this->_configFilePath);
         }
         return TRUE;
     }
@@ -326,5 +326,3 @@ abstract class ConfigFileManagerAbstract{
     public abstract function encodeData($data);
 
 }
-
-?>
