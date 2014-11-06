@@ -116,11 +116,12 @@ This is how to generate a list, that selects forms.
  [
   { //a header in the list (h1, h2, h3, etc. ...)
    "type"    : "h1",
-   "content" : "<text"
+   "content" : "<text>"
   },
   { //a link that call the generate function for a form
-   "type"    : "form",
-   "form_id" : "<id_of_form>"
+   "type"    : "link",
+   "onclick" : "<js_function>",
+   "content" : "<text>"
   }
  ]
 }
