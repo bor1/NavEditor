@@ -50,6 +50,23 @@
      "css_class" : "bereichSettingsElement",
      "css_id"  : "user_role_required"
     }
-   ]
+   ],
+   "buttons" :
+    [
+     {
+      "e_label" : "Speichern",
+      "name"    : "",
+      "onclick" : "",
+      "css_class" : "",
+      "css_id"  : "updateArea"
+     },
+     {
+      "e_label" : "L&ouml;schen",
+      "name"    : "",
+      "onclick" : "",
+      "css_class" : "",
+      "css_id"  : "removeArea"
+     }
+    ]
   }
 }

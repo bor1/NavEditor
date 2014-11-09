@@ -37,6 +37,8 @@ class FileManager {
             reset($objects);
             return rmdir($dir);
         }
+
+        return false;
     }
 
     public function createSubFolder($ppath, $fname) {
@@ -219,6 +221,8 @@ class FileManager {
             $content = str_replace(array('<comment_ssi>', '<comment>', '</comment>'), array('<!-' . '-#', '<!--', '-->'), $content);
             return file_put_contents($file_path, $content);
         }
+
+        return false;
     }
 
     public function backupCurrentConfigFile($file_path) {
@@ -226,17 +230,19 @@ class FileManager {
             $bak_file_path = $file_path . '-' . date('Ymd');
             return copy($file_path, $bak_file_path);
         }
+
+        return false;
     }
 
     public function restoreCurrentConfigFile($file_path) {
         $bak_file_path = $file_path . '-' . date('Ymd');
         if (!file_exists($bak_file_path)) {
-            return;
+            return false;
         }
         if (file_exists($file_path)) {
             if (filesize($file_path) == filesize($bak_file_path)) {
                 // Gleiche Datei, brauche nichts zu tun
-                return;
+                return false;
             } else {
                 // Neue Datei, also neue Konfigwerte
                 // Sichere diese extra ab in eine der defaultfiles und ueberschreibe dann mit

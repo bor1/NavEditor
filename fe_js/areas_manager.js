@@ -42,28 +42,39 @@ var fe_areas_manager = {
     
     createListFromNames : function(names){
         
-        //generate and object that will be parsed by ne3_magic.createList.
+        //generate an object that will be parsed by ne3_magic.createList.
         
-        var list = true;
+        var list = {};
         
         list.id = "areasList";
         list.css_id_s    = "";
         list.css_id_form = "";
+        list.identifier  = "json_list_data";
         
-        list.elements    = new Array(1);
-        list.elements[0] = { "type"    : "h3", "content" : "Benutzer:" };
+        list.elements    = new Array();
+        list.elements[0] = { "type"    : "h4", "content" : "Benutzer:" };
         
         i=1;
         for (; i<=names.length; i++){
+            list.elements[i] = {};
             list.elements[i].type = "link";
-            list.elements[i].onclick = "fe_areas_manager.loadData(" + names[i-1] + ")";
-            list.elements[i].content = names[i-1];
+            list.elements[i].onclick = 'fe_areas_manager.loadData(\'' + names[i-1] + '\')';
+            list.elements[i].content = "" + names[i-1];
+            list.elements[i].css_class = "glyphicon";
         }
         
         return list;
     },
     
     loadData : function(name){
+        //
+    },
+    
+    saveData : function(name){
+        //
+    },
+    
+    deleteArea : function(name){
         //
     }
 

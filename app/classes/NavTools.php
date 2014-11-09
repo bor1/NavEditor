@@ -252,8 +252,8 @@ class NavTools {
     /**
      * If $variable is not set, returns $default, otherwise $variable
      * @link https://wiki.php.net/rfc/ifsetor
-     * @param type $variable variable to test
-     * @param type $default value to return if $variable is null
+     * @param mixed $variable variable to test
+     * @param mixed $default value to return if $variable is null
      * @return mixed $default or $variable depends on isset($variable) test
      */
     public static function ifsetor(&$variable, $default = null) {
@@ -348,5 +348,3 @@ class NavTools {
     }
 
 }
-
-?>

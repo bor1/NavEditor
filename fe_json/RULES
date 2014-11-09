@@ -40,8 +40,8 @@ basic setup:
      "text"    : "text inside of your Link",
      "link"    : "<the url>",
      "onclick" : "<js_function>",        //not required
-     "css_class" : "<css_class_of_link", //not required
-     "css_id"  : "<css_id_of_link"       //not required
+     "css_class" : "<css_class_of_link>", //not required
+     "css_id"  : "<css_id_of_link>"       //not required
     },
     { //a button:
      "e_label" : "<e_label>",
@@ -49,8 +49,8 @@ basic setup:
      "name"    : "<name_of_your_button>",
      "label"   : "<the_label>",
      "onclick" : "<js_function>",        //not required
-     "css_class" : "<css_class_of_link", //not required
-     "css_id"  : "<css_id_of_link"       //not required
+     "css_class" : "<css_class_of_link>", //not required
+     "css_id"  : "<css_id_of_link>"       //not required
     },
     { //an input field (general):
      "e_label" : "<e_label>",
@@ -60,8 +60,8 @@ basic setup:
      "size"    : "<size_of_input>",      //not required
      "maxlength":"<maxlength_of_input>", //not required
      "value"   : "<initial_value>",     //not required
-     "css_class" : "<css_class_of_link", //not required
-     "css_id"  : "<css_id_of_link"       //not required
+     "css_class" : "<css_class_of_link>", //not required
+     "css_id"  : "<css_id_of_link>"       //not required
     },
     { // a textarea:
      "e_label" : "<e_label>",
@@ -70,8 +70,8 @@ basic setup:
      "cols"    : "<cols_of_area>",
      "rows"    : "<rows_of_area>",
      "content" : "<initial_value>",      //not required
-     "css_class" : "<css_class_of_link", //not required
-     "css_id"  : "<css_id_of_link"       //not required
+     "css_class" : "<css_class_of_link>", //not required
+     "css_id"  : "<css_id_of_link>"       //not required
     },
     { // a dropbox:
      "e_label" : "<e_label>",
@@ -82,18 +82,18 @@ basic setup:
                   {"content" : "<label_2>", "value" : "<value_2>"},
                   {"content" : "<label_3>", "value" : "<value_3>"}
                  ]
-     "css_class" : "<css_class_of_link", //not required
-     "css_id"  : "<css_id_of_link"       //not required
+     "css_class" : "<css_class_of_link>", //not required
+     "css_id"  : "<css_id_of_link>"       //not required
     }
    ],
   "buttons" :
-  [ //buttons that will appear at the end of the form
-   { //a button:
+   [ //buttons that will appear at the end of the form
+    { //a button:
      "e_label" : "<e_label>",
      "name"    : "<name_of_your_button>",
      "onclick" : "<js_function>",        //not required
-     "css_class" : "<css_class_of_link", //not required
-     "css_id"  : "<css_id_of_link"       //not required
+     "css_class" : "<css_class_of_link>", //not required
+     "css_id"  : "<css_id_of_link>"       //not required
     }
    ]
   }
@@ -109,6 +109,7 @@ This is how to generate a list, that selects forms.
 <css_id_form>      Where to generate the form
 
 {
+ "identifier" : "json_list_data",
  "id"       : "id_of_selector",
  "css_id_s" : "<css_id_selector>",
  "css_id_f" : "<css_id_form>",
@@ -116,12 +117,16 @@ This is how to generate a list, that selects forms.
  [
   { //a header in the list (h1, h2, h3, etc. ...)
    "type"    : "h1",
-   "content" : "<text>"
+   "content" : "<text>",
+   "css_id"  : "<css id>",
+   "css_class" : "<css class>"
   },
   { //a link that call the generate function for a form
    "type"    : "link",
    "onclick" : "<js_function>",
    "content" : "<text>"
+   "css_id"  : "<css id>",
+   "css_class" : "<css class>"
   }
  ]
 }

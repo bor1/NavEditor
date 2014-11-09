@@ -240,7 +240,7 @@ ne3_magic.createList = function (JSONdata) {
     }
     catch (error) {
         if (!(JSONdata.identifier))
-            return '<!-- no JSON data given to ne3_magic.createForm --!>';
+            return '<!-- no JSON data given to ne3_magic.createList --!>';
 
         //JSONdata is already parsed
         data = JSONdata;
@@ -254,11 +254,30 @@ ne3_magic.createList = function (JSONdata) {
             case "h4":
             case "h5":
             case "h6":
-                retString += '<' + data.elements[i].type + '>' + data.elements[i].content + '</' + data.elements[i].type + '"\n';
-                break;
+                
+                retString += '<' + data.elements[i].type;
+                
+                if ((typeof data.elements[i].css_class !== "undefined") && (data.elements[i].css_class !== "undefined"))
+                    retString += ' class="' + data.elements[i].css_class + '"';
+                if ((typeof data.elements[i].css_id !== "undefined") && (data.elements[i].css_id !== "undefined"))
+                    retString += ' id="' + data.elements[i].css_id + '"';
+    
+                retString += '>' + data.elements[i].content + '</' + data.elements[i].type + ">\n";
+                
+              break;
 
             case "link":
-                retString += '<a href="#" onclick="' + data.elements[i].onclick + '">' + content + "</a>\n";
+                
+                
+                retString += '<a href="#" ';
+                
+                if ((typeof data.elements[i].css_class !== "undefined") && (data.elements[i].css_class !== "undefined"))
+                    retString += ' class="' + data.elements[i].css_class + '"';
+                if ((typeof data.elements[i].css_id !== "undefined") && (data.elements[i].css_id !== "undefined"))
+                    retString += ' id="' + data.elements[i].css_id + '"';
+                    
+                retString += 'onclick="' + data.elements[i].onclick + '">' + data.elements[i].content + "</a>\n";
+                retString += "<br>";
                 break;
 
             default:
@@ -266,5 +285,6 @@ ne3_magic.createList = function (JSONdata) {
         }
     }
 
+    console.log(retString);
     return retString;
 };

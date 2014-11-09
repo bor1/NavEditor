@@ -42,6 +42,7 @@ class AreasManager {
 
     /**
      * Constructor
+     * @throws Exception if no config file can be created
      * @global array $ne_config_info
      * @global array $g_areas_settings
      */
@@ -104,6 +105,7 @@ class AreasManager {
      * Add new area, creates empty file
      * @param string $sAreaName name of area
      * @param array $aSettings associative array of area settings
+     * @throws Exception if new 'file_name' in settings already exists
      * @return bool success
      */
     public function addAreaSettings($sAreaName, array $aSettings) {
@@ -137,7 +139,7 @@ class AreasManager {
     /**
      * Remove area
      * @param string $sAreaName name of area
-     * @return success
+     * @return boolean success
      */
     public function deleteAreaSettings($sAreaName){
 
@@ -149,7 +151,7 @@ class AreasManager {
      * Update area
      * @param string $sAreaName name of area
      * @param array $aSettings associative array of area settings
-     * @return success
+     * @return boolean success
      * @throws Exception
      * @internal TODO vllt allgemein AreaFileHandler Klass erstellen.
      */
@@ -361,8 +363,8 @@ class AreasManager {
     }
 
     /**
-     * Tests, if new file_name doesnt used
-     * @param type $sNewFileName
+     * Tests, if new file_name used
+     * @param string $sNewFileName
      * @return boolean FALSE if already in use
      */
     private function _testNewFileName($sNewFileName) {
@@ -390,7 +392,8 @@ class AreasManager {
 
         //alle settings versuchen anzupassen
         //TODO irgendeine Validator Klasse hinzufuegen bzw erstellen...
-        array_walk($aSettings, function(&$item, $key) {
+        $aUserRoles =& $this->_aUserRoles;
+        array_walk($aSettings, function(&$item, $key) use (&$aUserRoles) {
                     switch ($key) {
                         case 'name':
 //                        case 'title':
@@ -408,7 +411,7 @@ class AreasManager {
 
 
                         case 'user_role_required':
-                            if (!array_key_exists($item, $this->_aUserRoles)) {
+                            if (!array_key_exists($item, $aUserRoles)) {
 //                                throw new Exception('Unknown user role: ' . $item);
                                 return FALSE;
                             }
