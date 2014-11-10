@@ -66,8 +66,20 @@ var fe_areas_manager = {
         return list;
     },
     
+    fillData : function(JSONdata){
+        console.log(JSONdata);
+        
+        var data = JSON.parse(JSONdata);
+        
+    },
+    
     loadData : function(name){
-        //
+        
+        console.log(name);
+        
+        NavTools.call_php('app/classes/AreasManager.php', 'getAreaSettings',
+                name,
+                fe_areas_manager.fillData);
     },
     
     saveData : function(name){

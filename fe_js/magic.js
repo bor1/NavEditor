@@ -227,6 +227,23 @@ ne3_magic.createForm = function (JSONdata) {
 
     retString += '</table>';
     retString += '</form>';
+    
+    retString += '<hr>';
+    for (i=0; i< data.form.buttons.length; i++){
+        var curEl = data.form.buttons[i];
+        
+        retString += '<button name="' + curEl.name + '"';
+        
+        
+        if ((typeof curEl.css_class !== "undefined") && (curEl.css_class !== "undefined"))
+            retString += ' class="' + curEl.css_class + '"';
+        if ((typeof curEl.css_id !== "undefined") && (curEl.css_id !== "undefined"))
+            retString += ' id="' + curEl.css_id + '"';
+        
+        retString += '>' + curEl.e_label + '</button>';
+    
+        
+    }
 
     return retString;
 };
@@ -285,6 +302,6 @@ ne3_magic.createList = function (JSONdata) {
         }
     }
 
-    console.log(retString);
+    //console.log(retString);
     return retString;
 };

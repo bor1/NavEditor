@@ -19,7 +19,6 @@
 #areas_manager #areasList{
     width: 10%;
     height: 100%;
-    min-height: 300px;
     float: left;
     overflow: auto;
     margin: 0 0 0 1em;
