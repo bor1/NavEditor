@@ -113,6 +113,15 @@ class NavTools {
                 $retString .= NavTools::wrapScriptInclude($path_js . "magic.js");
                 $retString .= NavTools::wrapScriptInclude($path_js . "areas_manager.js");
                 $retString .= NavTools::wrapStyleInclude($path_css . "areas_manager.css");
+                $retString .= NavTools::includeHtml('default',
+                        'jquery-ui-1.8.2.custom.min.js',
+                        'jqueryui/ne2-theme/jquery-ui-1.8.17.custom.css',
+                        'naveditor2.js',
+                        'jquery.md5.js',
+                        'livevalidation_standalone.compressed.js',
+                        'live_validation.css',
+                        'nav_tools.js'
+                );
                 break;
             
             default:

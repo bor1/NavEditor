@@ -52,7 +52,7 @@ var fe_areas_manager = {
         list.identifier  = "json_list_data";
         
         list.elements    = new Array();
-        list.elements[0] = { "type"    : "h4", "content" : "Benutzer:" };
+        list.elements[0] = { "type"    : "h4", "content" : "Bereiche:" };
         
         i=1;
         for (; i<=names.length; i++){
@@ -87,7 +87,12 @@ var fe_areas_manager = {
     },
     
     deleteArea : function(name){
-        //
+        
+        var text = NavTools.call_php('app/classes/AreasManager.php', 'deleteAreaSettings',
+                name,
+                function(data){console.log(data);});
+        
+
     }
 
 };
