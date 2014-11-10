@@ -11,7 +11,11 @@ if(! file_exists($fpath)) {
     switch($_GET["p"]){
         case "areas_manager":
         break;
-
+        
+        case "":
+            header('Location: dashboard.php');
+        break;
+    
         default:
             header('Location: ' . $_GET["p"] . ".php");
     }
