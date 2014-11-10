@@ -203,7 +203,7 @@ switch($oper) {
                             $opt_line = $ji['opt_name'] . "\t" . $ji['opt_value'] . "\r\n";
                             $new_file_content .= $opt_line;
                             break;
-/*						} else {
+/*                        } else {
                             $opt_line = "\r\n" . $ji['opt_name'] . "\t" . $ji['opt_value'] . "\r\n";
                             $new_file_content .= $opt_line;*/
                         }
@@ -224,7 +224,7 @@ switch($oper) {
                             $opt_line = $ji['opt_name'] . "\t" . $ji['opt_value'] . "\r\n";
                             $new_file_content .= $opt_line;
                             break;
-/*						} else {
+/*                        } else {
                             $opt_line = "\r\n" . $ji['opt_name'] . "\t" . $ji['opt_value'] . "\r\n";
                             $new_file_content .= $opt_line;*/
                         }

@@ -14,7 +14,7 @@ function http_get_file($url) {
         return FALSE;
     }
 
-/*		$url_stuff = parse_url($url);
+/*        $url_stuff = parse_url($url);
     $port = isset($url_stuff['port']) ? $url_stuff['port'] : 80;
 
     $fp = fsockopen($url_stuff['host'], $port);
@@ -38,7 +38,7 @@ function http_get_file($url) {
     preg_match('/Content-Length: ([0-9]+)/', $buffer, $parts);
     return substr($buffer, -$parts[1]);*/
 
-/*		if(function_exists('curl_init')) {
+/*        if(function_exists('curl_init')) {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HEADER, 0);

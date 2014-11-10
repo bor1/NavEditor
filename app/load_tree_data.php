@@ -5,7 +5,7 @@ $internal_tree_file = $_SERVER['DOCUMENT_ROOT'] . '/vkdaten/navigationsindex_buf
 $public_tree_file = $_SERVER['DOCUMENT_ROOT'] . '/vkdaten/navigationsindex.txt';
 
 if(!file_exists($internal_tree_file)) {
-	copy($public_tree_file, $internal_tree_file);
+    copy($public_tree_file, $internal_tree_file);
 }
 
 $fhr = new FileHandler();

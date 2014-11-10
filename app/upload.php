@@ -24,23 +24,23 @@ class UploadHandler
 
     private $options;
     private $uploadDir;
-	private $rootDir;
+    private $rootDir;
 
     function __construct($options=null) {
-	global $ne_config_info;
-		$this->uploadDir = rawurldecode((Input::post('folder')));
-		$this->rootDir = $ne_config_info['upload_dir'];
+    global $ne_config_info;
+        $this->uploadDir = rawurldecode((Input::post('folder')));
+        $this->rootDir = $ne_config_info['upload_dir'];
 
         $uploadDirFullPath = NavTools::root_filter($this->rootDir.$this->uploadDir);
 
         $this->options = array(
             'script_url' => $this->getFullUrl().'/'.basename(__FILE__),
-			'thumbprefix' => 'thumb_',
+            'thumbprefix' => 'thumb_',
             //'upload_dir' => dirname(__FILE__).'/files/',
             //'upload_url' => $this->getFullUrl().'/files/',
-			'upload_url' => $this->getFullUrl(true).$this->uploadDir,
-			'upload_dir' => NavTools::ifsetor($uploadDirFullPath, $this->rootDir.'/'),
-			'upload_dir_rel' => $this->uploadDir,
+            'upload_url' => $this->getFullUrl(true).$this->uploadDir,
+            'upload_dir' => NavTools::ifsetor($uploadDirFullPath, $this->rootDir.'/'),
+            'upload_dir_rel' => $this->uploadDir,
             'param_name' => 'files',
             // The php.ini settings upload_max_filesize and post_max_size
             // take precedence over the following max_file_size setting:
@@ -76,15 +76,15 @@ class UploadHandler
     }
 
 
-	function getFullUrl($mainPathOnly = null) {
-		return
-			(isset($_SERVER['HTTPS']) ? 'https://' : 'http://').
-			(isset($_SERVER['REMOTE_USER']) ? $_SERVER['REMOTE_USER'].'@' : '').
-			(isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : ($_SERVER['SERVER_NAME'].
-			(isset($_SERVER['HTTPS']) && $_SERVER['SERVER_PORT'] == 443 ||
-			$_SERVER['SERVER_PORT'] == 80 ? '' : ':'.$_SERVER['SERVER_PORT']))).
-			(isset($mainPathOnly) ? '' : substr($_SERVER['SCRIPT_NAME'],0, strrpos($_SERVER['SCRIPT_NAME'], '/')));
-	}
+    function getFullUrl($mainPathOnly = null) {
+        return
+            (isset($_SERVER['HTTPS']) ? 'https://' : 'http://').
+            (isset($_SERVER['REMOTE_USER']) ? $_SERVER['REMOTE_USER'].'@' : '').
+            (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : ($_SERVER['SERVER_NAME'].
+            (isset($_SERVER['HTTPS']) && $_SERVER['SERVER_PORT'] == 443 ||
+            $_SERVER['SERVER_PORT'] == 80 ? '' : ':'.$_SERVER['SERVER_PORT']))).
+            (isset($mainPathOnly) ? '' : substr($_SERVER['SCRIPT_NAME'],0, strrpos($_SERVER['SCRIPT_NAME'], '/')));
+    }
 
     private function get_file_object($file_name) {
         $file_path = $this->options['upload_dir'].$file_name;
@@ -116,8 +116,8 @@ class UploadHandler
 
     private function create_scaled_image($file_name, $options) {
         $file_path = $this->options['upload_dir'].$file_name;
-		$thumbPrefix = $this->options['thumbprefix'];
-		$thumbString = substr($file_name, 0, strlen($thumbPrefix)-1);
+        $thumbPrefix = $this->options['thumbprefix'];
+        $thumbString = substr($file_name, 0, strlen($thumbPrefix)-1);
         $new_file_path = $options['upload_dir'].$thumbPrefix.$file_name;
         list($img_width, $img_height) = @getimagesize($file_path);
         if (!$img_width || !$img_height || $thumbString == $thumbPrefix) {
@@ -281,7 +281,7 @@ class UploadHandler
         // }
         //header('Content-type: application/json');
         //echo json_encode($info);
-		echo "[]";
+        echo "[]";
     }
 
     public function post() {
