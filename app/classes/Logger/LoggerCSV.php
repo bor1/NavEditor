@@ -72,20 +72,20 @@ class LoggerCSV extends NE_Logger {
             return false;
         }
 
-		if (!file_exists($this->_logFilePath)) {
+        if (!file_exists($this->_logFilePath)) {
             $this->createLogFile($this->_logFilePath);
-		}
+        }
 
-		$this->_fileHandle = @fopen($this->_logFilePath, 'a+');
+        $this->_fileHandle = @fopen($this->_logFilePath, 'a+');
         if(!$this->_fileHandle){return false;}
 
         $this->applyFilterOnLogFile();
 
         $rowDataToSave = $this->getRowDataArray($message,$errorLevel);
 
-		fputcsv($this->_fileHandle, $rowDataToSave, $this->_separator);
+        fputcsv($this->_fileHandle, $rowDataToSave, $this->_separator);
 
-		fclose($this->_fileHandle);
+        fclose($this->_fileHandle);
 
         return true;
     }
@@ -99,7 +99,7 @@ class LoggerCSV extends NE_Logger {
     public function getLogArray() {
         if (!file_exists($this->_logFilePath)) {
             $this->createLogFile($this->_logFilePath);
-		}
+        }
         return \NavTools::csv_to_array($this->_logFilePath, $this->_separator);
     }
 

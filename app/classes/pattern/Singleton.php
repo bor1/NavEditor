@@ -17,7 +17,7 @@ abstract class Singleton {
         throw new Exception("Eine Instanz der Klasse ".get_called_class()." kann nicht geklont werden.");
     }
 
-	final private function __wakeup() {
+    final private function __wakeup() {
         throw new Exception("Eine Instanz der Klasse ".get_called_class()." kann nicht wiederhergestellt werden.");
     }
 
