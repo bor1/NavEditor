@@ -26,10 +26,10 @@ var NavTools = new function(){
 
     /**
      * Sets settings, with 's' elements, or default.
-     * @param {Object} [s] - settings object, with setting values
+     * @param {Object} [_s] - settings object, with setting values
      */
-    this.set_settings = function(s){
-        if( !s ){var s = {};}
+    this.set_settings = function(_s){
+        var s = self.ifsetor(_s,{});
         settings.current_host = location.protocol + "//" + location.host + "/";
         settings.nav_editor_path = self.ifsetor(s.nav_editor_path, 'vkdaten/tools/NavEditor3/');
         settings.ajax_handler_path = self.ifsetor(s.ajax_handler_path, 'app/ajax_handler.php');
@@ -46,14 +46,14 @@ var NavTools = new function(){
 
 
     /**
-     * returns ifnullvalue if 'value' is null or undefined and 'value' otherwise
-     * @param {mixed} value value to test for null or undefined
-     * @param {mixed} ifNotSetvalue value to return in case 'value' is null or undefined
-     * @return {mixed}
+     * returns <code>ifNotSetValue</code> if 'value' is null or undefined and 'value' otherwise
+     * @param {*} value value to test for null or undefined
+     * @param {*} ifNotSetValue value to return in case 'value' is null or undefined
+     * @return {*}
      */
-    this.ifsetor = function(value, ifNotSetvalue){
+    this.ifsetor = function(value, ifNotSetValue){
         if(value === undefined || value === null){
-            return ifNotSetvalue;
+            return ifNotSetValue;
         }
         return value;
     };
