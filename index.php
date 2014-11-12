@@ -10,19 +10,40 @@ if(! file_exists($fpath)) {
 } else {
     switch($_GET["p"]){
         case "areas_manager":
-        break;
+            $site_class = $_GET["p"];
+            break;
         
+        case "dashboard":
+        case "nav_editor":
+        case "file_editor":
+        case "ma_editor":
+        case "remove_caches":
+        case "website_editor":
+        case "conf_editor":
+        case "design_editor":
+        case "user_manager":
+        case "areas_manager":
+        case "update":
+        case "help_using":
+        case "help_details":
+        case "help_special_faq":
+        case "help_forum_blog":
+        case "licence":
+        case "credits":
+        case "logout":
+            header('Location: ' . $_GET["p"] . ".php");
+            break;
+    
         case "":
             header('Location: dashboard.php');
-        break;
+            break;
     
         default:
-            header('Location: ' . $_GET["p"] . ".php");
+            $site_class = "not_found";
+            break;
     }
     
 }
-///TODO: sanitize this input!!!
-$site_class = $_GET["p"];
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -30,7 +51,7 @@ $site_class = $_GET["p"];
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>Bereich Management - <?php echo($ne_config_info['app_titleplain']); ?></title>
+        <title><?php echo($ne_site_name[$site_class]);?> - <?php echo($ne_config_info['app_titleplain']); ?></title>
 
         <?php
         echo NavTools::includeFE($site_class);
@@ -39,7 +60,8 @@ $site_class = $_GET["p"];
         <script type="text/javascript">
             <?php
                 $json_php_filename = $ne_config_info['fe_json_folder_name'] . "/" . $site_class . ".json.php";
-                require($json_php_filename);
+                //This file may not exist, so we won't force including:
+                include($json_php_filename);
             ?>
         </script>
 

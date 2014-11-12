@@ -124,6 +124,10 @@ class NavTools {
                 );
                 break;
             
+            case ("not_found"):
+                $retString .= NavTools::includeHtml('default');
+                break;
+            
             default:
                 $retString .= "<!-- couldn\'t recognize the frontend class -->\n";
                 break;

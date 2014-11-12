@@ -305,7 +305,7 @@ $ne_menu = array(
 	1 => array(
 		'id'        => 1,
 		'title' => 'Dashboard',
-		'link'	=> 'dashboard.php',
+		'link'	=> 'index.php?p=dashboard',
 		'role'	=> 'user',
 		'sub'	=> 0,
 		'up'	=> 0,
@@ -323,7 +323,7 @@ $ne_menu = array(
 	11 => array(
 		'id'		=> 11,
 		'title'	=> 'Seite und Navigation',
-		'link'	=> 'nav_editor.php',
+		'link'	=> 'index.php?p=nav_editor',
 		'role'	=> 'user',
 		'sub'	=> 0,
 		'up'	=> 10,
@@ -332,7 +332,7 @@ $ne_menu = array(
 	12 => array(
 		'id'		=> 12,
 		'title'	=> 'Bilder und Dateien',
-		'link'	=> 'file_editor.php',
+		'link'	=> 'index.php?p=file_editor',
 		'role'	=> 'redaktor',
 		'sub'	=> 0,
 		'up'	=> 10,
@@ -361,7 +361,7 @@ $ne_menu = array(
 	41 => array(
 		'id'		=> 41,
 		'title'	=> 'UnivIS-Integration: Mitarbeiter',
-		'link'	=> 'ma_editor.php',
+		'link'	=> 'index.php?p=ma_editor',
 		'role'	=> 'user',
 		'sub'	=> 0,
 		'up'	=> 40,
@@ -370,7 +370,7 @@ $ne_menu = array(
     42 => array(
 		'id'		=> 41,
 		'title'	=> 'Caches',
-		'link'	=> 'remove_caches.php',
+		'link'	=> 'index.php?p=remove_caches',
 		'role'	=> 'admin',
 		'sub'	=> 0,
 		'up'	=> 40,
@@ -390,7 +390,7 @@ $ne_menu = array(
 	51 => array(
 		'id'		=> 51,
 		'title'	=> 'Daten zur Website',
-		'link'	=> 'website_editor.php',
+		'link'	=> 'index.php?p=website_editor',
 		'role'	=> 'admin',
 		'sub'	=> 0,
 		'up'	=> 50,
@@ -399,7 +399,7 @@ $ne_menu = array(
 	52 => array(
 		'id'		=> 52,
 		'title'	=> 'Konfiguration',
-		'link'	=> 'conf_editor.php',
+		'link'	=> 'index.php?p=conf_editor',
 		'role'	=> 'admin',
 		'sub'	=> 0,
 		'up'	=> 50,
@@ -409,7 +409,7 @@ $ne_menu = array(
 	53 => array(
 		'id'		=> 53,
 		'title'	=> 'Design',
-		'link'	=> 'design_editor.php',
+		'link'	=> 'index.php?p=design_editor',
 		'role'	=> 'admin',
 		'sub'	=> 0,
 		'up'	=> 50,
@@ -418,7 +418,7 @@ $ne_menu = array(
 	54 => array(
 		'id'		=> 54,
 		'title'	=> 'Benutzerverwaltung',
-		'link'	=> 'user_manager.php',
+		'link'	=> 'index.php?p=user_manager',
 		'role'	=> 'admin',
 		'sub'	=> 0,
 		'up'	=> 50,
@@ -427,7 +427,7 @@ $ne_menu = array(
     55 => array(
         'id'        => 55,
         'title' => 'Bereiche verwalten',
-        'link'  => 'areas_manager.php',
+        'link'  => 'index.php?p=areas_manager',
         'role'  => 'admin',
         'sub'   => 0,
         'up'    => 50,
@@ -436,7 +436,7 @@ $ne_menu = array(
 	56 => array(
 		'id'		=> 56,
 		'title'	=> 'Update',
-		'link'	=> 'update.php',
+		'link'	=> 'index.php?p=update',
 		'role'	=> 'admin',
 		'sub'	=> 0,
 		'up'	=> 50,
@@ -454,7 +454,7 @@ $ne_menu = array(
 	61 => array(
 		'id'		=> 61,
 		'title'	=> 'Nutzung der Hilfe',
-		'link'	=> 'help_using.php',
+		'link'	=> 'index.php?p=help_using',
 		'role'	=> 'public',
 		'sub'	=> 0,
 		'up'	=> 60,
@@ -463,8 +463,7 @@ $ne_menu = array(
 	62 => array(
 		'id'		=> 62,
 		'title'	=> 'Detaillierte Hilfe',
-		'link'	=> 'help_details.php',
-		'role'	=> 'public',
+		'link'	=> 'index.php?p=help_details',
 		'sub'	=> 0,
 		'up'	=> 60,
 		'desc'	=> '',
@@ -472,7 +471,7 @@ $ne_menu = array(
 	63 => array(
         'id'		=> 63,
 		'title'	=> 'Spezielle Fragen &amp; Antworten',
-		'link'	=> 'help_special_faq.php',
+		'link'	=> 'index.php?p=help_special_faq',
 		'role'	=> 'public',
 		'sub'	=> 0,
 		'up'	=> 60,
@@ -481,7 +480,7 @@ $ne_menu = array(
 	64 => array(
         'id'		=> 64,
 		'title'	=> 'Forum &amp; Blog',
-		'link'	=> 'help_forum_blog.php',
+		'link'	=> 'index.php?p=help_forum_blog',
 		'role'	=> 'public',
 		'sub'	=> 0,
 		'up'	=> 60,
@@ -490,7 +489,7 @@ $ne_menu = array(
 	65 => array(
         'id'		=> 65,
 		'title'	=> 'Nutzungslizenz',
-		'link'	=> 'licence.php',
+		'link'	=> 'index.php?p=licence',
 		'role'	=> 'public',
 		'sub'	=> 0,
 		'up'	=> 60,
@@ -499,7 +498,7 @@ $ne_menu = array(
 	66 => array(
         'id'		=> 66,
 		'title'	=> 'Entwickler',
-		'link'	=> 'credits.php',
+		'link'	=> 'index.php?p=credits',
 		'role'	=> 'public',
 		'sub'	=> 0,
 		'up'	=> 60,
@@ -508,7 +507,7 @@ $ne_menu = array(
 	100 => array(
 		'id'		=> 100,
 		'title'	=> 'Abmelden',
-		'link'	=> 'logout.php',
+		'link'	=> 'index.php?p=logout',
 		'role'	=> 'user',
 		'sub'	=> 0,
 		'up'	=> 0,
@@ -517,6 +516,12 @@ $ne_menu = array(
 		'attribut' => 'onclick="javascript:return confirm(\'Wollen Sie sich wirklich abmelden?\');"',
 	)
  );
+
+$ne_site_name = array(
+    "not_found"       => "Seite nicht gefunden!",
+    "areas_manager"   => "Bereich Management"
+);
+
 
 //dynamisch AreasEditors binden
 //MUST BE SET BEFORE:
