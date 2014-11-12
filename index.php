@@ -10,11 +10,11 @@ if(! file_exists($fpath)) {
 } else {
     switch($_GET["p"]){
         case "areas_manager":
+        case "nav_editor":
             $site_class = $_GET["p"];
             break;
         
         case "dashboard":
-        case "nav_editor":
         case "file_editor":
         case "ma_editor":
         case "remove_caches":

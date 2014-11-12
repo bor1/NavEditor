@@ -124,6 +124,15 @@ class NavTools {
                 );
                 break;
             
+            case "nav_editor":
+                $retString .= NavTools::includeHtml(
+                        'default',
+                        'json2.js',
+                        'tinymce/tinymce.min.js',
+                        'handlebars.js',
+                        'naveditor2.js');
+                $retString .= NavTools::wrapScriptInclude($path_js . "nav_editor.js");
+            
             case ("not_found"):
                 $retString .= NavTools::includeHtml('default');
                 break;

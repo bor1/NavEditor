@@ -519,7 +519,8 @@ $ne_menu = array(
 
 $ne_site_name = array(
     "not_found"       => "Seite nicht gefunden!",
-    "areas_manager"   => "Bereich Management"
+    "areas_manager"   => "Bereich Management",
+    "nav_editor"      => "Seite und Navigation"
 );
 
 
