@@ -2,6 +2,7 @@
 // require config.php!
 class ContentHandler {
 <<<<<<< HEAD
+<<<<<<< HEAD
     private $_defaultPath;
     private $_filePath;
     private $_templateHtml;
@@ -162,6 +163,8 @@ class ContentHandler {
     fclose($fh);
     return $retv;
 =======
+=======
+>>>>>>> 1707af777649f237a76338f364f86f034ef5a20b
     private $_defaultPath;
     private $_filePath;
     private $_templateHtml;
@@ -333,6 +336,9 @@ class ContentHandler {
     private function replaceContent() {
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1707af777649f237a76338f364f86f034ef5a20b
         $str_pattern = $this->_content_block_pattern;
         preg_match($str_pattern, $this->_templateHtml, $matches);
         // error
@@ -340,6 +346,7 @@ class ContentHandler {
             $str_pattern = $this->_content_block_pattern_fallback;
 
         }
+<<<<<<< HEAD
 
         // $str_pattern = $this->_content_block_pattern;
         $this->_templateHtml = preg_replace($str_pattern, '$1' . "\n" . $this->_content . "\n" . '$4', $this->_templateHtml);
@@ -363,6 +370,15 @@ class ContentHandler {
     private function _replaceContentEx() {
         $start_pos = mb_strpos($this->_templateHtml, $this->_content_marker_start);
 >>>>>>> aa546ac6e641d17a590e79a082d2423028ee9cac
+=======
+
+        // $str_pattern = $this->_content_block_pattern;
+        $this->_templateHtml = preg_replace($str_pattern, '$1' . "\n" . $this->_content . "\n" . '$4', $this->_templateHtml);
+    }
+
+    private function _replaceContentEx() {
+        $start_pos = mb_strpos($this->_templateHtml, $this->_content_marker_start);
+>>>>>>> 1707af777649f237a76338f364f86f034ef5a20b
                 $fallbackstart = mb_strpos($this->_templateHtml, $this->_content_marker_start_fallback );
                 $fallbackstart += mb_strlen($this->_content_marker_start_fallback );
                 $is_newstartpos = 0;
@@ -410,6 +426,7 @@ class ContentHandler {
                 if ($no_defaultendmarker==1) {
                     $part_tail = $this->_content_marker_end.$part_tail;
                 }
+<<<<<<< HEAD
 <<<<<<< HEAD
         $this->_templateHtml = $part_head . "\n". $this->_content. "\n" . $part_tail;
     }
@@ -470,6 +487,8 @@ class ContentHandler {
                 $fallbackstart = mb_strpos($this->_templateHtml, $this->_content_marker_start_fallback );
                 $fallbackstart += mb_strlen($this->_content_marker_start_fallback );
 =======
+=======
+>>>>>>> 1707af777649f237a76338f364f86f034ef5a20b
         $this->_templateHtml = $part_head . "\n". $this->_content. "\n" . $part_tail;
     }
 
@@ -532,6 +551,9 @@ class ContentHandler {
             $start_pos += mb_strlen($this->_content_marker_start);
                         $is_newstartpos = 1;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1707af777649f237a76338f364f86f034ef5a20b
         } else {
             $start_pos = mb_strpos($this->_templateHtml, $this->_content_marker_start_fallback );
             if ($start_pos !== FALSE) {
@@ -540,7 +562,10 @@ class ContentHandler {
 
         }
 
+<<<<<<< HEAD
         $end_pos = mb_strpos($this->_templateHtml, $this->_content_marker_end);
+=======
+>>>>>>> 1707af777649f237a76338f364f86f034ef5a20b
         if ($end_pos === FALSE) {
             $end_pos = mb_strpos($this->_templateHtml, $this->_content_marker_end_fallback );
         }
@@ -548,6 +573,7 @@ class ContentHandler {
         if($start_pos === FALSE || $end_pos === FALSE) {
             return '<span style="color:red; font-size: 1.5em; font-weight: bold;">Der Textbereich der Seite konnte nicht ermittelt werden. <br />M&ouml;glicherweise wurden fehlerhafte HTML-Anweisungen eingef&uuml;gt, die das Analysieren des Textes verhindern. Bitte korrigieren Sie die fehlerhaften Bestandteile des Codes &uuml;ber den Quellcode-Editor bei dem Men&uuml;punkt Bilder und Dateien (f&uuml;r Administratoren) oder nutzen einen HTML-Editor.  </span>';
         }
+<<<<<<< HEAD
         $len = mb_strlen($this->_templateHtml);
         $real_content = mb_substr($this->_templateHtml, $start_pos, $end_pos - $start_pos);
 =======
@@ -569,6 +595,10 @@ class ContentHandler {
 
         $real_content = mb_substr($this->_templateHtml, $start_pos, $end_pos - $start_pos);
 >>>>>>> aa546ac6e641d17a590e79a082d2423028ee9cac
+=======
+
+        $real_content = mb_substr($this->_templateHtml, $start_pos, $end_pos - $start_pos);
+>>>>>>> 1707af777649f237a76338f364f86f034ef5a20b
                 $textlen= mb_strlen($real_content);
                 if (($textlen < 1) && ($is_newstartpos)) {
                     //  use fallback

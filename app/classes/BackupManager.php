@@ -107,4 +107,8 @@ class BackupManager {
         }
     }
 
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 1707af777649f237a76338f364f86f034ef5a20b

@@ -2,6 +2,7 @@
 // require config.php!
 class FileHandler {
 <<<<<<< HEAD
+<<<<<<< HEAD
     private $_arr_json;
     private $_buffer;
     private $_section;
@@ -554,6 +555,8 @@ class FileHandler {
         global $ne_config_info;
         $titleFilePath = $ne_config_info['app_path'] . $ne_config_info['current_site_title_file'];
 =======
+=======
+>>>>>>> 1707af777649f237a76338f364f86f034ef5a20b
     private $_arr_json;
     private $_buffer;
     private $_section;
@@ -1107,7 +1110,10 @@ class FileHandler {
     public function UpdateTitleFile($titile_text) {
         global $ne_config_info;
         $titleFilePath = $ne_config_info['app_path'] . $ne_config_info['current_site_title_file'];
+<<<<<<< HEAD
 >>>>>>> aa546ac6e641d17a590e79a082d2423028ee9cac
+=======
+>>>>>>> 1707af777649f237a76338f364f86f034ef5a20b
         if(is_file($titleFilePath)){
             file_put_contents($titleFilePath, htmlentities($titile_text, ENT_COMPAT, 'UTF-8'));
         }

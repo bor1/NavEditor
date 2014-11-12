@@ -6,10 +6,10 @@ $oper = $_REQUEST['oper'];
 $fname = $_REQUEST['file_name'];
 
 if($oper == 'delete') {
-	if(file_exists($fpath . $fname)) {
-		@unlink($fpath . $fname);
-		@unlink($fpath . 'thumb_' . $fname);
-	}
-	echo('[OK]');
+    if(file_exists($fpath . $fname)) {
+        @unlink($fpath . $fname);
+        @unlink($fpath . 'thumb_' . $fname);
+    }
+    echo('[OK]');
 }
 ?>
