@@ -144,8 +144,6 @@ ne3_magic.createDropBox = function (name, elements, css_class, id) {
 
     retString += '>';
 
-    console.log("Laenge der elemente:" + (elements.length));
-
     //idk why but apparently using i in this loop causes some wierd endless loops in createForm()
     for (j = 0; j < (elements.length); j++){
         retString += '<option value="' + elements[j].value + '">' + elements[j].content + '</option>';
@@ -192,22 +190,15 @@ ne3_magic.createForm = function (JSONdata) {
     retString += '>';
     retString += '<table>';
 
-    console.log(data.form.elements);
-    console.log("Laenge:");
-    console.log(data.form.elements.length);
-
     for (i = 0; i < data.form.elements.length; i++) {
 
         var curEl = data.form.elements[i];
 
-        console.log(curEl);
-        console.log(i);
-        
         retString += '<tr><td>';
         retString += '<b>' + curEl.e_label + '</b></td><td>';
         //our current element
 
-        
+
         switch (curEl.type) {
             case "link":
                 retString += ne3_magic.createLink(curEl.text, curEl.link, curEl.onclick, curEl.css_class, curEl.css_id);

@@ -70,8 +70,19 @@ var fe_areas_manager = {
         
         var data = JSON.parse(JSONdata);
         
-        //$()
+        console.log(data);
+        console.log(data.name);
         
+        $("#name").val(data.name);
+        $("#title").val(data.title);
+        $("#file_name").val(data.file_name);
+        $("#description").val(data.description);
+        $("#content_marker_start").val(data.content_marker_start);
+        $("#content_marker_end").val(data.content_marker_end);
+        $("#help_page_name").val(data.help_page_name);
+        $("#user_role_required").val(data.user_role_required);
+
+
     },
     
     loadData : function(name){

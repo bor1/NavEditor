@@ -83,7 +83,6 @@
      "css_class" : "bereichSettingsElement",
      "css_id"  : "help_page_name"
     },
-    
     {
      "e_label" : "Minimum Rolle",
      "type"    : "dropbox",
