@@ -3020,43 +3020,6 @@ class SimplePie
                     $items = array_merge($items, $arg->get_items(0, $limit));
                 }
                 else
-<<<<<<< HEAD
-				{
-					trigger_error('Arguments must be SimplePie objects', E_USER_WARNING);
-				}
-			}
-
-			$do_sort = true;
-			foreach ($items as $item)
-			{
-				if (!$item->get_date('U'))
-				{
-					$do_sort = false;
-					break;
-				}
-			}
-			$item = null;
-			if ($do_sort)
-			{
-				usort($items, array(get_class($urls[0]), 'sort_items'));
-			}
-
-			if ($end === 0)
-			{
-				return array_slice($items, $start);
-			}
-			else
-			{
-				return array_slice($items, $start, $end);
-			}
-		}
-		else
-		{
-			trigger_error('Cannot merge zero SimplePie objects', E_USER_WARNING);
-			return array();
-		}
-	}
-=======
                 {
                     trigger_error('Arguments must be SimplePie objects', E_USER_WARNING);
                 }
@@ -3092,7 +3055,6 @@ class SimplePie
             return array();
         }
     }
->>>>>>> 1707af777649f237a76338f364f86f034ef5a20b
 }
 
 /**
