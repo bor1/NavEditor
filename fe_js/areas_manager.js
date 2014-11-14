@@ -32,12 +32,12 @@ var fe_areas_manager = {
     },
 
     loadForm : function(){
-        
         $('#areasSettings').html(ne3_magic.createForm(areas_manager_form));
     },
     
     disableForm : function(){
-        //
+        $(".bereichSettingsElement").prop('disabled', true);
+        console.log("Form disabled!");
     },
     
     createListFromNames : function(names){
@@ -82,6 +82,7 @@ var fe_areas_manager = {
         $("#help_page_name").val(data.help_page_name);
         $("#user_role_required").val(data.user_role_required);
 
+        $(".bereichSettingsElement").prop('disabled', false);
 
     },
     
