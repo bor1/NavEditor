@@ -39,6 +39,52 @@
      "css_id"  : "file_name"
     },
     {
+     "e_label" : "Beschreibung",
+     "type"    : "input",
+     "name"    : "description",
+     "f_type"  : "text",
+     "value"   : "",
+     "css_class" : "bereichSettingsElement",
+     "css_id"  : "description"
+    },
+    {
+     "e_label" : "Beschreibung",
+     "type"    : "input",
+     "name"    : "description",
+     "f_type"  : "text",
+     "value"   : "",
+     "css_class" : "bereichSettingsElement",
+     "css_id"  : "description"
+    },
+    {
+     "e_label" : "Start Marker",
+     "type"    : "input",
+     "name"    : "content_marker_start",
+     "f_type"  : "text",
+     "value"   : "",
+     "css_class" : "bereichSettingsElement",
+     "css_id"  : "content_marker_start"
+    },
+    {
+     "e_label" : "End Marker",
+     "type"    : "input",
+     "name"    : "content_marker_end",
+     "f_type"  : "text",
+     "value"   : "",
+     "css_class" : "bereichSettingsElement",
+     "css_id"  : "content_marker_end"
+    },
+    {
+     "e_label" : "HelpPage Name",
+     "type"    : "input",
+     "name"    : "help_page_name",
+     "f_type"  : "text",
+     "value"   : "",
+     "css_class" : "bereichSettingsElement",
+     "css_id"  : "help_page_name"
+    },
+    
+    {
      "e_label" : "Minimum Rolle",
      "type"    : "dropbox",
      "name"    : "user_role_required",

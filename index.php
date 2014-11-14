@@ -67,7 +67,7 @@ if(! file_exists($fpath)) {
 
     </head>
 
-    <body id="areas_manager">
+    <body id="areas_manager nav_editor">
         <div id="wrapper">
             <h1 id="header"><?php echo($ne_config_info['app_title']); ?></h1>
             <div id="navBar">
@@ -84,5 +84,3 @@ if(! file_exists($fpath)) {
     </body>
 
 </html>
-
-?>

@@ -132,11 +132,10 @@ ne3_magic.createTextArea = function (name, cols, rows, content, css_class, id) {
  * @returns {retString|String}
  */
 ne3_magic.createDropBox = function (name, elements, css_class, id) {
-
     //size = elements.length;
     size = 1;
 
-    retString = '<select name="' + name + '" size="' + size + '"';
+    var retString = '<select name="' + name + '" size="' + size + '"';
 
     if ((typeof css_class !== "undefined") && (css_class !== "undefined"))
         retString += ' class="' + css_class + '"';
@@ -145,11 +144,15 @@ ne3_magic.createDropBox = function (name, elements, css_class, id) {
 
     retString += '>';
 
-    for (i = 0; i < (elements.length); i++)
-        retString += '<option value="' + elements[i].value + '">' + elements[i].content + '</option>';
+    console.log("Laenge der elemente:" + (elements.length));
+
+    //idk why but apparently using i in this loop causes some wierd endless loops in createForm()
+    for (j = 0; j < (elements.length); j++){
+        retString += '<option value="' + elements[j].value + '">' + elements[j].content + '</option>';
+    }
 
     retString += '</select>';
-
+    
     return retString;
 };
 
@@ -189,14 +192,22 @@ ne3_magic.createForm = function (JSONdata) {
     retString += '>';
     retString += '<table>';
 
+    console.log(data.form.elements);
+    console.log("Laenge:");
+    console.log(data.form.elements.length);
+
     for (i = 0; i < data.form.elements.length; i++) {
 
         var curEl = data.form.elements[i];
 
+        console.log(curEl);
+        console.log(i);
+        
         retString += '<tr><td>';
         retString += '<b>' + curEl.e_label + '</b></td><td>';
         //our current element
 
+        
         switch (curEl.type) {
             case "link":
                 retString += ne3_magic.createLink(curEl.text, curEl.link, curEl.onclick, curEl.css_class, curEl.css_id);
@@ -220,6 +231,7 @@ ne3_magic.createForm = function (JSONdata) {
 
             default:
                 retString += '<!-- Unknown type in magic.js::createForm-->' + "\n";
+                break;
         }
 
         retString += '</td></tr>' + "\n";
