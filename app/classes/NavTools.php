@@ -133,6 +133,19 @@ class NavTools {
                         'naveditor2.js');
                 $retString .= NavTools::wrapScriptInclude($path_js . "nav_editor.js");
             
+            case "user_manager":
+                $retString .= NavTools::includeHtml("default",
+                            "jqueryui/ne2-theme/jquery-ui-1.8.17.custom.css",
+                            "jquery-ui.min.js",
+                            "json2.js",
+                            "jquery.md5.js",
+                            "livevalidation_standalone.compressed.js",
+                            "jqueryFileTree.js",
+                            "jqueryFileTree.css",
+                            "live_validation.css"
+                        );
+                $retString .= NavTools::wrapScriptInclude($path_js . "user_manager.js");
+                
             case ("not_found"):
                 $retString .= NavTools::includeHtml('default');
                 break;
