@@ -235,7 +235,7 @@
                     filteredString = filteredString.replace(regex, replace[i]);
                 }
 
-                filteredString = filteredString.replace(new RegExp(static_regex_removed_symbols, "ig"), "");
+                filteredString = filteredString.replace(static_regex_removed_symbols, "");
                 return filteredString;
             }
 

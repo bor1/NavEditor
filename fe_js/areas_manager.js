@@ -131,8 +131,6 @@ var fe_areas_manager = {
             return;
         }
         
-        console.log("Save Area " + areaName);
-        
         var data = {
             //see ajax_handler.php how this should look like
             "name" : areaName,

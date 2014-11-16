@@ -72,7 +72,7 @@ if(! file_exists($fpath)) {
 
     </head>
 
-    <body class="container" id="areas_manager nav_editor bd_User">
+    <body id="areas_manager nav_editor bd_User">
         <div id="wrapper">
             <h1 id="header"><?php echo($ne_config_info['app_title']); ?></h1>
             <div id="navBar">
