@@ -15,11 +15,11 @@ if(! file_exists($fpath)) {
         case "areas_manager":
         case "nav_editor":
         case "user_manager":
+        case "file_editor":
             $site_class = $_GET["p"];
             break;
         
         case "dashboard":
-        case "file_editor":
         case "ma_editor":
         case "remove_caches":
         case "website_editor":
@@ -72,7 +72,7 @@ if(! file_exists($fpath)) {
 
     </head>
 
-    <body id="areas_manager nav_editor bd_User">
+    <body class="container" id="areas_manager nav_editor bd_User">
         <div id="wrapper">
             <h1 id="header"><?php echo($ne_config_info['app_title']); ?></h1>
             <div id="navBar">

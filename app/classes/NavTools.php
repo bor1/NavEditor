@@ -145,6 +145,29 @@ class NavTools {
                             "live_validation.css"
                         );
                 $retString .= NavTools::wrapScriptInclude($path_js . "user_manager.js");
+            
+            case "file_editor":
+                $retString .= NavTools::includeHtml("default",
+                        "jquery.MultiFile.js",
+                        "jqueryFileTree.css",
+                        "jqueryFileTree.js",
+                        "queryFolderImgPreview.js",
+                        "handlebars.js",
+                        "jquery-ui-1.8.18.custom.min.js",
+                        "upload/jquery.iframe-transport.js",
+                        "upload/jquery.fileupload.js",
+                        "upload/jquery.fileupload-ui.js",
+                        "upload/jquery.tmpl.min.js",
+                        "upload/jquery.image-gallery.js",
+                        "upload/jquery.xdr-transport.js",
+                        "jquery.ui.accordion.min.js",
+                        "tinymce/tinymce.min.js",
+                        "upload/jquery.fileupload.js",
+                        "nav_tools.js"
+
+                    );
+                $retString .= NavTools::wrapScriptInclude($path_js . "file_editor.js");
+                break;
                 
             case ("not_found"):
                 $retString .= NavTools::includeHtml('default');

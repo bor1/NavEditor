@@ -521,7 +521,8 @@ $ne_site_name = array(
     "not_found"       => "Seite nicht gefunden!",
     "areas_manager"   => "Bereich Management",
     "nav_editor"      => "Seite und Navigation",
-    "user_manager"    => "User management"
+    "user_manager"    => "User management",
+    "file_editor"     => "Manage Images/Files"
 );
 
 
