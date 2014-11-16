@@ -11,41 +11,45 @@ $fpath =  $ne_config_info['user_data_file_path'];
 if(! file_exists($fpath)) {
     header('Location: aktivierung.php');
 } else {
-    switch($_GET["p"]){
-        case "dashboard":
-        case "areas_manager":
-        case "nav_editor":
-        case "user_manager":
-        case "file_editor":
-            $site_class = $_GET["p"];
-            break;
-        
-        case "ma_editor":
-        case "remove_caches":
-        case "website_editor":
-        case "conf_editor":
-        case "design_editor":
-        case "areas_manager":
-        case "update":
-        case "help_using":
-        case "help_details":
-        case "help_special_faq":
-        case "help_forum_blog":
-        case "licence":
-        case "credits":
-        case "logout":
-            header('Location: ' . $_GET["p"] . ".php");
-            exit;
-            break;
-    
-        case "":
-            $site_class = "dashboard";
-            break;
-    
-        default:
-            $site_class = "not_found";
-            break;
+    if (!isset($_GET["p"])){
+        $site_class = "dashboard";
     }
+    else
+        switch($_GET["p"]){
+            case "dashboard":
+            case "areas_manager":
+            case "nav_editor":
+            case "user_manager":
+            case "file_editor":
+                $site_class = $_GET["p"];
+                break;
+
+            case "ma_editor":
+            case "remove_caches":
+            case "website_editor":
+            case "conf_editor":
+            case "design_editor":
+            case "areas_manager":
+            case "update":
+            case "help_using":
+            case "help_details":
+            case "help_special_faq":
+            case "help_forum_blog":
+            case "licence":
+            case "credits":
+            case "logout":
+                header('Location: ' . $_GET["p"] . ".php");
+                exit;
+                break;
+
+            case "":
+                $site_class = "dashboard";
+                break;
+
+            default:
+                $site_class = "not_found";
+                break;
+        }
     
 }
 ?>
