@@ -234,8 +234,8 @@
                     regex = new RegExp(find[i], "g");
                     filteredString = filteredString.replace(regex, replace[i]);
                 }
-                ///TODO there was a g before the php static extraction ...
-                filteredString = filteredString.replace(static_regex_removed_symbols + 'g', "");
+
+                filteredString = filteredString.replace(new RegExp(static_regex_removed_symbols, "ig"), "");
                 return filteredString;
             }
 
