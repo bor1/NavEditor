@@ -8,7 +8,8 @@
 var fe_areas_manager = {
 
     vars : {
-        formLoaded : false
+        formLoaded : false,
+        currentlyLoaded : ""
     },
     
     loadContent : function(){
@@ -23,7 +24,12 @@ var fe_areas_manager = {
 
     loadList : function(){
         
-        $('#areasList').html(ne3_magic.createList(fe_areas_manager.createListFromNames(areas_manager_list_names)));
+        var listString = ne3_magic.createList(fe_areas_manager.createListFromNames(areas_manager_list_names));
+        
+        //add the "Add new Area" button
+        listString += '<button onclick="fe_areas_manager.addArea()">new Area</button>';
+        
+        $('#areasList').html(listString);
     },
 
     preloadForm : function(){
@@ -33,9 +39,11 @@ var fe_areas_manager = {
 
     loadForm : function(){
         $('#areasSettings').html(ne3_magic.createForm(areas_manager_form));
+        
     },
     
     disableForm : function(){
+        $(".bereichSettingsElement").val("");
         $(".bereichSettingsElement").prop('disabled', true);
         console.log("Form disabled!");
     },
@@ -91,10 +99,60 @@ var fe_areas_manager = {
         NavTools.call_php('app/classes/AreasManager.php', 'getAreaSettings',
                 name,
                 fe_areas_manager.fillData);
+                
+                
+        this.vars.currentlyLoaded = $("#name").val();
+        console.log("Loaded form " + this.vars.currentlyLoaded);
     },
     
-    saveData : function(name){
-        //
+    saveDataCallback : function(message){
+        console.log(message);
+        
+        window.location.reload();
+    },
+    
+    saveData : function(){
+        
+        var areaName = "";
+        var newArea = false;
+        
+        if (this.vars.currentlyLoaded === ""){
+            //new Area
+            newArea = true;
+            areaName = $("#name").val();
+        }
+        else{
+            //change existing Area
+            areaName = this.vars.currentlyLoaded;
+        }
+        
+        if (areaName === ""){
+            alert("Bitte geben Sie einen Namen ein!");
+            return;
+        }
+        
+        console.log("Save Area " + areaName);
+        
+        var data = {
+            //see ajax_handler.php how this should look like
+            "name" : areaName,
+            "data" : {
+                
+                "name"          : $("#name").val(),
+                "title"         : $("#title").val(),
+                "file_name"     : $("#file_name").val(),
+                "description"   : $("#description").val(),
+                "content_marker_start" : $("#content_marker_start").val(),
+                "content_marker_end"   : $("#content_marker_end").val(),
+                "help_page_name"       : $("#help_page_name").val(),
+                "user_role_required"   : $("#user_role_required").val()
+            }
+        };
+        
+        if (newArea)
+            NavTools.call_php("app/classes/AreasManager.php", "addAreaSettings", JSON.stringify(data), this.saveDataCallback);
+        else
+            NavTools.call_php("app/classes/AreasManager.php", "updateAreaSettings", JSON.stringify(data), this.saveDataCallback);
     },
     
     deleteArea : function(name){
@@ -104,6 +162,14 @@ var fe_areas_manager = {
                 function(data){console.log(data);});
         
 
+    },
+    
+    addArea : function(){
+        this.vars.currentlyLoaded = "";
+        
+        $(".bereichSettingsElement").prop('disabled', false);
+        
+        $(".bereichSettingsElement").val("");
     }
 
 };

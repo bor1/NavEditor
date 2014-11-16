@@ -13,6 +13,10 @@ var ne3_magic = function () {
     return 'version: 0.1';
 };
 
+ne3_magic.realoadSite = function() {
+    window.location.reload();
+};
+
 /**
  * Creates an html hyperlink and returns the tag in a string
  * @param {String} text
@@ -242,6 +246,8 @@ ne3_magic.createForm = function (JSONdata) {
             retString += ' class="' + curEl.css_class + '"';
         if ((typeof curEl.css_id !== "undefined") && (curEl.css_id !== "undefined"))
             retString += ' id="' + curEl.css_id + '"';
+        if ((typeof curEl.onclick !== "undefined") && (curEl.onclick !== "undefined"))
+            retString += ' onclick="' + curEl.onclick + '"';
         
         retString += '>' + curEl.e_label + '</button>';
     

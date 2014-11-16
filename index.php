@@ -11,6 +11,7 @@ if(! file_exists($fpath)) {
     switch($_GET["p"]){
         case "areas_manager":
         case "nav_editor":
+        case "user_manager":
             $site_class = $_GET["p"];
             break;
         
@@ -21,7 +22,6 @@ if(! file_exists($fpath)) {
         case "website_editor":
         case "conf_editor":
         case "design_editor":
-        case "user_manager":
         case "areas_manager":
         case "update":
         case "help_using":
@@ -67,7 +67,7 @@ if(! file_exists($fpath)) {
 
     </head>
 
-    <body id="areas_manager nav_editor">
+    <body id="areas_manager nav_editor bd_User">
         <div id="wrapper">
             <h1 id="header"><?php echo($ne_config_info['app_title']); ?></h1>
             <div id="navBar">

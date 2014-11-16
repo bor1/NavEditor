@@ -98,7 +98,8 @@ try {
                     break;
 
                 case 'addAreaSettings':
-                    $data_to_return = $AreaManager->addAreaSettings($data_to_pass, $data_to_pass['settings']);
+                    $toPass = json_decode($data_to_pass);
+                    $data_to_return = $AreaManager->addAreaSettings($toPass->name, (array) $toPass->data);
                     break;
 
                 case 'deleteAreaSettings':

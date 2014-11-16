@@ -48,15 +48,6 @@
      "css_id"  : "description"
     },
     {
-     "e_label" : "Beschreibung",
-     "type"    : "input",
-     "name"    : "description",
-     "f_type"  : "text",
-     "value"   : "",
-     "css_class" : "bereichSettingsElement",
-     "css_id"  : "description"
-    },
-    {
      "e_label" : "Start Marker",
      "type"    : "input",
      "name"    : "content_marker_start",
@@ -101,14 +92,21 @@
      {
       "e_label" : "Speichern",
       "name"    : "",
-      "onclick" : "",
+      "onclick" : "fe_areas_manager.saveData()",
       "css_class" : "",
       "css_id"  : "updateArea"
      },
      {
       "e_label" : "L&ouml;schen",
       "name"    : "",
-      "onclick" : "",
+      "onclick" : "fe_areas_manager.deleteData()",
+      "css_class" : "",
+      "css_id"  : "removeArea"
+     },
+     {
+      "e_label" : "Schließen",
+      "name"    : "",
+      "onclick" : "fe_areas_manager.disableForm()",
       "css_class" : "",
       "css_id"  : "removeArea"
      }
