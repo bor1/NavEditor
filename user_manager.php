@@ -1,3 +1,5 @@
+<?php require_once("auth.php")?>
+
     <div class="container">
         <div class="page-header">
             <h3>Benutzerverwaltung</h3>

@@ -1,3 +1,5 @@
+<?php require_once("auth.php")?>
+
 <script id="menue-template" type="text/x-handlebars-template">
 
 

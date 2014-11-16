@@ -1,3 +1,4 @@
+<?php require_once("auth.php")?>
 
             <script type="text/javascript">
                 $(document).ready(fe_areas_manager.loadContent);
