@@ -522,7 +522,8 @@ $ne_site_name = array(
     "areas_manager"   => "Bereich Management",
     "nav_editor"      => "Seite und Navigation",
     "user_manager"    => "User management",
-    "file_editor"     => "Manage Images/Files"
+    "file_editor"     => "Manage Images/Files",
+    "dashboard"       => "Dashboard"
 );
 
 

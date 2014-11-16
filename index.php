@@ -12,6 +12,7 @@ if(! file_exists($fpath)) {
     header('Location: aktivierung.php');
 } else {
     switch($_GET["p"]){
+        case "dashboard":
         case "areas_manager":
         case "nav_editor":
         case "user_manager":
@@ -19,7 +20,6 @@ if(! file_exists($fpath)) {
             $site_class = $_GET["p"];
             break;
         
-        case "dashboard":
         case "ma_editor":
         case "remove_caches":
         case "website_editor":
@@ -39,8 +39,7 @@ if(! file_exists($fpath)) {
             break;
     
         case "":
-            header('Location: dashboard.php');
-            exit;
+            $site_class = "dashboard";
             break;
     
         default:
@@ -73,7 +72,7 @@ if(! file_exists($fpath)) {
     </head>
 
     <body id="areas_manager nav_editor bd_User">
-        <div id="wrapper">
+        <div class="dashboard" id="wrapper dashboard">
             <h1 id="header"><?php echo($ne_config_info['app_title']); ?></h1>
             <div id="navBar">
                 <?php require('common_nav_menu.php'); ?>

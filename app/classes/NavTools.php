@@ -168,6 +168,11 @@ class NavTools {
                     );
                 $retString .= NavTools::wrapScriptInclude($path_js . "file_editor.js");
                 break;
+            
+            case "dashboard":
+                $retString .= NavTools::includeHtml("default");
+                $retString .= NavTools::wrapScriptInclude($path_js . "dashboard.js");
+                break;
                 
             case ("not_found"):
                 $retString .= NavTools::includeHtml('default');
