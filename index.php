@@ -1,7 +1,10 @@
 <?php
 require_once ('auth.php');
 
-
+if ($loginResult == 'FAIL'){
+    Header('Location: login.php');
+    exit;
+}
 
 // check if first run
 $fpath =  $ne_config_info['user_data_file_path'];
@@ -32,10 +35,12 @@ if(! file_exists($fpath)) {
         case "credits":
         case "logout":
             header('Location: ' . $_GET["p"] . ".php");
+            exit;
             break;
     
         case "":
             header('Location: dashboard.php');
+            exit;
             break;
     
         default:
