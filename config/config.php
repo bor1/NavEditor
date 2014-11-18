@@ -525,7 +525,8 @@ $ne_site_name = array(
     "file_editor"     => "Manage Images/Files",
     "dashboard"       => "Dashboard",
     "credits"         => "Credits",
-    "licence"         => "Nutzungslizens"
+    "licence"         => "Nutzungslizens",
+    "help_forum_blog" => "Forum & Blog"
 );
 
 

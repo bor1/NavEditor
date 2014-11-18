@@ -23,6 +23,7 @@ if(! file_exists($fpath)) {
             case "file_editor":
             case "credits":
             case "licence":
+            case "help_forum_blog":
                 $site_class = $_GET["p"];
                 break;
 
@@ -36,7 +37,6 @@ if(! file_exists($fpath)) {
             case "help_using":
             case "help_details":
             case "help_special_faq":
-            case "help_forum_blog":
             case "logout":
                 header('Location: ' . $_GET["p"] . ".php");
                 exit;
@@ -78,7 +78,6 @@ if(! file_exists($fpath)) {
 
     <body id="areas_manager nav_editor bd_User">
         <div class="dashboard" id="wrapper dashboard">
-            <h1 id="header"><?php echo($ne_config_info['app_title']); ?></h1>
             <div id="navBar">
                 <?php require('common_nav_menu.php'); ?>
             </div>

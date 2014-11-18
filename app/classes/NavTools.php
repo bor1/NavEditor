@@ -109,7 +109,7 @@ class NavTools {
         $path_js  = $ne_config_info['ne_url'] . $ne_config_info['fe_js_folder_name'] . '/';
         
         switch ($frontendClass){
-            case ("areas_manager"):
+            case "areas_manager":
                 $retString .= NavTools::wrapScriptInclude($path_js . "magic.js");
                 $retString .= NavTools::wrapScriptInclude($path_js . "areas_manager.js");
                 $retString .= NavTools::wrapStyleInclude($path_css . "areas_manager.css");
@@ -174,9 +174,10 @@ class NavTools {
                 $retString .= NavTools::wrapScriptInclude($path_js . "dashboard.js");
                 break;
                 
-            case ("not_found"):
-            case ("credits"):
-            case ("licence"):
+            case "not_found":
+            case "credits":
+            case "licence":
+            case "help_forum_blog":
                 $retString .= NavTools::includeHtml('default');
                 break;
             
