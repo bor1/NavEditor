@@ -174,7 +174,7 @@ class NavTools {
                 $retString .= NavTools::wrapScriptInclude($path_js . "dashboard.js");
                 break;
             
-            case "website-editor":
+            case "website_editor":
                 $retString .= NavTools::includeHtml("default", "json2.js");
                 $retString .= NavTools::wrapScriptInclude($path_js . "website_editor.js");
                 break;

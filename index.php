@@ -28,12 +28,12 @@ if(! file_exists($fpath)) {
             case "help_special_faq":
             case "help_details":
             case "help_using":
+            case "website_editor":
                 $site_class = $_GET["p"];
                 break;
 
             case "ma_editor":
             case "remove_caches":
-            case "website_editor":
             case "conf_editor":
             case "design_editor":
             case "areas_manager":
