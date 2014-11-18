@@ -22,6 +22,7 @@ if(! file_exists($fpath)) {
             case "user_manager":
             case "file_editor":
             case "credits":
+            case "licence":
                 $site_class = $_GET["p"];
                 break;
 
@@ -36,7 +37,6 @@ if(! file_exists($fpath)) {
             case "help_details":
             case "help_special_faq":
             case "help_forum_blog":
-            case "licence":
             case "logout":
                 header('Location: ' . $_GET["p"] . ".php");
                 exit;
@@ -69,7 +69,8 @@ if(! file_exists($fpath)) {
             <?php
                 $json_php_filename = $ne_config_info['fe_json_folder_name'] . "/" . $site_class . ".json.php";
                 //This file may not exist, so we won't force including:
-                include($json_php_filename);
+                if (file_exists($json_php_filename))
+                    include($json_php_filename);
             ?>
         </script>
 
