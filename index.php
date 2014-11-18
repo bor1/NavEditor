@@ -67,12 +67,11 @@ if(! file_exists($fpath)) {
         ?>
 
             <?php
-                $json_php_filename = $ne_config_info['fe_json_folder_name'] . "/" . $site_class . ".head.php";
+                $json_php_filename = $ne_config_info['fe_head_folder_name'] . "/" . $site_class . ".head.php";
                 //This file may not exist, so we won't force including:
                 if (file_exists($json_php_filename))
                     include($json_php_filename);
             ?>
-        </script>
 
     </head>
 
