@@ -178,6 +178,9 @@ class NavTools {
             case "credits":
             case "licence":
             case "help_forum_blog":
+            case "help_special_faq":
+            case "help_details":
+            case "help_using":
                 $retString .= NavTools::includeHtml('default');
                 break;
             

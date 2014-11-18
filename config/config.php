@@ -526,7 +526,10 @@ $ne_site_name = array(
     "dashboard"       => "Dashboard",
     "credits"         => "Credits",
     "licence"         => "Nutzungslizens",
-    "help_forum_blog" => "Forum & Blog"
+    "help_forum_blog" => "Forum & Blog",
+    "help_special_faq"=> "Spezielle Fragen und Antworten",
+    "help_details"    => "Detaillierte Hilfe",
+    "help_using"      => "Nutzungshinweis"
 );
 
 

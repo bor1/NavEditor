@@ -24,6 +24,9 @@ if(! file_exists($fpath)) {
             case "credits":
             case "licence":
             case "help_forum_blog":
+            case "help_special_faq":
+            case "help_details":
+            case "help_using":
                 $site_class = $_GET["p"];
                 break;
 
@@ -34,9 +37,6 @@ if(! file_exists($fpath)) {
             case "design_editor":
             case "areas_manager":
             case "update":
-            case "help_using":
-            case "help_details":
-            case "help_special_faq":
             case "logout":
                 header('Location: ' . $_GET["p"] . ".php");
                 exit;
