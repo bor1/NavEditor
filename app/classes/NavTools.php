@@ -175,6 +175,7 @@ class NavTools {
                 break;
                 
             case ("not_found"):
+            case ("credits"):
                 $retString .= NavTools::includeHtml('default');
                 break;
             
