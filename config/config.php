@@ -84,8 +84,9 @@ $ne_config_info['fe_js_folder_name']   = 'fe_js';
 // CSS frontend folder name in vkdaten folder
 $ne_config_info['fe_css_folder_name']  = 'fe_css';
 
-// JSON form frontend folder name in vkdaten folder
-$ne_config_info['fe_json_folder_name']  = 'fe_json';
+// JSON and head form frontend folder name in vkdaten folder
+$ne_config_info['fe_json_folder_name']  = 'fe_head';
+$ne_config_info['fe_head_folder_name']  = 'fe_head';
 
 //URL to naveditor
 $ne_config_info['ne_url']           = "http://".$_SERVER['HTTP_HOST'].$ne_config_info['app_path_without_host'];
@@ -529,7 +530,8 @@ $ne_site_name = array(
     "help_forum_blog" => "Forum & Blog",
     "help_special_faq"=> "Spezielle Fragen und Antworten",
     "help_details"    => "Detaillierte Hilfe",
-    "help_using"      => "Nutzungshinweis"
+    "help_using"      => "Nutzungshinweis",
+    "website_editor"  => "Daten bearbeiten"
 );
 
 

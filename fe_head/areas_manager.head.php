@@ -21,8 +21,12 @@ $areas_manager_list_html = $areas_manager->getAreaList();
 
 ?>
 
+<script type="text/javascript">
+
 var _json_area_data = '<?php echo(json_encode($g_areas_settings['area_settings'])); ?>';
 
 var areas_manager_form = <?php echo $areas_manager_form_json ?>;
 var areas_manager_list_names = <?php echo json_encode($areas_manager_list_html)?>;
 var areas_manager_list;
+
+</script>

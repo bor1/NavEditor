@@ -1,8 +1,6 @@
-<?php
+<?php require_once("auth.php"); ?>
 
-require_once("auth.php");
-
-?>
+<script type="text/javascript">
 
 var admin_uname = "<?php echo(NavTools::getServerAdmin()); ?>";
 
@@ -19,3 +17,4 @@ var FileTreeObj = null;
 
 var server_main_path = "<?php echo ($_SERVER['DOCUMENT_ROOT']); ?>";
 
+</script>
