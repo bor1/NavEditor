@@ -31,11 +31,11 @@ if(! file_exists($fpath)) {
             case "website_editor":
             case "conf_editor":
             case "ma_editor":
+            case "design_editor":
                 $site_class = $_GET["p"];
                 break;
 
             case "remove_caches":
-            case "design_editor":
             case "update":
             case "logout":
                 header('Location: ' . $_GET["p"] . ".php");

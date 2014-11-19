@@ -533,7 +533,8 @@ $ne_site_name = array(
     "help_using"      => "Nutzungshinweis",
     "website_editor"  => "Daten bearbeiten",
     "conf_editor"     => "Konfigurationen bearbeiten",
-    "ma_editor"       => "Mitarbeiter bearbeiten"
+    "ma_editor"       => "Mitarbeiter bearbeiten",
+    "design_editor"   => "Design wechseln"
 );
 
 
