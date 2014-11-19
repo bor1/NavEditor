@@ -531,7 +531,8 @@ $ne_site_name = array(
     "help_special_faq"=> "Spezielle Fragen und Antworten",
     "help_details"    => "Detaillierte Hilfe",
     "help_using"      => "Nutzungshinweis",
-    "website_editor"  => "Daten bearbeiten"
+    "website_editor"  => "Daten bearbeiten",
+    "conf_editor"     => "Konfigurationen bearbeiten"
 );
 
 

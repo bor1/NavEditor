@@ -178,6 +178,10 @@ class NavTools {
                 $retString .= NavTools::includeHtml("default", "json2.js");
                 $retString .= NavTools::wrapScriptInclude($path_js . "website_editor.js");
                 break;
+            
+            case "conf_editor":
+                $retString .= NavTools::includeHtml("default","json2.js");
+                $retString .= NavTools::wrapScriptInclude($path_js . "conf_editor.js");
                 
             case "not_found":
             case "credits":
