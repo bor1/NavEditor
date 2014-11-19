@@ -30,10 +30,10 @@ if(! file_exists($fpath)) {
             case "help_using":
             case "website_editor":
             case "conf_editor":
+            case "ma_editor":
                 $site_class = $_GET["p"];
                 break;
 
-            case "ma_editor":
             case "remove_caches":
             case "design_editor":
             case "update":

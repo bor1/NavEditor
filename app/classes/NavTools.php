@@ -182,6 +182,15 @@ class NavTools {
             case "conf_editor":
                 $retString .= NavTools::includeHtml("default","json2.js");
                 $retString .= NavTools::wrapScriptInclude($path_js . "conf_editor.js");
+            
+            case "ma_editor":
+                $retString .= NavTools::includeHtml(
+                            'default',
+                            'tinymce/tinymce.min.js',
+                            'json2.js',
+                            'ajaxfileupload.js'
+                    );
+                $retString .= NavTools::wrapScriptInclude($path_js . "ma_editor.js");
                 
             case "not_found":
             case "credits":
