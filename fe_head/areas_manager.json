@@ -99,7 +99,7 @@
      {
       "e_label" : "L&ouml;schen",
       "name"    : "",
-      "onclick" : "fe_areas_manager.deleteData()",
+      "onclick" : "fe_areas_manager.deleteArea()",
       "css_class" : "",
       "css_id"  : "removeArea"
      },
