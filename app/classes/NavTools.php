@@ -212,7 +212,7 @@ class NavTools {
                 break;
             
             default:
-                $retString .= "<!-- couldn\'t recognize the frontend class -->\n";
+                $retString .= "<!-- couldn't recognize the frontend class -->\n";
                 break;
         }
         
