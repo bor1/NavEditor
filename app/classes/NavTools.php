@@ -94,11 +94,12 @@ class NavTools {
 
         return $retString;
     }
-    
+
     /**
      * Includes the the .css and .js files for the frontend
      * @param String $frontendClass
      * the class that should be loaded
+     * @return string frontend <include> scripts/css code for the <code>$frontendClass</code> page
      */
     public static function includeFE($frontendClass){
         global $ne_config_info;
