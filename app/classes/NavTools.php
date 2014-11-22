@@ -132,7 +132,7 @@ class NavTools {
                         'handlebars.js',
                         'naveditor2.js');
                 $retString .= NavTools::wrapScriptInclude($path_js . "nav_editor.js");
-            
+                break;
             case "user_manager":
                 $retString .= NavTools::includeHtml("default",
                             "jqueryui/ne2-theme/jquery-ui-1.8.17.custom.css",
@@ -145,7 +145,7 @@ class NavTools {
                             "live_validation.css"
                         );
                 $retString .= NavTools::wrapScriptInclude($path_js . "user_manager.js");
-            
+                break;
             case "file_editor":
                 $retString .= NavTools::includeHtml("default",
                         "jquery.MultiFile.js",
