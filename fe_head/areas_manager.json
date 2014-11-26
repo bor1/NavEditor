@@ -6,7 +6,7 @@
  "form" :
   {
    "name"       : "areas_manager_form",
-   "css_class"  : "areas_manager_form",
+   "css_class"  : "areas_manager_form form-horizontal",
    "css_id"     : "areas_manager_form",
 
    "elements"   :
@@ -17,7 +17,7 @@
      "name"    : "name",
      "f_type"  : "text",
      "value"   : "",
-     "css_class" : "bereichSettingsElement",
+     "css_class" : "bereichSettingsElement form-control",
      "css_id"  : "name"
     },
     {
@@ -26,7 +26,7 @@
      "name"    : "title",
      "f_type"  : "text",
      "value"   : "",
-     "css_class" : "bereichSettingsElement",
+     "css_class" : "bereichSettingsElement form-control",
      "css_id"  : "title"
     },
     {
@@ -35,7 +35,7 @@
      "name"    : "file_name",
      "f_type"  : "text",
      "value"   : "",
-     "css_class" : "bereichSettingsElement",
+     "css_class" : "bereichSettingsElement form-control",
      "css_id"  : "file_name"
     },
     {
@@ -44,7 +44,7 @@
      "name"    : "description",
      "f_type"  : "text",
      "value"   : "",
-     "css_class" : "bereichSettingsElement",
+     "css_class" : "bereichSettingsElement form-control",
      "css_id"  : "description"
     },
     {
@@ -53,7 +53,7 @@
      "name"    : "content_marker_start",
      "f_type"  : "text",
      "value"   : "",
-     "css_class" : "bereichSettingsElement",
+     "css_class" : "bereichSettingsElement form-control",
      "css_id"  : "content_marker_start"
     },
     {
@@ -62,7 +62,7 @@
      "name"    : "content_marker_end",
      "f_type"  : "text",
      "value"   : "",
-     "css_class" : "bereichSettingsElement",
+     "css_class" : "bereichSettingsElement form-control",
      "css_id"  : "content_marker_end"
     },
     {
@@ -71,7 +71,7 @@
      "name"    : "help_page_name",
      "f_type"  : "text",
      "value"   : "",
-     "css_class" : "bereichSettingsElement",
+     "css_class" : "bereichSettingsElement form-control",
      "css_id"  : "help_page_name"
     },
     {
@@ -83,7 +83,7 @@
                   {"content" : "Redakteur"    , "value" : "redaktor" },
                   {"content" : "Administrator", "value" : "admin"    }
                  ],
-     "css_class" : "bereichSettingsElement",
+     "css_class" : "bereichSettingsElement form-control",
      "css_id"  : "user_role_required"
     }
    ],
@@ -93,21 +93,21 @@
       "e_label" : "Speichern",
       "name"    : "",
       "onclick" : "fe_areas_manager.saveData()",
-      "css_class" : "",
+      "css_class" : "btn btn-success btn-light margin-5",
       "css_id"  : "updateArea"
      },
      {
       "e_label" : "L&ouml;schen",
       "name"    : "",
       "onclick" : "fe_areas_manager.deleteArea()",
-      "css_class" : "",
+      "css_class" : "btn btn-danger btn-light margin-5",
       "css_id"  : "removeArea"
      },
      {
       "e_label" : "Schließen",
       "name"    : "",
       "onclick" : "fe_areas_manager.disableForm()",
-      "css_class" : "",
+      "css_class" : "btn btn-primary btn-light margin-5",
       "css_id"  : "removeArea"
      }
     ]
