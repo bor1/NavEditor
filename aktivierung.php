@@ -46,15 +46,15 @@ function sendmail($admin_mail, $key) {
 
     $text .= "Um den NavEditor zu aktivieren und ein Passwort zur weiteren\n";
     $text .= "Benutzung festzulegen, klicken Sie bitte auf folgenden Link:\n";
-    $text .= "	http://" . $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'] . "?oper=uselink&key=" . $key . "\n\n";
+    $text .= "    http://" . $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'] . "?oper=uselink&key=" . $key . "\n\n";
 
     $text .= "oder geben auf der Seite\n";
-    $text .= "	http://" . $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'] . "?oper=keyeingabe\n";
+    $text .= "    http://" . $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'] . "?oper=keyeingabe\n";
     $text .= "den Aktivierungsschl\xC3\xBCssel\n";
-    $text .= "	" . $key . "\n";
+    $text .= "    " . $key . "\n";
     $text .= "ein.\n";
     $text .= "Mit freundlichen Gr\xC3\xBC\xC3\x9Fen\n\n";
-    $text .= '	Das RRZE Team.';
+    $text .= '    Das RRZE Team.';
     //mail inhalt ende
     mail($admin_mail, 'NavEditor aktivieren', $text, $headers);
 }
