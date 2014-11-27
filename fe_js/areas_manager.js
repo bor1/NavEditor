@@ -75,8 +75,14 @@ var fe_areas_manager = {
     },
     
     fillData : function(JSONdata){
-        
-        var data = JSON.parse(JSONdata);
+        try {
+            var data = JSON.parse(JSONdata);
+        }
+        catch (error){
+            alert("Error: " + error);
+            console.log("Got data: " + JSONdata);
+            return;
+        }
         
         console.log(data);
         console.log(data.name);
