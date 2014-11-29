@@ -103,117 +103,58 @@ class NavTools {
      */
     public static function includeFE($frontendClass){
         global $ne_config_info;
+        global $ne_site_info;
         
         $retString = '';
         
         $path_css = $ne_config_info['ne_url'] . $ne_config_info['fe_css_folder_name'] . '/';
         $path_js  = $ne_config_info['ne_url'] . $ne_config_info['fe_js_folder_name'] . '/';
-        
-        switch ($frontendClass){
-            case "areas_manager":
-                $retString .= NavTools::wrapScriptInclude($path_js . "magic.js");
-                $retString .= NavTools::wrapScriptInclude($path_js . "areas_manager.js");
-                $retString .= NavTools::wrapStyleInclude($path_css . "areas_manager.css");
-                $retString .= NavTools::includeHtml('default',
-                        'jquery-ui-1.8.2.custom.min.js',
-                        'jqueryui/ne2-theme/jquery-ui-1.8.17.custom.css',
-                        'naveditor2.js',
-                        'jquery.md5.js',
-                        'livevalidation_standalone.compressed.js',
-                        'live_validation.css',
-                        'nav_tools.js'
-                );
-                break;
-            
-            case "nav_editor":
-                $retString .= NavTools::includeHtml(
-                        'default',
-                        'json2.js',
-                        'tinymce/tinymce.min.js',
-                        'handlebars.js',
-                        'naveditor2.js');
-                $retString .= NavTools::wrapScriptInclude($path_js . "nav_editor.js");
-                break;
-            case "user_manager":
-                $retString .= NavTools::includeHtml("default",
-                            "jqueryui/ne2-theme/jquery-ui-1.8.17.custom.css",
-                            "jquery-ui.min.js",
-                            "json2.js",
-                            "jquery.md5.js",
-                            "livevalidation_standalone.compressed.js",
-                            "jqueryFileTree.js",
-                            "jqueryFileTree.css",
-                            "live_validation.css"
-                        );
-                $retString .= NavTools::wrapScriptInclude($path_js . "user_manager.js");
-                break;
-            case "file_editor":
-                $retString .= NavTools::includeHtml("default",
-                        "jquery.MultiFile.js",
-                        "jqueryFileTree.css",
-                        "jqueryFileTree.js",
-                        "queryFolderImgPreview.js",
-                        "handlebars.js",
-                        "jquery-ui-1.8.18.custom.min.js",
-                        "upload/jquery.iframe-transport.js",
-                        "upload/jquery.fileupload.js",
-                        "upload/jquery.fileupload-ui.js",
-                        "upload/jquery.tmpl.min.js",
-                        "upload/jquery.image-gallery.js",
-                        "upload/jquery.xdr-transport.js",
-                        "jquery.ui.accordion.min.js",
-                        "tinymce/tinymce.min.js",
-                        "upload/jquery.fileupload.js",
-                        "nav_tools.js"
+        if (array_key_exists($frontendClass, $ne_site_info['fe_include'])){
+            foreach ($ne_site_info["fe_include"][$frontendClass]["fe"] as $file){
 
-                    );
-                $retString .= NavTools::wrapScriptInclude($path_js . "file_editor.js");
-                break;
-            
-            case "dashboard":
-                $retString .= NavTools::includeHtml("default");
-                $retString .= NavTools::wrapScriptInclude($path_js . "dashboard.js");
-                break;
-            
-            case "website_editor":
-                $retString .= NavTools::includeHtml("default", "json2.js");
-                $retString .= NavTools::wrapScriptInclude($path_js . "website_editor.js");
-                break;
-            
-            case "conf_editor":
-                $retString .= NavTools::includeHtml("default","json2.js");
-                $retString .= NavTools::wrapScriptInclude($path_js . "conf_editor.js");
-                break;
-                
-            case "ma_editor":
-                $retString .= NavTools::includeHtml(
-                            'default',
-                            'tinymce/tinymce.min.js',
-                            'json2.js',
-                            'ajaxfileupload.js'
-                    );
-                $retString .= NavTools::wrapScriptInclude($path_js . "ma_editor.js");
-                break;
-                
-            case "design_editor":
-                $retString .= NavTools::includeHtml('default');
-                $retString .= NavTools::wrapScriptInclude($path_js . "design_editor.js");
-                break;
-                
-                
-            case "not_found":
-            case "credits":
-            case "licence":
-            case "help_forum_blog":
-            case "help_special_faq":
-            case "help_details":
-            case "help_using":
-                $retString .= NavTools::includeHtml('default');
-                break;
-            
-            default:
-                $retString .= "<!-- couldn't recognize the frontend class -->\n";
-                break;
+                $ext = $file;
+                $ext = parse_url($ext, PHP_URL_PATH);
+                $ext = pathinfo($ext, PATHINFO_EXTENSION);
+                switch($ext){
+                    case "js":
+                        $retString .= NavTools::wrapScriptInclude($path_js . $file);
+                        break;
+
+                    case "css":
+                        $retString .= NavTools::wrapStyleInclude($path_css . $file);
+                        break;
+
+                    default:
+                        //oh shit!
+                        break;
+                }
+            }
+            $retString .= NavTools::includeHtml($ne_site_info['fe_include'][$frontendClass]["html"]);
+        } else {
+            foreach ($ne_site_info["fe_include"]["default"]["fe"] as $file){
+
+                $ext = $file;
+                $ext = parse_url($ext, PHP_URL_PATH);
+                $ext = pathinfo($ext, PATHINFO_EXTENSION);
+                switch($ext){
+                    case "js":
+                        $retString .= NavTools::wrapScriptInclude($path_js . $file);
+                        break;
+
+                    case "css":
+                        $retString .= NavTools::wrapStyleInclude($path_css . $file);
+                        break;
+
+                    default:
+                        //oh shit!
+                        break;
+                }
+            }
+            if (file_exists($path_js . $frontendClass)){
+                //include a fe_js/<site_class>.js file if existing!
+                $retString .= NavTools::wrapScriptInclude($path_js . $frontendClass);
+            }
+            $retString .= NavTools::includeHtml($ne_site_info['fe_include']["default"]["html"]);
         }
         
         return $retString;

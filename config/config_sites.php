@@ -240,7 +240,7 @@ foreach ($ne_menu as $key=>$params) {
 //=======================END MENU===============================================
 
 
-$ne_site_name = array(
+$ne_site_info['site_name'] = array(
     "not_found"       => "Seite nicht gefunden!",
     "areas_manager"   => "Bereich Management",
     "nav_editor"      => "Seite und Navigation",
@@ -260,6 +260,95 @@ $ne_site_name = array(
     "debug"           => "Status und Fehlersuche"
 );
 
-
+$ne_site_info['fe_include'] = array(
+    "areas_manager" => array(
+        "fe" => array(
+            "magic.js",
+            "areas_manager.js",
+            "areas_manager.css"
+        ),
+        "html" => array(
+            'default',
+            'jquery-ui-1.8.2.custom.min.js',
+            'jqueryui/ne2-theme/jquery-ui-1.8.17.custom.css',
+            'naveditor2.js',
+            'jquery.md5.js',
+            'livevalidation_standalone.compressed.js',
+            'live_validation.css',
+            'nav_tools.js'
+        )
+    ),
+    "nav_editor" => array(
+        "fe" => array(
+            "nav_editor.js"
+        ),
+        "html" => array(
+            'default',
+            'json2.js',
+            'tinymce/tinymce.min.js',
+            'handlebars.js',
+            'naveditor2.js'
+        )
+    ),
+    "user_manager" => array(
+        "fe" => array(
+            "user_manager.js"
+        ),
+        "html" => array(
+            "default",
+            "jqueryui/ne2-theme/jquery-ui-1.8.17.custom.css",
+            "jquery-ui.min.js",
+            "json2.js",
+            "jquery.md5.js",
+            "livevalidation_standalone.compressed.js",
+            "jqueryFileTree.js",
+            "jqueryFileTree.css",
+            "live_validation.css"
+        )
+    ),
+    "file_editor" => array(
+        "fe" => array(
+            "file_editor.js"
+        ),
+        "html" => array(
+            "default",
+            "jquery.MultiFile.js",
+            "jqueryFileTree.css",
+            "jqueryFileTree.js",
+            "queryFolderImgPreview.js",
+            "handlebars.js",
+            "jquery-ui-1.8.18.custom.min.js",
+            "upload/jquery.iframe-transport.js",
+            "upload/jquery.fileupload.js",
+            "upload/jquery.fileupload-ui.js",
+            "upload/jquery.tmpl.min.js",
+            "upload/jquery.image-gallery.js",
+            "upload/jquery.xdr-transport.js",
+            "jquery.ui.accordion.min.js",
+            "tinymce/tinymce.min.js",
+            "upload/jquery.fileupload.js",
+            "nav_tools.js"
+        )
+    ),
+    "ma_editor" => array(
+        "fe" => array(
+            "ma_editor.js"
+        ),
+        "html" => array(
+            'default',
+            'tinymce/tinymce.min.js',
+            'json2.js',
+            'ajaxfileupload.js'
+        )
+    ),
+    "default" => array(
+        "fe" => array(
+            //
+        ),
+        "html" => array(
+            "default"
+        )
+    )
+);
 
 ?>

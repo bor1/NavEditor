@@ -32,6 +32,7 @@ if(! file_exists($fpath)) {
             case "conf_editor":
             case "ma_editor":
             case "design_editor":
+            case "debug":
                 $site_class = $_GET["p"];
                 break;
 
@@ -59,7 +60,7 @@ if(! file_exists($fpath)) {
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title><?php echo($ne_site_name[$site_class]);?> - <?php echo($ne_config_info['app_titleplain']); ?></title>
+        <title><?php echo($ne_site_info['site_name'][$site_class]);?> - <?php echo($ne_config_info['app_titleplain']); ?></title>
 
         <?php
         echo NavTools::includeFE($site_class);

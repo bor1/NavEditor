@@ -171,7 +171,8 @@ $ne_user_php_persmissions = array(
 
 
     //Admin
-    'areas_manager.php'      => 'admin',
+    'debug.php'                 => 'admin',
+    'areas_manager.php'         => 'admin',
     'conf_editor.php'           => 'admin',
     'design_editor.php'         => 'admin',
     'update.php'                => 'admin',

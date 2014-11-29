@@ -18,6 +18,7 @@ global $ne_menu;
 global $ne_user_php_persmissions;
 global $ne_user_public_php;
 global $g_areas_settings;
+global $ne_site_info;
 
 //===========FROM OTHER CONFIGS, ALIASES========================================
 //This php files are public for access, no need to login before.
