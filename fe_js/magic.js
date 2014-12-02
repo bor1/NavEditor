@@ -70,7 +70,7 @@ ne3_magic.createButton = function (name, label, onclick, css_class, id) {
  * @param {String} maxlength
  * @param {String} value
  * @param {String} css_class
- * @param {String} id
+ * @param {String} id 
  * @returns {String}
  */
 ne3_magic.createFormField = function (name, type, size, maxlength, value, css_class, id) {
@@ -102,7 +102,7 @@ ne3_magic.createFormField = function (name, type, size, maxlength, value, css_cl
  * @param {String} rows
  * @param {String} content
  * @param {String} css_class
- * @param {String} id
+ * @param {String} id 
  * @returns {String} html tag in a string
  */
 ne3_magic.createTextArea = function (name, cols, rows, content, css_class, id) {
@@ -154,7 +154,7 @@ ne3_magic.createDropBox = function (name, elements, css_class, id) {
     }
 
     retString += '</select>';
-
+    
     return retString;
 };
 
@@ -192,14 +192,14 @@ ne3_magic.createForm = function (JSONdata) {
         retString += ' id="' + data.form.id + '"';
 
     retString += '>';
+    retString += '<table>';
 
     for (i = 0; i < data.form.elements.length; i++) {
 
         var curEl = data.form.elements[i];
 
-        retString += '<div class="form-group">';
-        retString += '<label class="control-label col-md-3">' + curEl.e_label + '</label>\n';
-		retString += '<div class="controls col-md-9">';
+        retString += '<tr><td>';
+        retString += '<b>' + curEl.e_label + '</b></td><td>';
         //our current element
 
 
@@ -229,28 +229,29 @@ ne3_magic.createForm = function (JSONdata) {
                 break;
         }
 
-        retString += '</div></div>' + "\n";
+        retString += '</td></tr>' + "\n";
     }
 
+    retString += '</table>';
     retString += '</form>';
-
+    
     retString += '<hr>';
     for (i=0; i< data.form.buttons.length; i++){
         var curEl = data.form.buttons[i];
-
+        
         retString += '<button name="' + curEl.name + '"';
-
-
+        
+        
         if ((typeof curEl.css_class !== "undefined") && (curEl.css_class !== "undefined"))
             retString += ' class="' + curEl.css_class + '"';
         if ((typeof curEl.css_id !== "undefined") && (curEl.css_id !== "undefined"))
             retString += ' id="' + curEl.css_id + '"';
         if ((typeof curEl.onclick !== "undefined") && (curEl.onclick !== "undefined"))
             retString += ' onclick="' + curEl.onclick + '"';
-
+        
         retString += '>' + curEl.e_label + '</button>';
-
-
+    
+        
     }
 
     return retString;
@@ -279,28 +280,28 @@ ne3_magic.createList = function (JSONdata) {
             case "h4":
             case "h5":
             case "h6":
-
+                
                 retString += '<' + data.elements[i].type;
-
+                
                 if ((typeof data.elements[i].css_class !== "undefined") && (data.elements[i].css_class !== "undefined"))
                     retString += ' class="' + data.elements[i].css_class + '"';
                 if ((typeof data.elements[i].css_id !== "undefined") && (data.elements[i].css_id !== "undefined"))
                     retString += ' id="' + data.elements[i].css_id + '"';
-
+    
                 retString += '>' + data.elements[i].content + '</' + data.elements[i].type + ">\n";
-
+                
               break;
 
             case "link":
-
-
+                
+                
                 retString += '<a href="#" ';
-
+                
                 if ((typeof data.elements[i].css_class !== "undefined") && (data.elements[i].css_class !== "undefined"))
                     retString += ' class="' + data.elements[i].css_class + '"';
                 if ((typeof data.elements[i].css_id !== "undefined") && (data.elements[i].css_id !== "undefined"))
                     retString += ' id="' + data.elements[i].css_id + '"';
-
+                    
                 retString += 'onclick="' + data.elements[i].onclick + '">' + data.elements[i].content + "</a>\n";
                 retString += "<br>";
                 break;
