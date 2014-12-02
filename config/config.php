@@ -9,8 +9,8 @@ require_once(NE_DIR_ROOT . 'autoload.php');
 require_once(NE_DIR_CONFIG  . 'config_users.php');
 require_once(NE_DIR_CONFIG  . 'config_areaeditor.php');
 
- error_reporting(E_ALL & ~E_STRICT);
- ini_set('display_errors', 'on');
+// error_reporting(E_ALL & ~E_STRICT);
+// ini_set('display_errors', 'on');
 
 global $ne_config_info;
 global $ne_menu;
@@ -77,16 +77,6 @@ $ne_config_info['js_folder_name']   = 'js';
 
 // CSS folder name in vkdaten folder
 $ne_config_info['css_folder_name']  = 'css';
-
-// JS frontend folder name in vkdaten folder
-$ne_config_info['fe_js_folder_name']   = 'fe_js';
-
-// CSS frontend folder name in vkdaten folder
-$ne_config_info['fe_css_folder_name']  = 'fe_css';
-
-// JSON and head form frontend folder name in vkdaten folder
-$ne_config_info['fe_json_folder_name']  = 'fe_head';
-$ne_config_info['fe_head_folder_name']  = 'fe_head';
 
 //URL to naveditor
 $ne_config_info['ne_url']           = "http://".$_SERVER['HTTP_HOST'].$ne_config_info['app_path_without_host'];
@@ -306,7 +296,7 @@ $ne_menu = array(
 	1 => array(
 		'id'        => 1,
 		'title' => 'Dashboard',
-		'link'	=> 'index.php?p=dashboard',
+		'link'	=> 'dashboard.php',
 		'role'	=> 'user',
 		'sub'	=> 0,
 		'up'	=> 0,
@@ -324,7 +314,7 @@ $ne_menu = array(
 	11 => array(
 		'id'		=> 11,
 		'title'	=> 'Seite und Navigation',
-		'link'	=> 'index.php?p=nav_editor',
+		'link'	=> 'nav_editor.php',
 		'role'	=> 'user',
 		'sub'	=> 0,
 		'up'	=> 10,
@@ -333,7 +323,7 @@ $ne_menu = array(
 	12 => array(
 		'id'		=> 12,
 		'title'	=> 'Bilder und Dateien',
-		'link'	=> 'index.php?p=file_editor',
+		'link'	=> 'file_editor.php',
 		'role'	=> 'redaktor',
 		'sub'	=> 0,
 		'up'	=> 10,
@@ -362,7 +352,7 @@ $ne_menu = array(
 	41 => array(
 		'id'		=> 41,
 		'title'	=> 'UnivIS-Integration: Mitarbeiter',
-		'link'	=> 'index.php?p=ma_editor',
+		'link'	=> 'ma_editor.php',
 		'role'	=> 'user',
 		'sub'	=> 0,
 		'up'	=> 40,
@@ -371,7 +361,7 @@ $ne_menu = array(
     42 => array(
 		'id'		=> 41,
 		'title'	=> 'Caches',
-		'link'	=> 'index.php?p=remove_caches',
+		'link'	=> 'remove_caches.php',
 		'role'	=> 'admin',
 		'sub'	=> 0,
 		'up'	=> 40,
@@ -391,7 +381,7 @@ $ne_menu = array(
 	51 => array(
 		'id'		=> 51,
 		'title'	=> 'Daten zur Website',
-		'link'	=> 'index.php?p=website_editor',
+		'link'	=> 'website_editor.php',
 		'role'	=> 'admin',
 		'sub'	=> 0,
 		'up'	=> 50,
@@ -400,7 +390,7 @@ $ne_menu = array(
 	52 => array(
 		'id'		=> 52,
 		'title'	=> 'Konfiguration',
-		'link'	=> 'index.php?p=conf_editor',
+		'link'	=> 'conf_editor.php',
 		'role'	=> 'admin',
 		'sub'	=> 0,
 		'up'	=> 50,
@@ -410,7 +400,7 @@ $ne_menu = array(
 	53 => array(
 		'id'		=> 53,
 		'title'	=> 'Design',
-		'link'	=> 'index.php?p=design_editor',
+		'link'	=> 'design_editor.php',
 		'role'	=> 'admin',
 		'sub'	=> 0,
 		'up'	=> 50,
@@ -419,7 +409,7 @@ $ne_menu = array(
 	54 => array(
 		'id'		=> 54,
 		'title'	=> 'Benutzerverwaltung',
-		'link'	=> 'index.php?p=user_manager',
+		'link'	=> 'user_manager.php',
 		'role'	=> 'admin',
 		'sub'	=> 0,
 		'up'	=> 50,
@@ -428,7 +418,7 @@ $ne_menu = array(
     55 => array(
         'id'        => 55,
         'title' => 'Bereiche verwalten',
-        'link'  => 'index.php?p=areas_manager',
+        'link'  => 'areas_manager.php',
         'role'  => 'admin',
         'sub'   => 0,
         'up'    => 50,
@@ -437,7 +427,7 @@ $ne_menu = array(
 	56 => array(
 		'id'		=> 56,
 		'title'	=> 'Update',
-		'link'	=> 'index.php?p=update',
+		'link'	=> 'update.php',
 		'role'	=> 'admin',
 		'sub'	=> 0,
 		'up'	=> 50,
@@ -455,7 +445,7 @@ $ne_menu = array(
 	61 => array(
 		'id'		=> 61,
 		'title'	=> 'Nutzung der Hilfe',
-		'link'	=> 'index.php?p=help_using',
+		'link'	=> 'help_using.php',
 		'role'	=> 'public',
 		'sub'	=> 0,
 		'up'	=> 60,
@@ -464,7 +454,8 @@ $ne_menu = array(
 	62 => array(
 		'id'		=> 62,
 		'title'	=> 'Detaillierte Hilfe',
-		'link'	=> 'index.php?p=help_details',
+		'link'	=> 'help_details.php',
+		'role'	=> 'public',
 		'sub'	=> 0,
 		'up'	=> 60,
 		'desc'	=> '',
@@ -472,7 +463,7 @@ $ne_menu = array(
 	63 => array(
         'id'		=> 63,
 		'title'	=> 'Spezielle Fragen &amp; Antworten',
-		'link'	=> 'index.php?p=help_special_faq',
+		'link'	=> 'help_special_faq.php',
 		'role'	=> 'public',
 		'sub'	=> 0,
 		'up'	=> 60,
@@ -481,7 +472,7 @@ $ne_menu = array(
 	64 => array(
         'id'		=> 64,
 		'title'	=> 'Forum &amp; Blog',
-		'link'	=> 'index.php?p=help_forum_blog',
+		'link'	=> 'help_forum_blog.php',
 		'role'	=> 'public',
 		'sub'	=> 0,
 		'up'	=> 60,
@@ -490,7 +481,7 @@ $ne_menu = array(
 	65 => array(
         'id'		=> 65,
 		'title'	=> 'Nutzungslizenz',
-		'link'	=> 'index.php?p=licence',
+		'link'	=> 'licence.php',
 		'role'	=> 'public',
 		'sub'	=> 0,
 		'up'	=> 60,
@@ -499,7 +490,7 @@ $ne_menu = array(
 	66 => array(
         'id'		=> 66,
 		'title'	=> 'Entwickler',
-		'link'	=> 'index.php?p=credits',
+		'link'	=> 'credits.php',
 		'role'	=> 'public',
 		'sub'	=> 0,
 		'up'	=> 60,
@@ -508,7 +499,7 @@ $ne_menu = array(
 	100 => array(
 		'id'		=> 100,
 		'title'	=> 'Abmelden',
-		'link'	=> 'index.php?p=logout',
+		'link'	=> 'logout.php',
 		'role'	=> 'user',
 		'sub'	=> 0,
 		'up'	=> 0,
@@ -517,26 +508,6 @@ $ne_menu = array(
 		'attribut' => 'onclick="javascript:return confirm(\'Wollen Sie sich wirklich abmelden?\');"',
 	)
  );
-
-$ne_site_name = array(
-    "not_found"       => "Seite nicht gefunden!",
-    "areas_manager"   => "Bereich Management",
-    "nav_editor"      => "Seite und Navigation",
-    "user_manager"    => "User management",
-    "file_editor"     => "Manage Images/Files",
-    "dashboard"       => "Dashboard",
-    "credits"         => "Credits",
-    "licence"         => "Nutzungslizens",
-    "help_forum_blog" => "Forum & Blog",
-    "help_special_faq"=> "Spezielle Fragen und Antworten",
-    "help_details"    => "Detaillierte Hilfe",
-    "help_using"      => "Nutzungshinweis",
-    "website_editor"  => "Daten bearbeiten",
-    "conf_editor"     => "Konfigurationen bearbeiten",
-    "ma_editor"       => "Mitarbeiter bearbeiten",
-    "design_editor"   => "Design wechseln"
-);
-
 
 //dynamisch AreasEditors binden
 //MUST BE SET BEFORE:

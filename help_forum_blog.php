@@ -1,4 +1,25 @@
-<?php require_once ('auth.php');?>
+<?php
+require_once ('auth.php');
+
+?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<title>Nutzungslizenz - <?php echo($ne_config_info['app_titleplain']); ?></title>
+
+    <?php echo NavTools::includeHtml("default"); ?>
+
+
+</head>
+
+
+<body>
+	<?php require ('common_nav_menu.php'); ?>
+
     <div class="container page" id="wrapper">
 		<div class="page-header">
 			<h2 class="page-header">Forum &amp; Blog</h2>
@@ -17,3 +38,10 @@
 			Aktuelle Informationen, geplante &Auml;nderungen, Wartungsmeldungen oder St&ouml;rungen aus dem Bereich der Webdienste sind &uuml;ber dem Blog des Webteams abrufbar. Bitte abbonnieren Sie das Blog um als Webmaster informiert zu bleiben.</p>
 		<p>Blog aufrufen unter <a class="extern" href="http://blogs.fau.de/webworking/">http://blogs.fau.de/webworking/</a></p>
 	</div>
+
+	<?php require('common_footer.php'); ?>
+
+</body>
+
+</html>
+

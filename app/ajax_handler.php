@@ -94,20 +94,19 @@ try {
                     break;
                 case 'getAreaSettings':
 
-                    $data_to_return = json_encode($AreaManager->getAreaSettings($data_to_pass));
+                    $data_to_return = json_encode($AreaManager->getAreaSettings($data_to_pass['name']));
                     break;
 
                 case 'addAreaSettings':
-                    $toPass = json_decode($data_to_pass);
-                    $data_to_return = $AreaManager->addAreaSettings($toPass->name, (array) $toPass->data);
+                    $data_to_return = $AreaManager->addAreaSettings($data_to_pass['name'], $data_to_pass['settings']);
                     break;
 
                 case 'deleteAreaSettings':
-                    $data_to_return = $AreaManager->deleteAreaSettings($data_to_pass);
+                    $data_to_return = $AreaManager->deleteAreaSettings($data_to_pass['name']);
                     break;
 
                 case 'updateAreaSettings':
-                    $data_to_return = $AreaManager->updateAreaSettings($data_to_pass, $data_to_pass['settings']);
+                    $data_to_return = $AreaManager->updateAreaSettings($data_to_pass['name'], $data_to_pass['settings']);
                     break;
             }
             break;
