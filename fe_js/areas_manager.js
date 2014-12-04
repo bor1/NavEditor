@@ -45,6 +45,9 @@ var fe_areas_manager = {
     disableForm : function(){
         $(".bereichSettingsElement").val("");
         $(".bereichSettingsElement").prop('disabled', true);
+        
+        $("#areNameH").html("");
+        
         console.log("Form disabled!");
     },
     
