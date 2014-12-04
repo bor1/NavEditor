@@ -34,6 +34,13 @@ basic setup:
 
    "elements"   :
    [
+    { //a header in the form (h1, h2, h3, etc. ...)
+     "e_label" : "",  //Just set this as an empty string
+     "type"    : "h1",
+     "content" : "<text>",
+     "css_id"  : "<css id>",
+    "css_class" : "<css class>"
+    },
     { //a link:
      "e_label" : "<e_label>",
      "type"    : "link",

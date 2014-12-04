@@ -88,6 +88,7 @@ var fe_areas_manager = {
         console.log(data.name);
         
         $("#name").val(data.name);
+        $("#areNameH").html(data.title);
         $("#title").val(data.title);
         $("#file_name").val(data.file_name);
         $("#description").val(data.description);

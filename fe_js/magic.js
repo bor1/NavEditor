@@ -204,6 +204,24 @@ ne3_magic.createForm = function (JSONdata) {
 
 
         switch (curEl.type) {
+            case "h1":
+            case "h2":
+            case "h3":
+            case "h4":
+            case "h5":
+            case "h6":
+                
+                retString += '<' + curEl.type;
+                
+                if ((typeof curEl.css_class !== "undefined") && (curEl.css_class !== "undefined"))
+                    retString += ' class="' + curEl.css_class + '"';
+                if ((typeof curEl.css_id !== "undefined") && (curEl.css_id !== "undefined"))
+                    retString += ' id="' + curEl.css_id + '"';
+    
+                retString += '>' + curEl.content + '</' + curEl.type + ">";
+    
+              break;
+
             case "link":
                 retString += ne3_magic.createLink(curEl.text, curEl.link, curEl.onclick, curEl.css_class, curEl.css_id);
                 break;

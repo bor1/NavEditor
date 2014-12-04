@@ -12,6 +12,13 @@
    "elements"   :
    [
     {
+     "e_label" : "",
+     "type"    : "h3",
+     "content" : "",
+     "css_class" : "bereichSettingsElement",
+     "css_id"  : "areNameH"
+    },
+    {
      "e_label" : "Name",
      "type"    : "input",
      "name"    : "name",
