@@ -1,0 +1,139 @@
+HOWTO: write a json file that will be parsed into a form by fe_js/magic.js
+
+adapt everything inside "<*>" to your own needs!
+
+description:
+
+//               is a comment at the end of a line
+                 do NOT put this into an original file!
+
+<fe_class>       is your frontend class. This is used in NavTools::includeFE()
+                 and will *may*be used to implement a fully abstract wonderful magic
+                 .php file for all forms.
+
+<name_of_form>   the name that will be inside the <form> tag
+
+<id_of_form>     the id of the form that will be used to attach it to a selector
+
+<js_to_call>     the javascript that will be called after form is loaded. usually
+                 to fill it with the values. It will be attached manually.
+<e_label>        the label that will appear left from the element
+
+basic setup:
+
+{
+ "identifier" : "json_form_data",
+ "class"      : "<fe_class>",
+ "id"         : "<id_of_form>",
+ "js_loaded"  : "<js_to_call>",
+ "form" :
+  {
+   "name"       : "<name_of_form>",
+   "css_class"  : "<css _class_of_form>",
+   "css_id"     : "<css_id_of_form>"
+
+   "elements"   :
+   [
+    { //a header in the form (h1, h2, h3, etc. ...)
+     "e_label" : "",  //Just set this as an empty string
+     "type"    : "h1",
+     "content" : "<text>",
+     "css_id"  : "<css id>",
+    "css_class" : "<css class>"
+    },
+    { //a link:
+     "e_label" : "<e_label>",
+     "type"    : "link",
+     "text"    : "text inside of your Link",
+     "link"    : "<the url>",
+     "onclick" : "<js_function>",        //not required
+     "css_class" : "<css_class_of_link>", //not required
+     "css_id"  : "<css_id_of_link>"       //not required
+    },
+    { //a button:
+     "e_label" : "<e_label>",
+     "type"    : "button",
+     "name"    : "<name_of_your_button>",
+     "label"   : "<the_label>",
+     "onclick" : "<js_function>",        //not required
+     "css_class" : "<css_class_of_link>", //not required
+     "css_id"  : "<css_id_of_link>"       //not required
+    },
+    { //an input field (general):
+     "e_label" : "<e_label>",
+     "type"    : "input",
+     "name"    : "<name_of_your_input>",
+     "f_type"  : "<type_of_input>",
+     "size"    : "<size_of_input>",      //not required
+     "maxlength":"<maxlength_of_input>", //not required
+     "value"   : "<initial_value>",     //not required
+     "css_class" : "<css_class_of_link>", //not required
+     "css_id"  : "<css_id_of_link>"       //not required
+    },
+    { // a textarea:
+     "e_label" : "<e_label>",
+     "type"    : "textarea",
+     "name"    : "<name_of_area>",
+     "cols"    : "<cols_of_area>",
+     "rows"    : "<rows_of_area>",
+     "content" : "<initial_value>",      //not required
+     "css_class" : "<css_class_of_link>", //not required
+     "css_id"  : "<css_id_of_link>"       //not required
+    },
+    { // a dropbox:
+     "e_label" : "<e_label>",
+     "type"    : "dropbox",
+     "name"    : "<name_of_dropbox>",
+     "elements": [
+                  {"content" : "<label_1>", "value" : "<value_1>"},
+                  {"content" : "<label_2>", "value" : "<value_2>"},
+                  {"content" : "<label_3>", "value" : "<value_3>"}
+                 ]
+     "css_class" : "<css_class_of_link>", //not required
+     "css_id"  : "<css_id_of_link>"       //not required
+    }
+   ],
+  "buttons" :
+   [ //buttons that will appear at the end of the form
+    { //a button:
+     "e_label" : "<e_label>",
+     "name"    : "<name_of_your_button>",
+     "onclick" : "<js_function>",        //not required
+     "css_class" : "<css_class_of_link>", //not required
+     "css_id"  : "<css_id_of_link>"       //not required
+    }
+   ]
+  }
+}
+
+
+
+HOWTO: define a selector list
+
+This is how to generate a list, that selects forms.
+
+<css_id_selector>  Where to generate the selector list
+<css_id_form>      Where to generate the form
+
+{
+ "identifier" : "json_list_data",
+ "id"       : "id_of_selector",
+ "css_id_s" : "<css_id_selector>",
+ "css_id_f" : "<css_id_form>",
+ "elements" :
+ [
+  { //a header in the list (h1, h2, h3, etc. ...)
+   "type"    : "h1",
+   "content" : "<text>",
+   "css_id"  : "<css id>",
+   "css_class" : "<css class>"
+  },
+  { //a link that call the generate function for a form
+   "type"    : "link",
+   "onclick" : "<js_function>",
+   "content" : "<text>"
+   "css_id"  : "<css id>",
+   "css_class" : "<css class>"
+  }
+ ]
+}

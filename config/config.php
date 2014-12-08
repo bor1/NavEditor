@@ -8,15 +8,17 @@ require_once(NE_DIR_ROOT . 'autoload.php');
 
 require_once(NE_DIR_CONFIG  . 'config_users.php');
 require_once(NE_DIR_CONFIG  . 'config_areaeditor.php');
+require_once(NE_DIR_CONFIG  . 'config_sites.php');
 
-// error_reporting(E_ALL & ~E_STRICT);
-// ini_set('display_errors', 'on');
+ //error_reporting(E_ALL & ~E_STRICT);
+ //ini_set('display_errors', 'on');
 
 global $ne_config_info;
 global $ne_menu;
 global $ne_user_php_persmissions;
 global $ne_user_public_php;
 global $g_areas_settings;
+global $ne_site_info;
 
 //===========FROM OTHER CONFIGS, ALIASES========================================
 //This php files are public for access, no need to login before.
@@ -77,6 +79,16 @@ $ne_config_info['js_folder_name']   = 'js';
 
 // CSS folder name in vkdaten folder
 $ne_config_info['css_folder_name']  = 'css';
+
+// JS frontend folder name in vkdaten folder
+$ne_config_info['fe_js_folder_name']   = 'fe_js';
+
+// CSS frontend folder name in vkdaten folder
+$ne_config_info['fe_css_folder_name']  = 'fe_css';
+
+// JSON and head form frontend folder name in vkdaten folder
+$ne_config_info['fe_json_folder_name']  = 'fe_head';
+$ne_config_info['fe_head_folder_name']  = 'fe_head';
 
 //URL to naveditor
 $ne_config_info['ne_url']           = "http://".$_SERVER['HTTP_HOST'].$ne_config_info['app_path_without_host'];
@@ -283,232 +295,6 @@ $ne_config_info['default_includes_js_css'] = Array(
 );
 
 
-
-
-
-//=====================Menu=====================================================
-//rollen in dem fall sind nur bei '#' links wichtig.
-//andere rollen werden von $ne_config_info['php_file_permissions'] ersetzt
-//zu dem array kommen danach noch extra werte fuer bereiche.
-//die Bereich-daten werden von bereich-klasse geladen,
-//weil die "rollen" von der Bereich-config-datei abhaengig sind.
-$ne_menu = array(
-	1 => array(
-		'id'        => 1,
-		'title' => 'Dashboard',
-		'link'	=> 'dashboard.php',
-		'role'	=> 'user',
-		'sub'	=> 0,
-		'up'	=> 0,
-		'desc'	=> '',
-	),
-	10 => array(
-		'id'		=> 10,
-		'title'	=> 'Bearbeiten',
-		'link'	=> '#',
-		'role'	=> 'user',
-		'sub'	=> 1,
-		'up'	=> 0,
-		'desc'	=> 'Seiten, Navigation und Dateien bearbeiten',
-	),
-	11 => array(
-		'id'		=> 11,
-		'title'	=> 'Seite und Navigation',
-		'link'	=> 'nav_editor.php',
-		'role'	=> 'user',
-		'sub'	=> 0,
-		'up'	=> 10,
-		'desc'	=> '',
-	),
-	12 => array(
-		'id'		=> 12,
-		'title'	=> 'Bilder und Dateien',
-		'link'	=> 'file_editor.php',
-		'role'	=> 'redaktor',
-		'sub'	=> 0,
-		'up'	=> 10,
-		'desc'	=> '',
-	),
-	20 => array(
-		'id'		=> 20,
-		'title'	=> 'Allgemeine Bereiche',
-		'link'	=> '#',
-		'role'	=> 'redaktor',
-		'sub'	=> 1,
-		'up'	=> 0,
-		'desc'	=> 'Allgemeine Bereiche bearbeiten',
-	),
-//	21...3x loaded from config_areaeditor
-
-	40 => array(
-		'id'		=> 40,
-		'title'	=> 'Tools',
-		'link'	=> '#',
-		'role'	=> 'redaktor',
-		'sub'	=> 1,
-		'up'	=> 0,
-		'desc'	=> 'Funktionen die modulare Werkzeuge des Webbaukastens betreffen',
-	),
-	41 => array(
-		'id'		=> 41,
-		'title'	=> 'UnivIS-Integration: Mitarbeiter',
-		'link'	=> 'ma_editor.php',
-		'role'	=> 'user',
-		'sub'	=> 0,
-		'up'	=> 40,
-		'desc'	=> 'Mitarbeiter-Zusatzinformationen hochladen',
-	),
-    42 => array(
-		'id'		=> 41,
-		'title'	=> 'Caches',
-		'link'	=> 'remove_caches.php',
-		'role'	=> 'admin',
-		'sub'	=> 0,
-		'up'	=> 40,
-		'desc'	=> 'Caches leeren',
-	),
-
-	50 => array(
-		'id'		=> 50,
-		'title'	=> 'Erweitert',
-		'link'	=> '#',
-		'role'	=> 'admin',
-		'sub'	=> 1,
-		'up'	=> 0,
-		'desc'	=> 'Administratorfunktionen',
-		'addclass'	=> 'role_admin',
-	),
-	51 => array(
-		'id'		=> 51,
-		'title'	=> 'Daten zur Website',
-		'link'	=> 'website_editor.php',
-		'role'	=> 'admin',
-		'sub'	=> 0,
-		'up'	=> 50,
-		'desc'	=> '',
-	),
-	52 => array(
-		'id'		=> 52,
-		'title'	=> 'Konfiguration',
-		'link'	=> 'conf_editor.php',
-		'role'	=> 'admin',
-		'sub'	=> 0,
-		'up'	=> 50,
-		'desc'	=> '',
-	),
-
-	53 => array(
-		'id'		=> 53,
-		'title'	=> 'Design',
-		'link'	=> 'design_editor.php',
-		'role'	=> 'admin',
-		'sub'	=> 0,
-		'up'	=> 50,
-		'desc'	=> '',
-	),
-	54 => array(
-		'id'		=> 54,
-		'title'	=> 'Benutzerverwaltung',
-		'link'	=> 'user_manager.php',
-		'role'	=> 'admin',
-		'sub'	=> 0,
-		'up'	=> 50,
-		'desc'  => '',
-    ),
-    55 => array(
-        'id'        => 55,
-        'title' => 'Bereiche verwalten',
-        'link'  => 'areas_manager.php',
-        'role'  => 'admin',
-        'sub'   => 0,
-        'up'    => 50,
-        'desc'  => 'Bereiche Verwalten',
-    ),
-	56 => array(
-		'id'		=> 56,
-		'title'	=> 'Update',
-		'link'	=> 'update.php',
-		'role'	=> 'admin',
-		'sub'	=> 0,
-		'up'	=> 50,
-		'desc'	=> '',
-	),
-	60 => array(
-		'id'		=> 60,
-		'title'	=> 'Hilfe',
-		'link'	=> '#',
-		'role'	=> 'public',
-		'sub'	=> 1,
-		'up'	=> 0,
-		'desc'	=> '',
-	),
-	61 => array(
-		'id'		=> 61,
-		'title'	=> 'Nutzung der Hilfe',
-		'link'	=> 'help_using.php',
-		'role'	=> 'public',
-		'sub'	=> 0,
-		'up'	=> 60,
-		'desc'	=> '',
-	),
-	62 => array(
-		'id'		=> 62,
-		'title'	=> 'Detaillierte Hilfe',
-		'link'	=> 'help_details.php',
-		'role'	=> 'public',
-		'sub'	=> 0,
-		'up'	=> 60,
-		'desc'	=> '',
-	),
-	63 => array(
-        'id'		=> 63,
-		'title'	=> 'Spezielle Fragen &amp; Antworten',
-		'link'	=> 'help_special_faq.php',
-		'role'	=> 'public',
-		'sub'	=> 0,
-		'up'	=> 60,
-		'desc'	=> '',
-	),
-	64 => array(
-        'id'		=> 64,
-		'title'	=> 'Forum &amp; Blog',
-		'link'	=> 'help_forum_blog.php',
-		'role'	=> 'public',
-		'sub'	=> 0,
-		'up'	=> 60,
-		'desc'	=> '',
-	),
-	65 => array(
-        'id'		=> 65,
-		'title'	=> 'Nutzungslizenz',
-		'link'	=> 'licence.php',
-		'role'	=> 'public',
-		'sub'	=> 0,
-		'up'	=> 60,
-		'desc'	=> '',
-	),
-	66 => array(
-        'id'		=> 66,
-		'title'	=> 'Entwickler',
-		'link'	=> 'credits.php',
-		'role'	=> 'public',
-		'sub'	=> 0,
-		'up'	=> 60,
-		'desc'	=> '',
-	),
-	100 => array(
-		'id'		=> 100,
-		'title'	=> 'Abmelden',
-		'link'	=> 'logout.php',
-		'role'	=> 'user',
-		'sub'	=> 0,
-		'up'	=> 0,
-		'desc'	=> '',
-		'addclass'	=> 'logout',
-		'attribut' => 'onclick="javascript:return confirm(\'Wollen Sie sich wirklich abmelden?\');"',
-	)
- );
-
 //dynamisch AreasEditors binden
 //MUST BE SET BEFORE:
 //          $ne_config_info['area_conf_filepath'],
@@ -534,14 +320,5 @@ foreach ($alleBereiche as $aBereich) {
     $i++;
 }
 
-
-//fill $ne_menu permissions depend on $ne_config_info['php_file_permissions']
-$tmp_files_with_permissions = array_keys($ne_config_info['php_file_permissions']);//for performance
-foreach ($ne_menu as $key=>$params) {
-    if(in_array($params['link'],  $tmp_files_with_permissions)){
-        $ne_menu[$key]['role'] = $ne_config_info['php_file_permissions'][$params['link']];
-    }
-}
-//=======================END MENU===============================================
 
 ?>

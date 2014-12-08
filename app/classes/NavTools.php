@@ -8,6 +8,26 @@
 class NavTools {
 
     /**
+     * Wrapes a <script> tag around input
+     * @param String $filename
+     * @return String
+     * the tag to place between <head> tags
+     */
+    public static function wrapScriptInclude($filename){
+        return '<script type="text/javascript" src="' . $filename . '"></script>' . "\n";
+    }
+    
+    /**
+     * Wrapes a <style> tag around input
+     * @param String $filename
+     * @return String
+     * the tag to place between <head> tags
+     */
+    public static function wrapStyleInclude($filename){
+        return '<link rel="stylesheet" type="text/css" href="' . $filename . '">' . "\n";
+    }
+    
+    /**
      * include js und css files in html. from JS and CSS directory
      * there is an option to add default includes set like jQuery files etc..
      *
@@ -62,14 +82,84 @@ class NavTools {
             switch (strtolower($ext)) {
                 case "js":
                     $path = $ne_config_info['ne_url'] . $ne_config_info['js_folder_name'] . "/" . $file_only;
-                    $retString .= "<script type=\"text/javascript\" src=\"" . $path . $file_params . "\"></script>\n";
+                    $retString .= NavTools::wrapScriptInclude($path . $file_params);
+                    //$retString .= "<script type=\"text/javascript\" src=\"" . $path . $file_params . "\"></script>\n";
                     break;
                 case "css":
                     $path = $ne_config_info['ne_url'] . $ne_config_info['css_folder_name'] . "/" . $file_only;
-                    $retString .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"" . $path . $file_params . "\">\n";
+                    $retString .= NavTools::wrapStyleInclude($path . $file_params);
+                    //$retString .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"" . $path . $file_params . "\">\n";
             }
         }
 
+        return $retString;
+    }
+
+    /**
+     * Includes the the .css and .js files for the frontend
+     * @param String $frontendClass
+     * the class that should be loaded
+     * @return string frontend <include> scripts/css code for the <code>$frontendClass</code> page
+     */
+    public static function includeFE($frontendClass){
+        global $ne_config_info;
+        global $ne_site_info;
+        
+        $retString = '';
+        
+        $path_css = $ne_config_info['ne_url'] . $ne_config_info['fe_css_folder_name'] . '/';
+        $path_js  = $ne_config_info['ne_url'] . $ne_config_info['fe_js_folder_name'] . '/';
+        if (array_key_exists($frontendClass, $ne_site_info['fe_include'])){
+            $retString .= NavTools::includeHtml($ne_site_info['fe_include'][$frontendClass]["html"]);
+            
+            foreach ($ne_site_info["fe_include"][$frontendClass]["fe"] as $file){
+
+                $ext = $file;
+                $ext = parse_url($ext, PHP_URL_PATH);
+                $ext = pathinfo($ext, PATHINFO_EXTENSION);
+                switch($ext){
+                    case "js":
+                        $retString .= NavTools::wrapScriptInclude($path_js . $file);
+                        break;
+
+                    case "css":
+                        $retString .= NavTools::wrapStyleInclude($path_css . $file);
+                        break;
+
+                    default:
+                        //oh shit!
+                        break;
+                }
+            }
+        } else {
+            $retString .= NavTools::includeHtml($ne_site_info['fe_include']["default"]["html"]);
+            
+            foreach ($ne_site_info["fe_include"]["default"]["fe"] as $file){
+
+                $ext = $file;
+                $ext = parse_url($ext, PHP_URL_PATH);
+                $ext = pathinfo($ext, PATHINFO_EXTENSION);
+                switch($ext){
+                    case "js":
+                        $retString .= NavTools::wrapScriptInclude($path_js . $file);
+                        break;
+
+                    case "css":
+                        $retString .= NavTools::wrapStyleInclude($path_css . $file);
+                        break;
+
+                    default:
+                        //oh shit!
+                        break;
+                }
+            }
+            //$retString .= NE_DIR_RELATIVE . $ne_config_info['fe_js_folder_name'] . "/" . $frontendClass . ".js";
+            if (file_exists($ne_config_info['fe_js_folder_name'] . "/"  . $frontendClass . ".js")){
+                //include a fe_js/<site_class>.js file if existing!
+                $retString .= NavTools::wrapScriptInclude($path_js . $frontendClass . ".js");
+            }
+        }
+        
         return $retString;
     }
 
