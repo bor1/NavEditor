@@ -535,6 +535,23 @@ class FileHandler {
 
         $this->replaceTitleTagContent($data->site_title_text, $page_file_path);
     }
+    
+    // Replaces in a html-file defined by $fpath, the div with the $id, and the new content defined by $rcontent 
+    public function replace_div_with_id($fpath, $id, $rcontent) {
+    	$fcontent = file_get_contents ( $fpath );
+    	$doc = new DOMDocument();
+    	libxml_use_internal_errors(true);
+    	$doc->loadHTML($fcontent);
+    	$new_div = $doc->createElement('div');
+    	$new_div->setAttribute('id', $id);
+    	$fragment = $doc->createDocumentFragment();
+    	$fragment->appendXML($rcontent);
+    	$new_div->appendChild($fragment);
+    	$old_div = $doc->getElementById((string)$id);
+    	$old_div->parentNode->replaceChild($new_div, $old_div);
+    	$domSafeContent = $doc->saveHTML();
+    	file_put_contents( $fpath, $domSafeContent );
+    }
 
     private function replaceTitleTagContent($new_title_text, $page_file_path) {
         $fcontent = file_get_contents($page_file_path);

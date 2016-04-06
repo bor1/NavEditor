@@ -65,8 +65,9 @@ if($oper == 'get_content') {
         }
         $rcontent .= '<p><a href="/">' . $data->content_text . (strlen($data->content_desc) > 0 ? ' <span class="description">' . $data->content_desc . '</span>' : '') . '</a></p>';
     }
-    $newContent = preg_replace($pat, '<div id="logo">' . $rcontent . '</div>', $fcontent);
-    file_put_contents($fpath, $newContent);
+//     $newContent = preg_replace($pat, '<div id="logo">' . $rcontent . '</div>', $fcontent);
+//     file_put_contents($fpath, $newContent);
+    $fh->replace_div_with_id($fpath, 'logo', $rcontent);
     $fh->UpdateTitleFile($data->site_title_text);
     echo('Update done!');
 } elseif($oper == 'update_content_all') {
@@ -91,8 +92,9 @@ if($oper == 'get_content') {
     }
 //    echo("richtig rum in file $fpath");
 //    echo($rcontent);
-    $newContent = preg_replace($pat, '<div id="logo">' . $rcontent . '</div>', $fcontent);
-    file_put_contents($fpath, $newContent);
+//     $newContent = preg_replace($pat, '<div id="logo">' . $rcontent . '</div>', $fcontent);
+//     file_put_contents($fpath, $newContent);
+    $fh->replace_div_with_id($fpath, 'logo', $rcontent);
     $fh->UpdateTitleFile($data->site_title_text);
 
     // update all
